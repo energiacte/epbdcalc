@@ -1,0 +1,169 @@
+# Archivo de generación de Instalador para Nullsoft Installer (NSIS)
+# para el programa epbdcalc: Cálculo de balance energético según EN 15603
+# Rafael Villar Burke, 2014
+
+Name @APPNAME@
+
+# Solicitar instalación como admin para copiar enlaces en carpeta de sistema
+RequestExecutionLevel admin
+
+# General Symbol Definitions
+!define APPNAME @APPNAME@
+!define REGKEY "SOFTWARE\$(^Name)"
+!define ARCH @ARCH@
+!define VERSION @VERSION@
+!define DATE @DATE@
+!define DISTDIR @DISTDIR@
+!define UPXPATH @UPXPATH@
+!define COMPANY "Daniel Jimenez González, Rafael Villar Burke <pachi@ietcc.csic.es>"
+!define URL http://www.ietcc.csic.es
+#!define SPLASHIMAGE "ui\splash.jpg"
+!define EXENAME "${APPNAME}.exe"
+!define README_FILE $INSTDIR\README.html
+
+# Usar lzma para comprimir - Lo seleccionamos en las preferencias
+SetCompressor /SOLID lzma
+# Usar UPX para reducir tamaño del instalador
+!packhdr "./exehead.tmp" '"$UPXPATH" "./exehead.tmp"'
+
+# MUI Symbol Definitions
+!define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\modern-install-full.ico"
+!define MUI_STARTMENUPAGE_REGISTRY_ROOT HKLM
+!define MUI_STARTMENUPAGE_NODISABLE
+!define MUI_STARTMENUPAGE_REGISTRY_KEY ${REGKEY}
+!define MUI_STARTMENUPAGE_REGISTRY_VALUENAME StartMenuGroup
+!define MUI_STARTMENUPAGE_DEFAULTFOLDER ${APPNAME}
+!define MUI_FINISHPAGE_RUN $INSTDIR\${EXENAME}
+!define MUI_FINISHPAGE_SHOWREADME ${README_FILE}
+!define MUI_FINISHPAGE_SHOWREADME_TEXT "Mostrar archivo README"
+#!define MUI_FINISHPAGE_SHOWREADME_FUNCTION showReadmeChangelog
+#!define MUI_FINISHPAGE_LINK "Visita http://www.rvburke.com/software.html"
+#!define MUI_FINISHPAGE_LINK_LOCATION "http://www.rvburke.com/software.html"
+!define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\modern-uninstall-full.ico"
+
+# Included files
+!include Sections.nsh
+!include MUI2.nsh
+
+# Variables
+Var StartMenuGroup
+
+# Installer pages
+!insertmacro MUI_PAGE_WELCOME
+!insertmacro MUI_PAGE_LICENSE 'COPYING.txt'
+!insertmacro MUI_PAGE_DIRECTORY
+!insertmacro MUI_PAGE_STARTMENU Application $StartMenuGroup
+!insertmacro MUI_PAGE_INSTFILES
+!insertmacro MUI_PAGE_FINISH
+
+# Uninstaller pages
+!insertmacro MUI_UNPAGE_CONFIRM
+!insertmacro MUI_UNPAGE_INSTFILES
+
+# Installer languages
+!insertmacro MUI_LANGUAGE SpanishInternational
+
+# Installer attributes${APPNAME}-${ARCH}-${VERSION}-${DATE}.exe
+
+OutFile ${APPNAME}-${ARCH}-${VERSION}-${DATE}-setup.exe
+InstallDir $PROGRAMFILES\${APPNAME}
+CRCCheck on
+XPStyle on
+ShowInstDetails hide
+VIProductVersion 2015.10.0.0
+VIAddVersionKey ProductName "${APPNAME} - Cálculo de la eficiencia energética EN 15603"
+VIAddVersionKey ProductVersion "${VERSION}"
+VIAddVersionKey CompanyName "${COMPANY}"
+VIAddVersionKey CompanyWebsite "${URL}"
+VIAddVersionKey FileVersion "${VERSION}"
+VIAddVersionKey FileDescription ""
+VIAddVersionKey LegalCopyright ""
+InstallDirRegKey HKLM "${REGKEY}" Path
+ShowUninstDetails hide
+
+# Installer sections
+Section -Main SEC0000
+    SetOutPath $INSTDIR
+    SetOverwrite on
+    File /r ${DISTDIR}\*
+    # Copiamos el archivo html para enseñar al final
+    File README.html
+    WriteRegStr HKLM "${REGKEY}\Components" Main 1
+SectionEnd
+
+Section -post SEC0001
+    # Enlaces en all users en vez del usuario actual
+    SetShellVarContext all
+    WriteRegStr HKLM "${REGKEY}" Path $INSTDIR
+    SetOutPath $INSTDIR
+    WriteUninstaller $INSTDIR\uninstall.exe
+    !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
+    SetOutPath $SMPROGRAMS\$StartMenuGroup
+    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\Uninstall $(^Name).lnk" $INSTDIR\uninstall.exe
+    CreateShortCut "$SMPROGRAMS\$StartmenuGroup\$(^Name).lnk" "$INSTDIR\${EXENAME}"
+    #CreateShortCut "$SMPROGRAMS\$StartmenuGroup\Ayuda de $(^Name).lnk" "$INSTDIR\htmldocs\index.html"
+    !insertmacro MUI_STARTMENU_WRITE_END
+    WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" DisplayName "$(^Name)"
+    WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" DisplayVersion "${VERSION}"
+    WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" Publisher "${COMPANY}"
+    WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" URLInfoAbout "${URL}"
+    WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" DisplayIcon $INSTDIR\uninstall.exe
+    WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" UninstallString $INSTDIR\uninstall.exe
+    WriteRegDWORD HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" NoModify 1
+    WriteRegDWORD HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" NoRepair 1
+SectionEnd
+
+# Macro for selecting uninstaller sections
+!macro SELECT_UNSECTION SECTION_NAME UNSECTION_ID
+    Push $R0
+    ReadRegStr $R0 HKLM "${REGKEY}\Components" "${SECTION_NAME}"
+    StrCmp $R0 1 0 next${UNSECTION_ID}
+    !insertmacro SelectSection "${UNSECTION_ID}"
+    GoTo done${UNSECTION_ID}
+next${UNSECTION_ID}:
+    !insertmacro UnselectSection "${UNSECTION_ID}"
+done${UNSECTION_ID}:
+    Pop $R0
+!macroend
+
+# Uninstaller sections
+Section /o -un.Main UNSEC0000
+    RmDir /r /REBOOTOK $INSTDIR
+    DeleteRegValue HKLM "${REGKEY}\Components" Main
+SectionEnd
+
+Section -un.post UNSEC0001
+    # Enlaces en all users en vez del usuario actual
+    SetShellVarContext all
+    DeleteRegKey HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)"
+    Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\Uninstall $(^Name).lnk"
+    Delete /REBOOTOK "$SMPROGRAMS\$StartmenuGroup\$(^Name).lnk"
+    #Delete /REBOOTOK "$SMPROGRAMS\$StartmenuGroup\Ayuda de $(^Name).lnk"
+    Delete /REBOOTOK $INSTDIR\uninstall.exe
+    DeleteRegValue HKLM "${REGKEY}" StartMenuGroup
+    DeleteRegValue HKLM "${REGKEY}" Path
+    DeleteRegKey /IfEmpty HKLM "${REGKEY}\Components"
+    DeleteRegKey /IfEmpty HKLM "${REGKEY}"
+    RmDir /REBOOTOK $SMPROGRAMS\$StartMenuGroup
+    RmDir /REBOOTOK $INSTDIR
+SectionEnd
+
+# Installer functions
+
+#Function .onInit
+#    InitPluginsDir
+    #Push $R1
+    #File /oname=$PLUGINSDIR\splash.jpg ${SPLASHIMAGE}
+    #newadvsplash::show 3000 600 400 -1 "$PLUGINSDIR\splash.jpg"
+    #Delete $PLUGINSDIR\splash.jpg
+    #Pop $R1
+    #Pop $R1
+#FunctionEnd
+
+# Uninstaller functions
+Function un.onInit
+    SetAutoClose true
+    ReadRegStr $INSTDIR HKLM "${REGKEY}" Path
+    !insertmacro MUI_STARTMENU_GETFOLDER Application $StartMenuGroup
+    !insertmacro SELECT_UNSECTION Main ${UNSEC0000}
+FunctionEnd

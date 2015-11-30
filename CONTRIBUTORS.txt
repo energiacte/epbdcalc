@@ -1,0 +1,10 @@
+This file includes a list of those people who have made significant contributions to the project.
+Este archivo incluye una lista de las personas que han hecho aportaciones significativas al proyecto.
+
+Main developers:
+Inicio del proyecto y autores principales:
+  Rafael Villar Burke <pachi@ietcc.csic.es>
+  Daniel Jiménez González <danielj@ietcc.csic.es>
+
+Other participants:
+Otros participantes:
