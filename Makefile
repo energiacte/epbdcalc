@@ -20,6 +20,13 @@ UPXPATH?=$(subst /,\/,$(shell which upx))
 DISTDIR?=$(subst /,\/,build/exe.mingw-2.7)
 MAKENSIS?=$(shell which makensis)
 
+# Documentation from LaTeX sources
+TEX_SOURCE_DIR :=./docs
+TEX_BUILD_DIR :=build
+TEX_SRCS := $(shell find ${TEX_SOURCE_DIR} -maxdepth 1 -type f -name '*.tex')
+PDF_TARGETS := $(TEX_SRCS:%.tex=%.pdf)
+$(info ${TEX_SRCS} ${PDF_TARGETS})
+
 # Create README.html from README.rst
 PYRSTEXISTS:=$(findstring .py, $(shell which rst2html.py))
 ifeq ($(PYRSTEXISTS), .py)
@@ -33,8 +40,13 @@ endif
 #make windows installer by default
 winbuild: manual README.html freeze installer
 
-manual: ./docs/build/Manual_epbdcalc.pdf
-	cp $< .
+manual: ${PDF_TARGETS}
+
+%.pdf:%.tex
+	@echo "Conversión de $^ -> $@"
+	cd ${TEX_SOURCE_DIR} && pdflatex --output-directory=${TEX_BUILD_DIR} $(notdir $^)
+	cd ${TEX_SOURCE_DIR} && pdflatex --output-directory=${TEX_BUILD_DIR} $(notdir $^)
+	cp ${TEX_SOURCE_DIR}/${TEX_BUILD_DIR}/$(notdir $@) $(notdir $@)
 
 freeze: setup_exe.py
 	$(PYTHON) setup_exe.py build
