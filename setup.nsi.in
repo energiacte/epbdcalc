@@ -15,7 +15,7 @@ RequestExecutionLevel admin
 !define DATE @DATE@
 !define DISTDIR @DISTDIR@
 !define UPXPATH @UPXPATH@
-!define COMPANY "Daniel Jimenez González, Rafael Villar Burke <pachi@ietcc.csic.es>"
+!define COMPANY "Ministerio de Fomento, Instituto de Ciencias de la Construcción Eduardo Torroja (IETcc-CSIC)"
 !define URL http://www.ietcc.csic.es
 #!define SPLASHIMAGE "ui\splash.jpg"
 !define EXENAME "${APPNAME}.exe"
