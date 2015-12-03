@@ -37,8 +37,10 @@ else:
 import pyepbd as ep
 
 COPY = u"""\tversión: %s
-\t(c) 2015  Ministerio de Fomento / Instituto de Ciencias de la Construcción Eduardo Torroja (IETcc-CSIC)
-\tAutores: Daniel Jiménez González <danielj@ietcc.csic.es> / Rafael Villar Burke <pachi@ietcc.csic.es>
+\t(c) 2015 Ministerio de Fomento
+\t    2015 Instituto de Ciencias de la Construcción Eduardo Torroja (IETcc-CSIC)
+\tAutores: Daniel Jiménez González <danielj@ietcc.csic.es>
+\t         Rafael Villar Burke <pachi@ietcc.csic.es>
 """ % ep.__version__
 
 if __name__ == '__main__':
@@ -46,7 +48,7 @@ if __name__ == '__main__':
     import sys
 
     parser = argparse.ArgumentParser(description=u'Cálculo de la eficiencia energética según ISO/DIS 52000-1:205 y CTE DB-HE',
-                                     usage="%(prog)s [-h] [-f [FPFILE]] [--krdel [KRDEL]] [--kexp [KEXP]] vecfile\n\n" + COPY,
+                                     usage=u"%(prog)s [-h] [-f [FPFILE]] [--krdel [KRDEL]] [--kexp [KEXP]] vecfile\n\n" + COPY,
                                      formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(dest='vecfile', nargs='?',
                         type=argparse.FileType('r'),
