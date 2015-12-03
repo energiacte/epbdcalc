@@ -20,8 +20,7 @@ La herramienta funciona en sistemas GNU/Linux y MS-Windows.
 Créditos y licencia
 -------------------
 
-Copyright (c) 2015 Ministerio de Fomento
-                   Instituto de Ciencias de la Construcción Eduardo Torroja (IETcc-CSIC)
+Copyright (c) 2015 Ministerio de Fomento, Instituto de Ciencias de la Construcción Eduardo Torroja (IETcc-CSIC)
 
 *epbdcalc* es un programa desarrollado por Daniel Jiménez González y Rafael Villar Burke, del Instituto Eduardo Torroja de Ciencias de la Construcción (IETcc-CSIC) en el ámbito del convenio de colaboración entre el CSIC y el Ministerio de Fomento para el desarrollo de tareas relacionadas con el Código Técnico de la Edificación y se publica bajo una licencia libre.
 
