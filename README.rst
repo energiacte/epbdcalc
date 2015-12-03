@@ -20,9 +20,12 @@ La herramienta funciona en sistemas GNU/Linux y MS-Windows.
 Créditos y licencia
 -------------------
 
-*epbdcalc* es un programa desarrollado por Daniel Jiménez González y Rafael Villar Burke, del Instituto Eduardo Torroja de Ciencias de la Construcción (IETcc-CSIC) en el ámbito del convenio de colaboración entre el CSIC y el Ministerio de Fomento para el desarrollo de tareas relacionadas con el Código Técnico de la Edificación y se publica bajo una licencia libre, la licencia pública del proyecto GNU (GPLv2 o posterior), utilizada en programas como el sistema GNU/Linux y similar a las licencias empleadas en los proyecto Firefox o LibreOffice.
+Copyright (c) 2015 Ministerio de Fomento
+                   Instituto de Ciencias de la Construcción Eduardo Torroja (IETcc-CSIC)
 
-Se puede consultar la licencia completa en el archivo `COPYING.txt` distribuido con el código fuente, o su versión original inglesa en la página del proyecto GNU, donde se proporciona también una versión no oficial en castellano.
+*epbdcalc* es un programa desarrollado por Daniel Jiménez González y Rafael Villar Burke, del Instituto Eduardo Torroja de Ciencias de la Construcción (IETcc-CSIC) en el ámbito del convenio de colaboración entre el CSIC y el Ministerio de Fomento para el desarrollo de tareas relacionadas con el Código Técnico de la Edificación y se publica bajo una licencia libre.
+
+Se puede consultar la licencia completa en el archivo `LICENSE_ES.txt` y `LICENSE.txt` distribuidos con el código fuente.
 
 *epbdcalc* se distribuye con la esperanza de que resulte útil, pero SIN NINGUNA GARANTÍA, ni garantía MERCANTIL implícita ni la CONVENIENCIA PARA UN PROPÓSITO PARTICULAR.
 
