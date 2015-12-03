@@ -30,6 +30,7 @@
 \usepackage[backref,pdfencoding=auto,colorlinks=true,linkcolor=blue]{hyperref}
 \usepackage{bookmark} % corrige errores con appendix e hyperref
 
+\graphicspath{{./imagenes/}{./docs/imagenes/}}
 \renewcommand{\familydefault}{phv} %phv - Helvética para fuente por defecto
 \renewcommand{\headrulewidth}{0pt} % Sin línea superior en encabezado
 \addto\captionsspanish{\def\tablename{Tabla}} %% Para renombrar cuadros a tablas
@@ -49,8 +50,8 @@ boxrule=0pt,boxsep=0pt,breakable}
 %% ------------ PÁGINA INICIAL
 \makeatletter
 \def\ps@portada{%
-\def\@oddhead{\includegraphics[height=1.17cm]{imagenes/mfom}\hfill \includegraphics[height=1.17cm]{imagenes/ietcc}~\includegraphics[height=1.17cm]{imagenes/csic2}}
-\def\@evenhead{\includegraphics[height=1.17cm]{imagenes/mfom}\hfill \includegraphics[height=1.17cm]{imagenes/ietcc}~\includegraphics[height=1.17cm]{imagenes/csic2}}
+\def\@oddhead{\includegraphics[height=1.17cm]{mfom}\hfill \includegraphics[height=1.17cm]{ietcc}~\includegraphics[height=1.17cm]{csic2}}
+\def\@evenhead{\includegraphics[height=1.17cm]{mfom}\hfill \includegraphics[height=1.17cm]{ietcc}~\includegraphics[height=1.17cm]{csic2}}
 %\let\@oddhead\@empty%
 %\let\@evenhead\@empty%
 \def\@oddfoot{\scriptsize\parbox[b]{4cm}{Versión \version ~/ \fecha \\Página~\textbf{\thepage}~de~ \textbf{\ref*{TotPages}}}\hfill
@@ -66,8 +67,8 @@ MADRID ESPAÑA\\TEL: 91 302 04 40\\FAX: 91 302 07 00}
 %% ------------ PÁGINA plain (para ToC)
 \fancypagestyle{plain}{%
 \fancyhf{} % clear all header and footer fields
-\fancyhead[L]{\includegraphics[height=1.17cm]{imagenes/mfom}}
-\fancyhead[R]{\hfill \includegraphics[height=1.17cm]{imagenes/ietcc}~\includegraphics[height=1.17cm]{imagenes/csic2}\\
+\fancyhead[L]{\includegraphics[height=1.17cm]{mfom}}
+\fancyhead[R]{\hfill \includegraphics[height=1.17cm]{ietcc}~\includegraphics[height=1.17cm]{csic2}\\
 \scshape \tiny Instituto de Ciencias de la Construcción Eduardo Torroja}
 \fancyfoot[L]{\scriptsize\parbox[b]{4cm}{Versión \version ~/ \fecha \\Página~\textbf{\thepage}~de~ \textbf{\ref*{TotPages}}}}
 \renewcommand{\headrulewidth}{0pt}
@@ -76,8 +77,8 @@ MADRID ESPAÑA\\TEL: 91 302 04 40\\FAX: 91 302 07 00}
 %% ------------ PÁGINA TIPO
 \pagestyle{fancy}
 \fancyhf{}
-\lhead{\includegraphics[height=1.17cm]{imagenes/mfom}}
-\rhead{\hfill \includegraphics[height=1.17cm]{imagenes/ietcc}~\includegraphics[height=1.17cm]{imagenes/csic2}\\
+\lhead{\includegraphics[height=1.17cm]{mfom}}
+\rhead{\hfill \includegraphics[height=1.17cm]{ietcc}~\includegraphics[height=1.17cm]{csic2}\\
 \scshape \tiny Instituto de Ciencias de la Construcción Eduardo Torroja
 }
 \lfoot{\scriptsize \parbox[b]{4cm}{Versión \version ~/ \fecha \\Página~\textbf{\thepage}~de~ \textbf{\ref*{TotPages}}}}
@@ -235,7 +236,7 @@ El archivo de datos de entrada proporciona la información de origen y uso de la
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=15cm]{imagenes/esquemavectores}
+\includegraphics[width=15cm]{esquemavectores}
 \caption{Esquema de campos de un registro del archivo \texttt{CSV} de entrada.}
 \label{fig:estructuraVectores}
 \end{figure}
