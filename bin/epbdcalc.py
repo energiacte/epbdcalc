@@ -47,7 +47,7 @@ if __name__ == '__main__':
     import argparse
     import sys
 
-    parser = argparse.ArgumentParser(description=u'Cálculo de la eficiencia energética según ISO/DIS 52000-1:205 y CTE DB-HE',
+    parser = argparse.ArgumentParser(description=u'Cálculo de la eficiencia energética según ISO/DIS 52000-1:2015 y CTE DB-HE',
                                      usage=u"%(prog)s [-h] [-f [FPFILE]] [--krdel [KRDEL]] [--kexp [KEXP]] vecfile\n\n" + COPY,
                                      formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(dest='vecfile', nargs='?',
