@@ -1,10 +1,10 @@
-epbdcalc - Cálculo de la eficiencia energética según EN 15603
-=============================================================
+epbdcalc - Cálculo de la eficiencia energética según ISO/DIS 52000-1:2015
+=========================================================================
 
 Descripción y uso
 -----------------
 
-**epbdcalc** es un programa para el cálculo de la eficiencia energética siguiendo la metodología de la norma EN 15603.
+**epbdcalc** es un programa para el cálculo de la eficiencia energética siguiendo la metodología de la norma ISO/DIS 52000-1:2015.
 
 La ejecución del programa solamente requiere la indicación de un archivo de datos de entrada cuyo formato se detalla en el manual en formato PDF que se distribuye con la aplicación.
 

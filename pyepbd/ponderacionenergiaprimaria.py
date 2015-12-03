@@ -40,7 +40,7 @@ mediante el parámetro normativo de resuministro ($k_{rdel}$).
 
 Realizado el calculo del balance, los valores energéticos se agrupan en unos pocos
 conceptos con valores anuales de los que se obtendrá el indicador de eficiencia
-energética según indica la norma \textit{FprEN 15603} aplicando los pasos A y B.
+energética según indica la norma \textit{ISO/DIS 52000-1:2015} aplicando los pasos A y B.
 
 Estos indicadores tienen una parte renovable y otra no renovable, lo que permite
 calcular el valor de consumo energético total, además del porcentaje de uso de

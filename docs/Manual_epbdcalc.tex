@@ -85,7 +85,7 @@ MADRID ESPAÑA\\TEL: 91 302 04 40\\FAX: 91 302 07 00}
 
 %% DATOS DEL INFORME **********************************************************
 \newcommand{\titulo}{Manual de usuario del programa \texttt{epbdcalc}}
-\newcommand{\subtitulo}{Cálculo de la eficiencia energética según la norma FprEN-15603:2014}
+\newcommand{\subtitulo}{Cálculo de la eficiencia energética según la norma ISO/DIS 52000-1:2015}
 \newcommand{\titulocorto}{\titulo} % Título para encabezados
 %\newcommand{\tipo}{BORRADOR}%{Documento preliminar} % Tipo documento: PRELIMINAR, FINAL, ETC.
 \newdateformat{mydate}{\monthname[\THEMONTH] \THEYEAR}
@@ -143,15 +143,15 @@ MADRID ESPAÑA\\TEL: 91 302 04 40\\FAX: 91 302 07 00}
 \newpage
 \section{Introducción}
 
-La futura norma \textit{EN-15603:2014} de \textit{Eficiencia energética de los edificios. Consumo global de energía y definición de las evaluaciones energéticas} establece la metodología para el cálculo la eficiencia energética dentro del alcance de la \textit{Directiva 2010/31/UE} relativa a la\textit{eficiencia energética de los edificios} (\textit{EPDB}). Para facilitar la comprensión e interpretación de la norma, se desarrolla el informe técnico \textit{FprCEN-TR\_15615: ''Energy Performance of buildings - Acompanying Technical Report on draft Overarching standard EPB (prEN 15063)''} y unas hojas de cálculo asociadas.
+La norma \textit{ISO/DIS 52000-1:2015 (anterior prEN~15603:2014)} de \textit{Eficiencia energética de los edificios. Consumo global de energía y definición de las evaluaciones energéticas} establece la metodología para el cálculo la eficiencia energética dentro del alcance de la \textit{Directiva 2010/31/UE} relativa a la\textit{eficiencia energética de los edificios} (\textit{EPDB}). Para facilitar la comprensión e interpretación de la norma, se desarrolla el informe técnico \textit{FprCEN-TR\_15615: ''Energy Performance of buildings - Acompanying Technical Report on draft Overarching standard EPB (prEN 15063)''} y unas hojas de cálculo asociadas.
 
-Este manual documenta el programa \texttt{epbdcalc}, elaborado por el \textit{Instituto de Ciencias de la Construcción Eduardo Torroja (IETcc-CSIC)} en el marco del convenio vigente con el \textit{Ministerio de Fomento}, que implementa la metodología de cálculo descrita en el último borrador disponible de la norma \textit{EN-15603:2014}. El programa se ha desarrollado como parte del proceso de trasposición de la directiva a la legislación nacional española y con el objetivo de facilitar la adaptación de las herramientas de evaluación de la eficiencia energética.
+Este manual documenta el programa \texttt{epbdcalc}, elaborado por el \textit{Instituto de Ciencias de la Construcción Eduardo Torroja (IETcc-CSIC)} en el marco del convenio vigente con el \textit{Ministerio de Fomento}, que implementa la metodología de cálculo descrita en el último borrador disponible de la norma \textit{ISO/DIS 52000-1:2015 (anterior prEN~15603:2014)}. El programa se ha desarrollado como parte del proceso de trasposición de la directiva a la legislación nacional española y con el objetivo de facilitar la adaptación de las herramientas de evaluación de la eficiencia energética.
 
 El manual describe la interfaz de usuario del programa \textit{epbdcalc} y el formato de los archivos de entrada, que incluyen los valores de producción y consumo energético del edificio.
 El programa calcula la energía importada de las redes de abastecimiento, el porcentaje de energía exportada que se considera en la evaluación de la eficiencia energética del edificio. Para todo ello, tiene en cuenta los factores de paso normativos de los distintos vectores energéticos y los factores de resuministro ($k_{rdel}$) y exportación ($k_{exp}$).
 
 \begin{myquote}\footnotesize
-The still-in-progress CEN standard \textit{EN-15603:2014}, on \textit{Energy Efficiency of Buildings. Overarching standard EPB}, sets a framework for the assessment of the energy performance of buildings that is consistent with the \textit{EPB Directive recast (2010/31/UE)} on the \textit{energy efficiency of buildings}. To ease the understanding and interpretation of this standard, the \textit{FprCEN-TR\_15615: ''Energy Performance of buildings - Acompanying Technical Report on draft Overarching standard EPB (prEN 15063)''} has been developed, along with a set of examples in spreadsheet form.
+    The still-in-progress CEN/ISO standard \textit{ISO/DIS 5200-1:2015 (former prEN~15603:2014)}, on \textit{Energy Efficiency of Buildings. Overarching standard EPB}, sets a framework for the assessment of the energy performance of buildings that is consistent with the \textit{EPB Directive recast (2010/31/UE)} on the \textit{energy efficiency of buildings}. To ease the understanding and interpretation of this standard, the \textit{FprCEN-TR\_15615: ''Energy Performance of buildings - Acompanying Technical Report on draft Overarching standard EPB (prEN 15603)''} has been developed, along with a set of examples in spreadsheet form.
 
 This manual documents the \texttt{epbdcalc} application which has been developed under the current agreement by the \textit{Instituto de Ciencias de la Construcción Eduardo Torroja (IETcc-CSIC)} and the spanish \textit{Ministerio de Fomento} and implements the calculation methodology in the current draft of the standard. It has been developed as part of the transposition process of the EPBD into the spanish legislation and to ease the adaptation of the existing energy evaluation tools.
 
@@ -187,7 +187,7 @@ La invocación del programa sin un archivo de datos de entrada o usando las opci
     	versión: 2015.10.16
     	2015  Rafael Villar Burke <pachi@ietcc.csic.es>
     	      Daniel Jiménez González <danielj@ietcc.csic.es>
-    Cálculo de la eficiencia energética según EN 15603 y CTE DB-HE
+    Cálculo de la eficiencia energética según ISO/DIS 52000-1:2015 y CTE DB-HE
     
     positional arguments:
       vecfile               archivo de datos de los vectores energéticos
@@ -324,7 +324,7 @@ Todos los registros deben emplear número igual de pasos de tiempo, o el program
 
 \subsection{Salida de resultados}
 
-La norma \textit{EN 15603} establece como indicadores de la eficiencia energética de los edificios el \textit{consumo total de energía primaria} (\texttt{$EP_{tot}$}) y el \textit{porcentaje de energía primaria renovable del consumo total de energía} (\texttt{$RER$}).
+La norma \textit{ISO/DIS 52000-1:2015} establece como indicadores de la eficiencia energética de los edificios el \textit{consumo total de energía primaria} (\texttt{$EP_{tot}$}) y el \textit{porcentaje de energía primaria renovable del consumo total de energía} (\texttt{$RER$}).
 
 El programa ofrece, además de dichos indicadores, la descomposición consumo total de energía primaria en su parte renovable (\texttt{$EP_{ren}$}) y no renovable (\texttt{$EP_{nren}$}), como se muestra en la \autoref{tab:indicadoresFinales}.
 

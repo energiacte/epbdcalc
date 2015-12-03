@@ -1,6 +1,6 @@
 # Archivo de generación de Instalador para Nullsoft Installer (NSIS)
-# para el programa epbdcalc: Cálculo de balance energético según EN 15603
-# Rafael Villar Burke, 2014
+# para el programa epbdcalc: Cálculo de balance energético según ISO/DIS 52000-1:2015
+# 2015 Rafael Villar Burke <pachi@ietcc.csic.es>
 
 Name @APPNAME@
 
@@ -71,7 +71,7 @@ CRCCheck on
 XPStyle on
 ShowInstDetails hide
 VIProductVersion 2015.10.0.0
-VIAddVersionKey ProductName "${APPNAME} - Cálculo de la eficiencia energética EN 15603"
+VIAddVersionKey ProductName "${APPNAME} - Cálculo de la eficiencia energética ISO/DIS 52000-1:2015"
 VIAddVersionKey ProductVersion "${VERSION}"
 VIAddVersionKey CompanyName "${COMPANY}"
 VIAddVersionKey CompanyWebsite "${URL}"

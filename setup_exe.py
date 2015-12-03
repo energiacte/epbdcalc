@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #encoding: utf-8
 #
-#   Programa epbdcalc: Cálculo de la eficiencia energética EN 15603
+#   Programa epbdcalc: Cálculo de la eficiencia energética ISO/DIS 52000-1:2015
 #
 #   Copyright (C) 2015  Rafael Villar Burke <pachi@ietcc.csic.es>
 #                       Daniel Jiménez González <danielj@ietcc.csic.es>
@@ -77,7 +77,7 @@ setup(
     author="Rafael Villar Burke, Daniel Jiménez González",
     author_email='pachi@ietcc.csic.es',
     version=__version__,
-    description="Cálculo de la eficiencia energética según EN 15603",
+    description="Cálculo de la eficiencia energética según ISO/DIS 52000-1:2015",
     long_description=README + '\n\n' + NEWS,
     options=dict(build_exe=buildOptions),
     executables=executables,
