@@ -1,7 +1,12 @@
 *.pyc
+*.swp
 .DS_Store
 .cache
 build
 __pycache__
 *.exe
-
+*.pdf
+docs/imagenes/*.eps
+docs/imagenes/*.svg
+setup.nsi
+README.html
