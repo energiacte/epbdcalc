@@ -52,7 +52,7 @@ FACTORESDEPASOOFICIALES = pd.DataFrame([
 ['ELECTRICIDAD', 'COGENERACION', 'to_nEPB', 'B', 0.5, 2.0]],
  columns=['vector', 'fuente', 'uso', 'factor', 'ren', 'nren'])
 
-def calcula_eficiencia_energetica(datafile, k_rdel=None, k_exp=None, fp=None, ver=False):
+def calcula_eficiencia_energetica(datafile, k_rdel=None, k_exp=None, fp=None):
     """Balance total de la energía ponderada usada por el edificio y ahorrada a la red.
 
     Es el balance de energía en la frontera de evaluación AB, descontada la
@@ -71,16 +71,8 @@ def calcula_eficiencia_energetica(datafile, k_rdel=None, k_exp=None, fp=None, ve
     fp = (FACTORESDEPASOOFICIALES if fp is None
           else pd.read_csv(fp, skipinitialspace=True, comment='#', skip_blank_lines=True))
 
-    if ver:
-        print 'entrando en balance con k_rdel=',k_rdel
-    balance = calcular_balance(datafile, k_rdel, ver=False)
-    if ver:
-        ver_balance(balance)
-        print 'fin del balance'
-
-    if ver:
-        print 'factores de paso origen:', fp
-    EP = pondera_energia_primaria(balance, fp, k_exp, ver=ver)
+    balance = calcular_balance(datafile, k_rdel)
+    EP = pondera_energia_primaria(balance, fp, k_exp)
 
     return EP
 

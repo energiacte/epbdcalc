@@ -34,6 +34,7 @@ if not hasattr(sys, 'frozen'):
 else:
     currpath, upperpath = None, None
     warnings.simplefilter('ignore')
+
 import pyepbd as ep
 
 COPY = u"""\tversión: %s
@@ -81,9 +82,9 @@ if __name__ == '__main__':
         print u'Usando factor de exportación (k_exp) predeterminado'
 
     EP = ep.calcula_eficiencia_energetica(args.vecfile, k_rdel=args.krdel, k_exp=args.kexp,
-        fp=fpdatafile, ver=False)
+        fp=fpdatafile)
 
-    cadenasalida = ep.verInd(EP, ver=True, texto='Archivo de entrada: %s' % args.vecfile.name)
+    cadenasalida = ep.verInd(EP, texto='Archivo de entrada: %s' % args.vecfile.name)
 
     if args.outputfile:
         print 'Guardando resultados en el archivo:', args.outputfile.name

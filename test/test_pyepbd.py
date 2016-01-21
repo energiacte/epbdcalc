@@ -76,25 +76,17 @@ def concepto(vector, tipo, origendestino, valor, nombre_fichero = None):
         f.writelines('%s,%s,%s,' % (vector, tipo, origendestino) + ','.join([str(e) for e in valor]) + '\n')
 
 
-def verificar(EPB, res, texto=None, ver=False):
+def verificar(EPB, res, texto=None):
     import pandas as pd
     res = pd.Series({'ren': res[0], 'nren': res[1]})
-    if ver:
-        print '___ verificando ___'
-        ep.verInd(EPB, texto='entrada')
-        ep.verInd(res, texto='test')
     res = EPB.EP - pd.Series(res)
     if abs(res.sum()) > 2:
-        if ver:
-            print 'mal', res.sum()
-            ep.ver(EPB, texto)
-            print '#####################################################'
-            print '--------------------'
+        print 'Resultado no coincidente: ', res.sum()
+        ep.verInd(EPB, texto)
+        print '#####################################################'
+        print '--------------------'
         return False
     else:
-        if ver:
-            print 'bien'
-            print '--------------------'
         return True
 
 
@@ -120,13 +112,13 @@ def test_ejemplo1base_normativo():
     res = [34.1, 208.20]
     assert verificar(EP,res) == True
 
-def test_ejemplo1PV(ver=False):
+def test_ejemplo1PV():
     datafile = os.path.join(currpath, 'ejemplo1PV.csv')
     crear_fichero(datafile)
     concepto('ELECTRICIDAD','CONSUMO', 'EPB', perfilC(100), datafile)
     concepto('ELECTRICIDAD','PRODUCCION', 'INSITU', perfilC(50), datafile)
     fp = os.path.join(currpath, '../data/factores_paso_test.csv')
-    EP = ep.calcula_eficiencia_energetica(datafile, fp=fp, ver=ver)
+    EP = ep.calcula_eficiencia_energetica(datafile, fp=fp)
     res = [75.0, 100.0]
     assert verificar(EP,res) == True
     
@@ -152,19 +144,19 @@ def test_ejemplo1xPV_normativo():
     res = [120.0, -80.0]
     assert verificar(EP,res) == True
     
-def test_ejemplo1xPVk0(ver=False):
+def test_ejemplo1xPVk0():
     datafile = os.path.join(currpath, 'ejemplo1xPV.csv')
     crear_fichero(datafile)
     concepto('ELECTRICIDAD','CONSUMO', 'EPB', perfilC(100), datafile)
     concepto('ELECTRICIDAD','PRODUCCION', 'INSITU', perfilC(140), datafile)
     fp = os.path.join(currpath, '../data/factores_paso_test.csv')
-    EP = ep.calcula_eficiencia_energetica(datafile, fp=fp, k_exp=0.0, ver=ver)
+    EP = ep.calcula_eficiencia_energetica(datafile, fp=fp, k_exp=0.0)
     res = [100.0, 0.0]
     assert verificar(EP,res) == True
 
-def test_ejemplo1xPVk0_normativo(ver=False):
+def test_ejemplo1xPVk0_normativo():
     datafile = os.path.join(currpath, 'ejemplo1xPV.csv')
-    EP = ep.calcula_eficiencia_energetica(datafile, k_exp=0.0, ver=ver)
+    EP = ep.calcula_eficiencia_energetica(datafile, k_exp=0.0)
     res = [100.0, 0.0]
     assert verificar(EP,res) == True
 
