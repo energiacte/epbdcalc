@@ -55,8 +55,8 @@ FACTORESDEPASOOFICIALES = pd.DataFrame([
 def calcula_eficiencia_energetica(datafile, k_rdel=None, k_exp=None, fp=None, ver=False):
     """Balance total de la energía ponderada usada por el edificio y ahorrada a la red.
 
-    Es el balance de energía en la frontera de evaluación descontada la
-    parte que ahorra la red debido a la exportación para todos los
+    Es el balance de energía en la frontera de evaluación AB, descontada la
+    parte que ahorra la red debido a la exportación, para todos los
     vectores energéticos y todas las fuentes.
 
     Este total descuenta al obtenido en el paso A lo que la red ahorra
@@ -79,7 +79,7 @@ def calcula_eficiencia_energetica(datafile, k_rdel=None, k_exp=None, fp=None, ve
         print 'fin del balance'
 
     if ver:
-        print 'factore de paso origen:', fp
+        print 'factores de paso origen:', fp
     EP = pondera_energia_primaria(balance, fp, k_exp, ver=ver)
 
     return EP
