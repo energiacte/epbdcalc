@@ -36,14 +36,12 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
 
     if isinstance(E_nEPB, dict):
         E_nEPB = sum(E_nEPB.values())
-    #~ if not E_nEPB != None:
-        #~ E_nEPB = np.zeros(ndata)
 
     E_EPB_t = np.minimum(E_EPB, E_prod_tot) #element wise
 
     #____exportable___
-    exportable = E_prod_tot - E_EPB_t # linea 20
-    factor_exportable_producido = [1-E_EPB_t[n]/e  if e != 0 else 0 for n, e in enumerate(E_prod_tot)]
+    exportable = E_prod_tot - E_EPB_t
+    factor_exportable_producido = [1-E_EPB_t[n]/e if e != 0 else 0 for n, e in enumerate(E_prod_tot)]
     if isinstance(E_prod, dict):
         E_exportable_source = {} #es directamente lo producido en cada source por el factor exportable
         for source, values in E_prod.items():
@@ -51,7 +49,7 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
 
     #___nEPB_____
     E_nEPB_used_t = np.minimum(exportable, E_nEPB) # linea 26
-    factor_nEPB_exportable = [E_nEPB_used_t[n]/e  if e != 0 else 0 for n, e in enumerate(exportable)]
+    factor_nEPB_exportable = [E_nEPB_used_t[n]/e if e != 0 else 0 for n, e in enumerate(exportable)]
     # podemos asociarlo a cada uno de los productores
     if isinstance(E_prod, dict):
         E_nEPB_source = {}
@@ -64,7 +62,7 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
     # porcentaje de la exportable que es exceso (no va a nEPB)
     # el exceso se minora con k_rdel para ser resuministrado
     # y luego con k_exp para ser exportado
-    factor_exceso_exportable = [exceso_t[n]/e  if e != 0 else 0 for n, e in enumerate(exportable)] #linea 33
+    factor_exceso_exportable = [exceso_t[n]/e if e != 0 else 0 for n, e in enumerate(exportable)] #linea 33
     if isinstance(E_prod, dict):
         E_exceso_source = {}
         for source, values in E_exportable_source.items():
@@ -116,7 +114,7 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
             balance_temporal[clave] = fuente
 
     balance_anual = {}
-    for fuente,usos in balance_temporal.items():
+    for fuente, usos in balance_temporal.items():
         balance_anual[fuente] = {}
         for uso, valor in usos.items():
             if abs(valor.sum()) > 0.1:
