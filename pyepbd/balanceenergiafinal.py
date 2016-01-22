@@ -24,7 +24,6 @@
 
 import numpy as np
 import pandas as pd
-import collections
 
 def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
 
@@ -122,52 +121,51 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
     return balance_anual, balance_temporal
 
 
-def calcular_balance(fichero, k_rdel):
+def readdata(filename):
+    """Read input data from filename
 
-    if hasattr(fichero, 'readlines'):
-        lineas = fichero.readlines()
-    else:
-        with open(fichero, 'r') as f:
-            lineas = f.readlines()
+    vector, atype, srcdst, (values ...)
+    """
+    with open(filename, 'r') as datafile:
+        lines = datafile.readlines()
 
-    datos_balance = {}
-    nvalores = False
-    for linea in lineas[1:]:
-        campos = linea.split(',')
-        vector = campos[0]
-        tipo = campos[1]
-        src_dst = campos[2]
-        valores = np.array([float(e.strip('\n')) for e in campos[3:]])
-        if not nvalores:
-            nvalores = len(valores)
+    data = {}
+    nvalues = False
+    for line in lines[1:]:
+        fields = line.split(',')
+        vector, atype, srcdst = fields[0:3]
+        values = np.array([float(e.strip('\n')) for e in fields[3:]])
+        
+        if not nvalues:
+            nvalues = len(values)
         else:
-            if nvalores != len(valores):
+            if nvalues != len(values):
                 print '___error___', 'hay un vector con un número de datos erróneo'
-                print vector, tipo, src_dst, valores
+                print vector, atype, srcdst, values
                 #TODO: raise exception and handle in CLI
 
-        if vector not in datos_balance.keys():
-            datos_balance[vector] = {}
+        if vector not in data:
+            data[vector] = {}
 
-        if tipo not in datos_balance[vector].keys():
-            datos_balance[vector][tipo] = {}
+        if atype not in data[vector]:
+            data[vector][atype] = {}
 
-        if src_dst not in datos_balance[vector][tipo].keys():
-            datos_balance[vector][tipo][src_dst] = np.zeros(nvalores)
+        atypedata = data[vector][atype]
+        if srcdst not in atypedata:
+            atypedata[srcdst] = np.zeros(nvalues)
+        atypedata[srcdst] = atypedata[srcdst] + values
+    return nvalues, data
 
-        datos_balance[vector][tipo][src_dst] = datos_balance[vector][tipo][src_dst] + valores
-
-    for vector, conceptos in datos_balance.items():
-        consumo_EPB, consumo_nEPB, produccion = np.zeros(nvalores), np.zeros(nvalores), np.zeros(nvalores)
-        if 'CONSUMO' in conceptos.keys():
-            if 'EPB' in conceptos['CONSUMO'].keys():
-                consumo_EPB = pd.Series(conceptos['CONSUMO']['EPB'])
-            if 'NEPB' in conceptos['CONSUMO'].keys():
-                consumo_nEPB = pd.Series(conceptos['CONSUMO']['NEPB'])
-        if 'PRODUCCION' in conceptos.keys(): ### produccion es un diccionario con las fuentes!!!!
-            produccion = conceptos['PRODUCCION']
-
+def calcular_balance(filename, k_rdel):
+    nsteps, data = readdata(filename)
+    balance = {}
+    for vector in data:
+        atypes = data[vector]
+        consumo_EPB = pd.Series(atypes['CONSUMO']['EPB']) if 'CONSUMO' in atypes and 'EPB' in atypes['CONSUMO'] else np.zeros(nsteps)
+        consumo_nEPB = pd.Series(atypes['CONSUMO']['NEPB']) if 'CONSUMO' in atypes and 'NEPB' in atypes['CONSUMO'] else np.zeros(nsteps)
+        produccion = atypes['PRODUCCION'] if 'PRODUCCION' in atypes else np.zeros(nsteps)
+        # produccion es un diccionario con las fuentes
         bal_an, bal_t = calcular_balance_vector(consumo_EPB, consumo_nEPB, produccion, k_rdel)
-        datos_balance[vector] = {'anual': bal_an, 'temporal': bal_t}
-    return datos_balance
+        balance[vector] = {'anual': bal_an, 'temporal': bal_t}
+    return balance
 

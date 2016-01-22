@@ -81,7 +81,7 @@ if __name__ == '__main__':
     if args.kexp is None:
         print u'Usando factor de exportación (k_exp) predeterminado'
 
-    EP = ep.calcula_eficiencia_energetica(args.vecfile, k_rdel=args.krdel, k_exp=args.kexp,
+    EP = ep.calcula_eficiencia_energetica(args.vecfile.name, k_rdel=args.krdel, k_exp=args.kexp,
         fp=fpdatafile)
 
     cadenasalida = ep.verInd(EP, texto='Archivo de entrada: %s' % args.vecfile.name)
