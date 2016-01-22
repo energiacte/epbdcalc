@@ -61,8 +61,9 @@ README.html: README.rst res/style.css
 setup.nsi: setup.nsi.in pyepbd/__init__.py
 	sed 's/@APPNAME@/$(APPNAME)/g; s/@VERSION@/$(VERSION)/g; s/@ARCH@/$(ARCH)/g; s/@DATE@/$(DATE)/g; s/@UPXPATH@/$(UPXPATH)/g; s/@DISTDIR@/$(DISTDIR)/g' setup.nsi.in > setup.nsi
 
-test check tests:
-	pytest
+test:
+	$(PYTHON) -m pytest
+	$(PYTHON) bin/epbdcalc.py test/ejemplo6K3.csv
 
 clean:
 	rm -rf build dist MANIFEST setup.nsi README.html Manual_epbdcalc.pdf
@@ -70,4 +71,4 @@ clean:
 	find . -name *.swp -exec rm {} \;
 
 # Los phony son los que no dependen de archivos y hay que considerar siempre no actualizados (rebuild)
-.PHONY = setup.nsi winbuild clean test check tests
+.PHONY: setup.nsi winbuild clean test
