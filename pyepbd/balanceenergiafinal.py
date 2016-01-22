@@ -30,7 +30,7 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
     ndata = len(E_EPB)
 
     if isinstance(E_prod, dict):
-        E_prod_tot = sum(E_prod.values())#element wise
+        E_prod_tot = sum(E_prod.values()) #element wise
     else:
         E_prod_tot = E_prod
 
@@ -39,12 +39,11 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
     #~ if not E_nEPB != None:
         #~ E_nEPB = np.zeros(ndata)
 
-    E_EPB_t = np.minimum(E_EPB,E_prod_tot) #element wise
+    E_EPB_t = np.minimum(E_EPB, E_prod_tot) #element wise
 
     #____exportable___
     exportable = E_prod_tot - E_EPB_t # linea 20
-    factor_exportable_producido = [1-E_EPB_t[n]/e  if e != 0 else 0 for n,e in enumerate(E_prod_tot)]
-    #porcenExport = [1-E_EPB_t[n]/e  if e != 0 else 0 for n,e in enumerate(E_prod_tot)]
+    factor_exportable_producido = [1-E_EPB_t[n]/e  if e != 0 else 0 for n, e in enumerate(E_prod_tot)]
     if isinstance(E_prod, dict):
         E_exportable_source = {} #es directamente lo producido en cada source por el factor exportable
         for source, values in E_prod.items():
@@ -52,7 +51,7 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
 
     #___nEPB_____
     E_nEPB_used_t = np.minimum(exportable, E_nEPB) # linea 26
-    factor_nEPB_exportable = [E_nEPB_used_t[n]/e  if e != 0 else 0 for n,e in enumerate(exportable)]
+    factor_nEPB_exportable = [E_nEPB_used_t[n]/e  if e != 0 else 0 for n, e in enumerate(exportable)]
     # podemos asociarlo a cada uno de los productores
     if isinstance(E_prod, dict):
         E_nEPB_source = {}
@@ -65,7 +64,7 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
     # porcentaje de la exportable que es exceso (no va a nEPB)
     # el exceso se minora con k_rdel para ser resuministrado
     # y luego con k_exp para ser exportado
-    factor_exceso_exportable = [exceso_t[n]/e  if e != 0 else 0 for n,e in enumerate(exportable)] #linea 33
+    factor_exceso_exportable = [exceso_t[n]/e  if e != 0 else 0 for n, e in enumerate(exportable)] #linea 33
     if isinstance(E_prod, dict):
         E_exceso_source = {}
         for source, values in E_exportable_source.items():
@@ -83,14 +82,14 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
     # cuando se recoge esa energía, o desde el punto de vista del consumo,
     # cunado se sirve esa energía recogida. El total es el mismo, pero los valores
     # temporales varían.
-    factor_resuministrada_producida = E_rdel_total/exceso #
+    factor_resuministrada_producida = E_rdel_total / exceso
     if isinstance(E_prod, dict):
         E_rdel_source = {}
         for source, values in E_exceso_source.items():
             E_rdel_source[source] = values * factor_resuministrada_producida
 
     E_rdel_t = factor_resuministrada_producida * exceso_t
-    factor_unfilled_rdel = E_rdel_total/E_EPB_unfilled
+    factor_unfilled_rdel = E_rdel_total / E_EPB_unfilled
 
     E_rdel_servida_t = factor_unfilled_rdel * E_EPB_unfilled_t
 
@@ -99,7 +98,7 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
     E_del_grid_t = E_EPB - E_EPB_t - E_rdel_servida_t
     E_exp_grid = exceso - E_rdel_total
     # hay que repercutirlo por combustible
-    prop_exceso_red = E_exp_grid/exceso if exceso != 0 else 0
+    prop_exceso_red = E_exp_grid / exceso if exceso != 0 else 0
     if isinstance(E_prod, dict):
         E_exp_grid_source = {}
         for clave, valor in E_exceso_source.items(): #exceso por fuente
@@ -109,12 +108,11 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
         E_exp_grid_t = np.zeros(ndata)
 
     balance_temporal = {'grid': {'input': sum(E_del_grid_t)}}
-    if isinstance(E_prod,dict):
+    if isinstance(E_prod, dict):
         for clave, valor in E_prod.items():
-            fuente = {}
-            fuente['input'] = E_prod[clave]
-            fuente['to_nEPB'] = E_nEPB_source[clave]
-            fuente['to_grid'] = E_exp_grid_source[clave]
+            fuente = {'input': E_prod[clave],
+                      'to_nEPB': E_nEPB_source[clave],
+                      'to_grid': E_exp_grid_source[clave]}
             balance_temporal[clave] = fuente
 
     balance_anual = {}
@@ -162,7 +160,7 @@ def calcular_balance(fichero, k_rdel):
         datos_balance[vector][tipo][src_dst] = datos_balance[vector][tipo][src_dst] + valores
 
     for vector, conceptos in datos_balance.items():
-        consumo_EPB, consumo_nEPB, produccion = np.zeros(nvalores),np.zeros(nvalores),np.zeros(nvalores)
+        consumo_EPB, consumo_nEPB, produccion = np.zeros(nvalores), np.zeros(nvalores), np.zeros(nvalores)
         if 'CONSUMO' in conceptos.keys():
             if 'EPB' in conceptos['CONSUMO'].keys():
                 consumo_EPB = pd.Series(conceptos['CONSUMO']['EPB'])
@@ -171,16 +169,17 @@ def calcular_balance(fichero, k_rdel):
         if 'PRODUCCION' in conceptos.keys(): ### produccion es un diccionario con las fuentes!!!!
             produccion = conceptos['PRODUCCION']
 
-        bal_an, bal_t =  calcular_balance_vector(consumo_EPB, consumo_nEPB, produccion, k_rdel)
+        bal_an, bal_t = calcular_balance_vector(consumo_EPB, consumo_nEPB, produccion, k_rdel)
         datos_balance[vector] = {'anual': bal_an, 'temporal': bal_t}
     return datos_balance
 
-    # para cada vector calcular el balance de vector.
-    # con eso formar el vector_data y devolverlo a control para calcular
-    # la eficiencia enrgética.
-
 def calc_balance(E_EPB, E_nEPB, E_prod, k_rdel):
-    E_EPB_t = np.minimum(E_EPB,E_prod) #element wise
+    """Calcula balance de vector para cada vector
+    con eso formar el vector_data y devolverlo a control para calcular
+    la eficiencia enrgética.
+    """
+
+    E_EPB_t = np.minimum(E_EPB, E_prod) #element wise
     exportable = E_prod - E_EPB_t
     E_nEPB_used_t = np.minimum(exportable, E_nEPB)
     exceso = np.sum(E_prod - E_EPB_t - E_nEPB_used_t)
