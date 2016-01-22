@@ -173,25 +173,3 @@ def calcular_balance(fichero, k_rdel):
         datos_balance[vector] = {'anual': bal_an, 'temporal': bal_t}
     return datos_balance
 
-def calc_balance(E_EPB, E_nEPB, E_prod, k_rdel):
-    """Calcula balance de vector para cada vector
-    con eso formar el vector_data y devolverlo a control para calcular
-    la eficiencia enrgética.
-    """
-
-    E_EPB_t = np.minimum(E_EPB, E_prod) #element wise
-    exportable = E_prod - E_EPB_t
-    E_nEPB_used_t = np.minimum(exportable, E_nEPB)
-    exceso = np.sum(E_prod - E_EPB_t - E_nEPB_used_t)
-    E_EPB_noCubierto = np.sum(E_EPB - E_EPB_t)
-    maxima_rdel = min(E_EPB_noCubierto, exceso)
-
-    E_nEPB_used = np.sum(E_nEPB_used_t)
-    E_rdel = k_rdel * maxima_rdel
-    E_del_grid = np.sum(E_EPB) - np.sum(E_EPB_t) - E_rdel
-    E_exp_grid = exceso - E_rdel
-
-    salida = {'nEPB_used': E_nEPB_used,
-              'rdel': E_rdel,
-              'del_grid': E_del_grid,
-              'exp_grid': E_exp_grid}
