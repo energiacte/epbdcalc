@@ -171,7 +171,7 @@ def calcula_eficiencia_energetica_vec(vector, sources, fp, k_exp):
 
     return pd.DataFrame({'EP': eficiencia_energetica, 'EPpasoA': balance_pasoA})
 
-def pondera_energia_primaria(balance, fp, k_exp, ver=False):
+def pondera_energia_primaria(balance, fp, k_exp):
     """Balance total de la energía ponderada usada por el edificio y ahorrada a la red.
 
     Es el balance de energía en la frontera de evaluación descontada la
@@ -184,14 +184,8 @@ def pondera_energia_primaria(balance, fp, k_exp, ver=False):
     Devuelve un diccionario con las claves 'ren' y 'nren' que corresponden
     a la parte renovable y no renovable.
     """
-    if ver:
-        print 'comienza la ponderación de la energía primaria'
     EP = pd.DataFrame({'EP':{'ren': 0.0, 'nren': 0.0}, 'EPpasoA':{'ren': 0.0, 'nren': 0.0}})
-    for vector, sources in balance.items():        
-        EPpacial = calcula_eficiencia_energetica_vec(vector, sources, fp, k_exp)
-        EP = EP + EPpacial
-        if ver:
-            ep.verInd(EPpacial, texto=vector)
-            ep.verInd(EP, texto='Total')
-    
+    for vector, sources in balance.items():
+        EPparcial = calcula_eficiencia_energetica_vec(vector, sources, fp, k_exp)
+        EP = EP + EPparcial
     return EP
