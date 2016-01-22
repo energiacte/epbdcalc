@@ -144,6 +144,7 @@ def calcular_balance(fichero, k_rdel):
             if nvalores != len(valores):
                 print '___error___', 'hay un vector con un número de datos erróneo'
                 print vector, tipo, src_dst, valores
+                #TODO: raise exception and handle in CLI
 
         if vector not in datos_balance.keys():
             datos_balance[vector] = {}
