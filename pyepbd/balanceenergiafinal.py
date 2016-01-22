@@ -27,7 +27,6 @@ import pandas as pd
 import collections
 
 def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
-    ndata = len(E_EPB)
 
     if isinstance(E_prod, dict):
         E_prod_tot = sum(E_prod.values()) #element wise
@@ -103,22 +102,22 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
             E_exp_grid_source[clave]= prop_exceso_red * valor
         E_exp_grid_t = sum(E_exp_grid_source.values())
     else:
-        E_exp_grid_t = np.zeros(ndata)
+        E_exp_grid_t = np.zeros(len(E_EPB))
 
     balance_temporal = {'grid': {'input': sum(E_del_grid_t)}}
     if isinstance(E_prod, dict):
-        for clave, valor in E_prod.items():
-            fuente = {'input': E_prod[clave],
-                      'to_nEPB': E_nEPB_source[clave],
-                      'to_grid': E_exp_grid_source[clave]}
-            balance_temporal[clave] = fuente
+        for source in E_prod:
+            srcenergy = {'input': E_prod[source],
+                         'to_nEPB': E_nEPB_source[source],
+                         'to_grid': E_exp_grid_source[source]}
+            balance_temporal[source] = srcenergy
 
     balance_anual = {}
-    for fuente, usos in balance_temporal.items():
-        balance_anual[fuente] = {}
-        for uso, valor in usos.items():
-            if abs(valor.sum()) > 0.1:
-                balance_anual[fuente][uso] = valor.sum()
+    for source, uses in balance_temporal.items():
+        balance_anual[source] = {}
+        for use, value in uses.items():
+            if abs(value.sum()) > 0.1:
+                balance_anual[source][use] = value.sum()
 
     return balance_anual, balance_temporal
 
