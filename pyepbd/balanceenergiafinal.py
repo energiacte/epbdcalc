@@ -108,23 +108,6 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
     else:
         E_exp_grid_t = np.zeros(ndata)
 
-    def verificar_balance():
-        valor1 = E_EPB - (E_EPB_t + E_rdel_t + E_del_grid_t)
-        valor2 = E_prod_tot - (E_EPB_t + E_nEPB_used_t + E_rdel_t + E_exp_grid_t)
-        if abs(valor1.sum()) > 1:
-            print '___###____ error de verificación 1 ___###____ '
-            print v.redondeo(valor1)
-        if abs(valor2.sum()) > 2:
-            print '___###____ error de verificación 2 ___###____ '
-            print v.redondeo(valor2)
-            print 'E_prod_tot', E_prod_tot
-            print 'E_EPB_t', E_EPB_t
-            print 'E_nEPB_used_t', E_nEPB_used_t
-            print 'E_rdel_t', E_rdel_t
-            print 'E_exp_grid_t', E_exp_grid_t
-
-    verificar_balance()
-
     balance_temporal = {'grid': {'input': sum(E_del_grid_t)}}
     if isinstance(E_prod,dict):
         for clave, valor in E_prod.items():
