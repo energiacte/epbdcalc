@@ -1,14 +1,21 @@
-*.pyc
-*.swp
+# Emacs and Vim temp files
 *~
+[#]*[#]
+.\#*
+*.swp
+# Python files
+*.pyc
+__pycache__
+# Misc files and dirs
 .DS_Store
 .cache
+# Build artifacts, installers or executable files
 build
-__pycache__
 *.exe
 *.pdf
 *.zip
+setup.nsi
+# Documentation auxiliary, generated or temp files
 docs/imagenes/*.eps
 docs/imagenes/*.svg
-setup.nsi
 README.html
