@@ -147,7 +147,7 @@ def calcula_ahorro_pasoB(sources, fp, k_exp):
     ahorro_pasoB = k_exp * (to_nEPB + to_grid)
     return ahorro_pasoB
 
-def calcula_eficiencia_energetica_vec(vector, sources, fp, k_exp, mostrar = False):
+def calcula_eficiencia_energetica_vec(vector, sources, fp, k_exp):
     """Balance total de la energía ponderada de un vector energético
 
     Es el balance de energía para un vector energético en la frontera de
@@ -160,7 +160,7 @@ def calcula_eficiencia_energetica_vec(vector, sources, fp, k_exp, mostrar = Fals
     a la parte renovable y no renovable de la eficiencia energética
     medida como energía primaria.
     """
-    fp_vec = fp[fp.vector==vector]    
+    fp_vec = fp[fp.vector==vector]
     sources = sources['anual']
 
     energia_entrante_pasoA = calcula_energia_entrante_pasoA(sources, fp_vec)
@@ -169,16 +169,6 @@ def calcula_eficiencia_energetica_vec(vector, sources, fp, k_exp, mostrar = Fals
     ahorro_pasoB = calcula_ahorro_pasoB(sources, fp_vec, k_exp)
     eficiencia_energetica = balance_pasoA - ahorro_pasoB
 
-    if mostrar:
-        import vista
-        vista.ver(energia_entrante_pasoA, 'paso A, energía entrante ponderada')
-        vista.ver(energia_saliente_pasoA, 'paso A, energía saliente podenrada')
-        vista.ver(balance_pasoA, 'paso A, balance de energía ponderada')
-        vista.verInd(balance_pasoA, 'indicadores paso A')
-        vista.ver(ahorro_pasoB, 'paso B, energía ahorrada a la red')
-        vista.ver(eficiencia_energetica, 'eficiencia energética del edifcio')
-        vista.verInd(eficiencia_energetica, 'indicadores totales')
-    
     return pd.DataFrame({'EP': eficiencia_energetica, 'EPpasoA': balance_pasoA})
 
 def pondera_energia_primaria(balance, fp, k_exp, ver=False):
@@ -198,7 +188,7 @@ def pondera_energia_primaria(balance, fp, k_exp, ver=False):
         print 'comienza la ponderación de la energía primaria'
     EP = pd.DataFrame({'EP':{'ren': 0.0, 'nren': 0.0}, 'EPpasoA':{'ren': 0.0, 'nren': 0.0}})
     for vector, sources in balance.items():        
-        EPpacial = calcula_eficiencia_energetica_vec(vector, sources, fp, k_exp, mostrar = False)
+        EPpacial = calcula_eficiencia_energetica_vec(vector, sources, fp, k_exp)
         EP = EP + EPpacial
         if ver:
             ep.verInd(EPpacial, texto=vector)
