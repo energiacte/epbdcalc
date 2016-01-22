@@ -24,24 +24,18 @@
 
 import numpy as np
 
-def verInd(EP, ver=True, texto=None):
+def verInd(EP, texto=None):
 
     total = EP.EP['ren'] + EP.EP['nren']
-    salida = []
-    if texto:
-        salida.append(texto + '\n')
+    salida = [texto + '\n'] if texto else []
     salida.append('EP           | EPpasoA\n')
-    salida.append('ren ='+ str(round(EP.EP['ren'],1)).rjust(8)      +\
-                '| ren ='+ str(round(EP.EPpasoA['ren'],1)).rjust(8) + '\n')
-    salida.append('nren='+ str(round(EP.EP['nren'],1)).rjust(8)     +\
-                '| nren='+ str(round(EP.EPpasoA['nren'],1)).rjust(8) +'\n')
-    salida.append('tot ='+ str(round(total,1)).rjust(8)             +\
-                '|\n')
-    salida.append('RER ='+ str(round((EP.EP['ren']/total),2)).rjust(8) +\
-                '|\n')
-    #salida.append('----------------------------------------')
-    if ver:
-        print ''.join(salida)
+    salida.append('ren =' + str(round(EP.EP['ren'], 1)).rjust(8) +
+                  '| ren =' + str(round(EP.EPpasoA['ren'], 1)).rjust(8) + '\n')
+    salida.append('nren=' + str(round(EP.EP['nren'], 1)).rjust(8) +
+                  '| nren=' + str(round(EP.EPpasoA['nren'], 1)).rjust(8) +'\n')
+    salida.append('tot =' + str(round(total, 1)).rjust(8) + '|\n')
+    salida.append('RER =' + str(round((EP.EP['ren'] / total), 2)).rjust(8) + '|\n')
+    print ''.join(salida)
 
     return salida
 
