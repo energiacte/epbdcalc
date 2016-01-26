@@ -27,11 +27,13 @@ import pandas as pd
 
 def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
 
+    # XXX: why can this be anything but a dict here? E_prod should be a dict when calling
     if isinstance(E_prod, dict):
         E_prod_tot = sum(E_prod.values()) #element wise
     else:
         E_prod_tot = E_prod
 
+    # XXX: why can this be anything but a dict here? E_nEPB should be a dict when calling
     if isinstance(E_nEPB, dict):
         E_nEPB = sum(E_nEPB.values())
 
@@ -40,6 +42,7 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
     #____exportable___
     exportable = E_prod_tot - E_EPB_t
     factor_exportable_producido = [1-E_EPB_t[n]/e if e != 0 else 0 for n, e in enumerate(E_prod_tot)]
+    # XXX: why can this be anything but a dict here? E_prod should be a dict when calling
     if isinstance(E_prod, dict):
         E_exportable_source = {} #es directamente lo producido en cada source por el factor exportable
         for source, values in E_prod.items():
@@ -49,6 +52,7 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
     E_nEPB_used_t = np.minimum(exportable, E_nEPB) # linea 26
     factor_nEPB_exportable = [E_nEPB_used_t[n]/e if e != 0 else 0 for n, e in enumerate(exportable)]
     # podemos asociarlo a cada uno de los productores
+    # XXX: why can this be anything but a dict here? E_prod should be adict when calling
     if isinstance(E_prod, dict):
         E_nEPB_source = {}
         for source, values in E_exportable_source.items():
@@ -61,7 +65,7 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
     # el exceso se minora con k_rdel para ser resuministrado
     # y luego con k_exp para ser exportado
     factor_exceso_exportable = [exceso_t[n]/e if e != 0 else 0 for n, e in enumerate(exportable)] #linea 33
-    # XXX: can this be anything besides a dict?
+    # XXX: why can this be anything but a dict here? E_prod should be a dict when calling
     if isinstance(E_prod, dict):
         E_exceso_source = {}
         for source in E_exportable_source:
@@ -80,6 +84,7 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
     # cunado se sirve esa energía recogida. El total es el mismo, pero los valores
     # temporales varían.
     factor_resuministrada_producida = E_rdel_total / exceso
+    # XXX: why can this be anything but a dict here? E_prod should be a dict when calling
     if isinstance(E_prod, dict):
         E_rdel_source = {}
         for source, values in E_exceso_source.items():
@@ -96,32 +101,35 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
     E_exp_grid = exceso - E_rdel_total
     # hay que repercutirlo por combustible
     prop_exceso_red = E_exp_grid / exceso if exceso != 0 else 0
+    # XXX: why can this be anything but a dict here? # E_prod should be a dict when calling
     if isinstance(E_prod, dict):
         E_exp_grid_source = {}
-        for clave, valor in E_exceso_source.items(): #exceso por fuente
-            E_exp_grid_source[clave]= prop_exceso_red * valor
+        for source, valor in E_exceso_source.items(): #exceso por fuente
+            E_exp_grid_source[source]= prop_exceso_red * valor
         E_exp_grid_t = sum(E_exp_grid_source.values())
     else:
         E_exp_grid_t = np.zeros(len(E_EPB))
 
-    balance_temporal = {'grid': {'input': sum(E_del_grid_t)}}
+    temp_balance = {'grid': {'input': sum(E_del_grid_t)}}
+        
+    # XXX: why can this be anything but a dict here? E_prod should be a dict when calling
     if isinstance(E_prod, dict):
         for source in E_prod:
             srcenergy = {'input': E_prod[source],
                          'to_nEPB': E_nEPB_source[source],
                          'to_grid': E_exp_grid_source[source]}
-            balance_temporal[source] = srcenergy
+            temp_balance[source] = srcenergy
 
-    balance_anual = {}
-    for source in balance_temporal:
-        balance_anual[source] = {}
-        temp_balance_for_source = balance_temporal[source]
+    annual_balance = {}
+    for source in temp_balance:
+        annual_balance[source] = {}
+        temp_balance_for_source = temp_balance[source]
         for use in temp_balance_for_source:
             sumforuse = temp_balance_for_source[use].sum()
             if abs(sumforuse) > 0.1:
-                balance_anual[source][use] = sumforuse
+                annual_balance[source][use] = sumforuse
 
-    return balance_anual, balance_temporal
+    return annual_balance, temp_balance
 
 
 def readdata(filename):
@@ -132,32 +140,30 @@ def readdata(filename):
     with open(filename, 'r') as datafile:
         lines = datafile.readlines()
 
-    data = {}
-    nvalues = False
-    for line in lines[1:]:
-        fields = line.split(',')
-        vector, atype, srcdst = fields[0:3]
-        values = np.array([float(e.strip('\n')) for e in fields[3:]])
-        
-        if not nvalues:
-            nvalues = len(values)
-        else:
-            if nvalues != len(values):
-                print '___error___', 'hay un vector con un número de datos erróneo'
-                print vector, atype, srcdst, values
-                #TODO: raise exception and handle in CLI
+        # find number of steps used from first value list
+        numsteps = len(lines[1].split(',')[3:])
 
-        if vector not in data:
-            data[vector] = {}
+        data = {}
+        for ii, line in enumerate(lines[1:]):
+            fields = line.split(',')
+            vector, atype, srcdst = fields[0:3]
+            values = np.array([float(e.strip('\n')) for e in fields[3:]])
 
-        if atype not in data[vector]:
-            data[vector][atype] = {}
+            if len(values) != numsteps:
+                #TODO: handle Exception in CLI
+                raise "All inputs must use the same number of steps. Problem found in line %i" % (ii + 2)
 
-        atypedata = data[vector][atype]
-        if srcdst not in atypedata:
-            atypedata[srcdst] = np.zeros(nvalues)
-        atypedata[srcdst] = atypedata[srcdst] + values
-    return nvalues, data
+            if vector not in data:
+                data[vector] = {}
+
+            if atype not in data[vector]:
+                data[vector][atype] = {}
+
+            atypedata = data[vector][atype]
+            if srcdst not in atypedata:
+                atypedata[srcdst] = np.zeros(numsteps)
+            atypedata[srcdst] = atypedata[srcdst] + values
+    return numsteps, data
 
 def calcular_balance(filename, k_rdel):
     nsteps, data = readdata(filename)
