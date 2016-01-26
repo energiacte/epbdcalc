@@ -61,10 +61,11 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
     # el exceso se minora con k_rdel para ser resuministrado
     # y luego con k_exp para ser exportado
     factor_exceso_exportable = [exceso_t[n]/e if e != 0 else 0 for n, e in enumerate(exportable)] #linea 33
+    # XXX: can this be anything besides a dict?
     if isinstance(E_prod, dict):
         E_exceso_source = {}
-        for source, values in E_exportable_source.items():
-            E_exceso_source[source] = values * factor_exceso_exportable
+        for source in E_exportable_source:
+            E_exceso_source[source] = E_exportable_source[source] * factor_exceso_exportable
 
     #_______ EPB no cubierto _____
     E_EPB_unfilled_t = E_EPB - E_EPB_t
@@ -112,11 +113,13 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
             balance_temporal[source] = srcenergy
 
     balance_anual = {}
-    for source, uses in balance_temporal.items():
+    for source in balance_temporal:
         balance_anual[source] = {}
-        for use, value in uses.items():
-            if abs(value.sum()) > 0.1:
-                balance_anual[source][use] = value.sum()
+        temp_balance_for_source = balance_temporal[source]
+        for use in temp_balance_for_source:
+            sumforuse = temp_balance_for_source[use].sum()
+            if abs(sumforuse) > 0.1:
+                balance_anual[source][use] = sumforuse
 
     return balance_anual, balance_temporal
 
