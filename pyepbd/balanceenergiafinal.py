@@ -136,10 +136,11 @@ def readdata(filename):
 
     vector, atype, srcdst, (values ...)
     """
+
     with open(filename, 'r') as datafile:
         lines = datafile.readlines()
 
-        # find number of steps used from first value list
+        # find number of steps used
         numsteps = len(lines[1].split(',')[3:])
 
         data = {}
