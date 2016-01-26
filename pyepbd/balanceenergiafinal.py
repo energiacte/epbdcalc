@@ -23,7 +23,6 @@
 # SOFTWARE.
 
 import numpy as np
-import pandas as pd
 
 def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
 
@@ -170,8 +169,8 @@ def calcular_balance(filename, k_rdel):
     balance = {}
     for vector in data:
         atypes = data[vector]
-        consumo_EPB = pd.Series(atypes['CONSUMO']['EPB']) if 'CONSUMO' in atypes and 'EPB' in atypes['CONSUMO'] else np.zeros(nsteps)
-        consumo_nEPB = pd.Series(atypes['CONSUMO']['NEPB']) if 'CONSUMO' in atypes and 'NEPB' in atypes['CONSUMO'] else np.zeros(nsteps)
+        consumo_EPB = np.array(atypes['CONSUMO']['EPB']) if 'CONSUMO' in atypes and 'EPB' in atypes['CONSUMO'] else np.zeros(nsteps)
+        consumo_nEPB = np.array(atypes['CONSUMO']['NEPB']) if 'CONSUMO' in atypes and 'NEPB' in atypes['CONSUMO'] else np.zeros(nsteps)
         produccion = atypes['PRODUCCION'] if 'PRODUCCION' in atypes else np.zeros(nsteps)
         # produccion es un diccionario con las fuentes
         bal_an, bal_t = calcular_balance_vector(consumo_EPB, consumo_nEPB, produccion, k_rdel)
