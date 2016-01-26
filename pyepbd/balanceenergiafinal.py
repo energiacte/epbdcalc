@@ -26,68 +26,41 @@ import numpy as np
 
 def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
 
-    # XXX: why can this be anything but a dict here? E_prod should be a dict when calling
-    if isinstance(E_prod, dict):
-        E_prod_tot = sum(E_prod.values()) #element wise
-    else:
-        E_prod_tot = E_prod
-
-    # XXX: why can this be anything but a dict here? E_nEPB should be a dict when calling
-    if isinstance(E_nEPB, dict):
-        E_nEPB = sum(E_nEPB.values())
-
-    E_EPB_t = np.minimum(E_EPB, E_prod_tot) #element wise
+    E_prod_tot = sum(E_prod.values()) # total for each step from all origins
+    E_EPB_t = np.minimum(E_EPB, E_prod_tot) # minimum for each step
 
     #____exportable___
     exportable = E_prod_tot - E_EPB_t
-    factor_exportable_producido = [1-E_EPB_t[n]/e if e != 0 else 0 for n, e in enumerate(E_prod_tot)]
-    # XXX: why can this be anything but a dict here? E_prod should be a dict when calling
-    if isinstance(E_prod, dict):
-        E_exportable_source = {} #es directamente lo producido en cada source por el factor exportable
-        for source, values in E_prod.items():
-            E_exportable_source[source] = values * factor_exportable_producido
+    factor_exportable_producido = [1 - E_EPB_t[n] / e if e != 0 else 0 for n, e in enumerate(E_prod_tot)]
+    E_exportable_bysource = {source: E_prod[source] * factor_exportable_producido for source in E_prod}
 
     #___nEPB_____
-    E_nEPB_used_t = np.minimum(exportable, E_nEPB) # linea 26
-    factor_nEPB_exportable = [E_nEPB_used_t[n]/e if e != 0 else 0 for n, e in enumerate(exportable)]
-    # podemos asociarlo a cada uno de los productores
-    # XXX: why can this be anything but a dict here? E_prod should be adict when calling
-    if isinstance(E_prod, dict):
-        E_nEPB_source = {}
-        for source, values in E_exportable_source.items():
-            E_nEPB_source[source] = values * factor_nEPB_exportable
+    E_nEPB_used_t = np.minimum(exportable, E_nEPB)
+    factor_nEPB_exportable = [E_nEPB_used_t[n] / e if e != 0 else 0 for n, e in enumerate(exportable)]
+    E_nEPB_bysource = {source: E_exportable_bysource[source] * factor_nEPB_exportable for source in E_exportable_bysource}
 
     # ____exceso ___
-    exceso_t = E_prod_tot - E_EPB_t - E_nEPB_used_t #linea 32
+    # parte de la exportable que no va a nEPB
+    # esa energía se minora con k_rdel para su resuministro y con k_exp para su exportación
+    exceso_t = E_prod_tot - E_EPB_t - E_nEPB_used_t
     exceso = np.sum(exceso_t)
-    # porcentaje de la exportable que es exceso (no va a nEPB)
-    # el exceso se minora con k_rdel para ser resuministrado
-    # y luego con k_exp para ser exportado
-    factor_exceso_exportable = [exceso_t[n]/e if e != 0 else 0 for n, e in enumerate(exportable)] #linea 33
-    # XXX: why can this be anything but a dict here? E_prod should be a dict when calling
-    if isinstance(E_prod, dict):
-        E_exceso_source = {}
-        for source in E_exportable_source:
-            E_exceso_source[source] = E_exportable_source[source] * factor_exceso_exportable
+    factor_exceso_exportable = [exceso_t[n] / e if e != 0 else 0 for n, e in enumerate(exportable)] #linea 33
+    E_exceso_bysource = {source: E_exportable_bysource[source] * factor_exceso_exportable for source in E_exportable_bysource}
 
     #_______ EPB no cubierto _____
     E_EPB_unfilled_t = E_EPB - E_EPB_t
     E_EPB_unfilled = np.sum(E_EPB_unfilled_t)
 
     #_______ resuministrada _____
-    #maxima_rdel_paso = k_rdel * E_EPB_unfilled #en caso de que haya producción
-    maxima_rdel = min(E_EPB_unfilled, exceso) #línea 40
-    E_rdel_total = k_rdel * maxima_rdel # resuministrable permitida
     # la resuministrada se puede ver desde el punto de vista de la producción,
     # cuando se recoge esa energía, o desde el punto de vista del consumo,
     # cunado se sirve esa energía recogida. El total es el mismo, pero los valores
     # temporales varían.
+    maxima_rdel = min(E_EPB_unfilled, exceso)
+    E_rdel_total = k_rdel * maxima_rdel # resuministrable permitida
     factor_resuministrada_producida = E_rdel_total / exceso
-    # XXX: why can this be anything but a dict here? E_prod should be a dict when calling
-    if isinstance(E_prod, dict):
-        E_rdel_source = {}
-        for source, values in E_exceso_source.items():
-            E_rdel_source[source] = values * factor_resuministrada_producida
+    # Valor no usado
+    # E_rdel_bysource = {source: E_exceso_bysource[source] * factor_resuministrada_producida for source in E_exceso_bysource}
 
     E_rdel_t = factor_resuministrada_producida * exceso_t
     factor_unfilled_rdel = E_rdel_total / E_EPB_unfilled
@@ -95,30 +68,20 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
     E_rdel_servida_t = factor_unfilled_rdel * E_EPB_unfilled_t
 
     # ___ energía suministrada por la red ____
-    E_del_grid = sum(E_EPB) - sum(E_EPB_t) - sum(E_rdel_t)
+    # Valor no usado
+    # E_del_grid = sum(E_EPB) - sum(E_EPB_t) - sum(E_rdel_t)
     E_del_grid_t = E_EPB - E_EPB_t - E_rdel_servida_t
     E_exp_grid = exceso - E_rdel_total
-    # hay que repercutirlo por combustible
     prop_exceso_red = E_exp_grid / exceso if exceso != 0 else 0
-    # XXX: why can this be anything but a dict here? # E_prod should be a dict when calling
-    if isinstance(E_prod, dict):
-        E_exp_grid_source = {}
-        for source, valor in E_exceso_source.items(): #exceso por fuente
-            E_exp_grid_source[source]= prop_exceso_red * valor
-        E_exp_grid_t = sum(E_exp_grid_source.values())
-    else:
-        E_exp_grid_t = np.zeros(len(E_EPB))
+    E_exp_grid_bysource = {source: E_exceso_bysource[source] * prop_exceso_red for source in E_exceso_bysource}
+    # Valor no usado
+    # E_exp_grid_t = sum(E_exp_grid_bysource.values())
 
     temp_balance = {'grid': {'input': sum(E_del_grid_t)}}
-        
-    # XXX: why can this be anything but a dict here? E_prod should be a dict when calling
-    if isinstance(E_prod, dict):
-        for source in E_prod:
-            srcenergy = {'input': E_prod[source],
-                         'to_nEPB': E_nEPB_source[source],
-                         'to_grid': E_exp_grid_source[source]}
-            temp_balance[source] = srcenergy
 
+    temp_balance.update({source: {'input': E_prod[source],
+                             'to_nEPB': E_nEPB_bysource[source],
+                             'to_grid': E_exp_grid_bysource[source]} for source in E_prod})
     annual_balance = {}
     for source in temp_balance:
         annual_balance[source] = {}
