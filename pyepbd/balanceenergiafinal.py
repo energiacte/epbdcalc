@@ -134,47 +134,58 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
 def readdata(filename):
     """Read input data from filename
 
-    vector, etype, originoruse, (values ...)
-    """
+    Returns values indexed by vector, vtype and originoruse
 
+    data[vector][vtype][originoruse] -> array(numsteps)
+
+    * vector is and energy vector (carrier)
+    * vtype is either 'PRODUCCION' or 'CONSUMO' por produced or used energy
+    * originoruse defines the energy origin for produced energy (INSITU or COGENERACION)
+      or its end use (EPB or NEPB) for used energy.
+    * values
+    """
     with open(filename, 'r') as datafile:
         lines = datafile.readlines()
 
-        # find number of steps used
+        # Find number of calculation steps used
         numsteps = len(lines[1].split(',')[3:])
 
         data = {}
         for ii, line in enumerate(lines[1:]):
-            fields = line.split(',')
-            vector, etype, originoruse = fields[0:3]
-            values = np.array([float(e.strip('\n')) for e in fields[3:]])
+            fields = line.strip().split(',')
+            vector, vtype, originoruse = fields[0:3]
+            values = np.array(fields[3:]).astype(np.float)
 
+            # Checks
+            #TODO: handle Exceptions in CLI
             if len(values) != numsteps:
-                #TODO: handle Exception in CLI
-                raise "All inputs must use the same number of steps. Problem found in line %i" % (ii + 2)
+                raise ValueError, ("All input must use the same number of steps. "
+                                   "Problem found in line %i of %s\n\t%s" % (ii + 2, filename, line))
+            if vtype not in ('PRODUCCION', 'CONSUMO'):
+                raise ValueError, "Vector type is not 'CONSUMO' or 'PRODUCCION' in line %i\n\t%s" % (ii+2, line)
+            if originoruse not in ('EPB', 'NEPB', 'INSITU', 'COGENERACION'):
+                raise ValueError, ("Origin or end use is not 'EPB', 'NEPB', 'INSITU' or 'COGENERACION'"
+                                   " in line %i\n\t%s" % (ii+2, line))
 
             if vector not in data:
-                data[vector] = {}
+                data[vector] = {'CONSUMO': {'EPB': np.zeros(numsteps),
+                                            'NEPB': np.zeros(numsteps)},
+                                'PRODUCCION': {'INSITU': np.zeros(numsteps),
+                                               'COGENERACION': np.zeros(numsteps)}}
 
-            if etype not in data[vector]:
-                data[vector][etype] = {}
-
-            etypedata = data[vector][etype]
-            if originoruse not in etypedata:
-                etypedata[originoruse] = np.zeros(numsteps)
-            etypedata[originoruse] = etypedata[originoruse] + values
-    return numsteps, data
+            data[vector][vtype][originoruse] = data[vector][vtype][originoruse] + values
+    return data
 
 def calcular_balance(filename, k_rdel):
-    nsteps, data = readdata(filename)
+    data = readdata(filename)
     balance = {}
     for vector in data:
-        etypes = data[vector]
-        consumo_EPB = np.array(etypes['CONSUMO']['EPB']) if 'CONSUMO' in etypes and 'EPB' in etypes['CONSUMO'] else np.zeros(nsteps)
-        consumo_nEPB = np.array(etypes['CONSUMO']['NEPB']) if 'CONSUMO' in etypes and 'NEPB' in etypes['CONSUMO'] else np.zeros(nsteps)
-        produccion = etypes['PRODUCCION'] if 'PRODUCCION' in etypes else np.zeros(nsteps)
+        vdata = data[vector]
         # produccion es un diccionario con las fuentes
-        bal_an, bal_t = calcular_balance_vector(consumo_EPB, consumo_nEPB, produccion, k_rdel)
+        bal_an, bal_t = calcular_balance_vector(vdata['CONSUMO']['EPB'],
+                                                vdata['CONSUMO']['NEPB'],
+                                                vdata['PRODUCCION'],
+                                                k_rdel)
         balance[vector] = {'anual': bal_an, 'temporal': bal_t}
     return balance
 
