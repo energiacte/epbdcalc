@@ -134,7 +134,7 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
 def readdata(filename):
     """Read input data from filename
 
-    vector, atype, srcdst, (values ...)
+    vector, etype, originoruse, (values ...)
     """
 
     with open(filename, 'r') as datafile:
@@ -146,7 +146,7 @@ def readdata(filename):
         data = {}
         for ii, line in enumerate(lines[1:]):
             fields = line.split(',')
-            vector, atype, srcdst = fields[0:3]
+            vector, etype, originoruse = fields[0:3]
             values = np.array([float(e.strip('\n')) for e in fields[3:]])
 
             if len(values) != numsteps:
@@ -156,23 +156,23 @@ def readdata(filename):
             if vector not in data:
                 data[vector] = {}
 
-            if atype not in data[vector]:
-                data[vector][atype] = {}
+            if etype not in data[vector]:
+                data[vector][etype] = {}
 
-            atypedata = data[vector][atype]
-            if srcdst not in atypedata:
-                atypedata[srcdst] = np.zeros(numsteps)
-            atypedata[srcdst] = atypedata[srcdst] + values
+            etypedata = data[vector][etype]
+            if originoruse not in etypedata:
+                etypedata[originoruse] = np.zeros(numsteps)
+            etypedata[originoruse] = etypedata[originoruse] + values
     return numsteps, data
 
 def calcular_balance(filename, k_rdel):
     nsteps, data = readdata(filename)
     balance = {}
     for vector in data:
-        atypes = data[vector]
-        consumo_EPB = np.array(atypes['CONSUMO']['EPB']) if 'CONSUMO' in atypes and 'EPB' in atypes['CONSUMO'] else np.zeros(nsteps)
-        consumo_nEPB = np.array(atypes['CONSUMO']['NEPB']) if 'CONSUMO' in atypes and 'NEPB' in atypes['CONSUMO'] else np.zeros(nsteps)
-        produccion = atypes['PRODUCCION'] if 'PRODUCCION' in atypes else np.zeros(nsteps)
+        etypes = data[vector]
+        consumo_EPB = np.array(etypes['CONSUMO']['EPB']) if 'CONSUMO' in etypes and 'EPB' in etypes['CONSUMO'] else np.zeros(nsteps)
+        consumo_nEPB = np.array(etypes['CONSUMO']['NEPB']) if 'CONSUMO' in etypes and 'NEPB' in etypes['CONSUMO'] else np.zeros(nsteps)
+        produccion = etypes['PRODUCCION'] if 'PRODUCCION' in etypes else np.zeros(nsteps)
         # produccion es un diccionario con las fuentes
         bal_an, bal_t = calcular_balance_vector(consumo_EPB, consumo_nEPB, produccion, k_rdel)
         balance[vector] = {'anual': bal_an, 'temporal': bal_t}
