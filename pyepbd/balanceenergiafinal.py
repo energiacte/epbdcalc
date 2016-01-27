@@ -29,8 +29,8 @@ def get_temp_balance_forvector(vdata, k_rdel):
     E_EPB = vdata['CONSUMO']['EPB']
     E_nEPB = vdata['CONSUMO']['NEPB']
     E_prod = vdata['PRODUCCION']
-    
-    E_prod_tot = np.sum(E_prod.values(), axis=0) # total for each step from all origins
+
+    E_prod_tot = E_prod['INSITU'] + E_prod['COGENERACION']
     E_EPB_t = np.minimum(E_EPB, E_prod_tot) # minimum for each step
 
     #____exportable___
