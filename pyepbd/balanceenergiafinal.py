@@ -24,8 +24,12 @@
 
 import numpy as np
 
-def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
+def calcular_balance_vector(vdata, k_rdel):
 
+    E_EPB = vdata['CONSUMO']['EPB']
+    E_nEPB = vdata['CONSUMO']['NEPB']
+    E_prod = vdata['PRODUCCION']
+    
     E_prod_tot = np.sum(E_prod.values(), axis=0) # total for each step from all origins
     E_EPB_t = np.minimum(E_EPB, E_prod_tot) # minimum for each step
 
@@ -148,10 +152,7 @@ def calcular_balance(filename, k_rdel):
     for vector in data:
         vdata = data[vector]
         # produccion es un diccionario con las fuentes
-        bal_t = calcular_balance_vector(vdata['CONSUMO']['EPB'],
-                                        vdata['CONSUMO']['NEPB'],
-                                        vdata['PRODUCCION'],
-                                        k_rdel)
+        bal_t = calcular_balance_vector(vdata, k_rdel)
         bal_an = get_annual_balance_forvector(bal_t)
         balance[vector] = {'anual': bal_an, 'temporal': bal_t}
     return balance
