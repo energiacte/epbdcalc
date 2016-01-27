@@ -80,8 +80,12 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
     temp_balance = {'grid': {'input': sum(E_del_grid_t)}}
 
     temp_balance.update({source: {'input': E_prod[source],
-                             'to_nEPB': E_nEPB_bysource[source],
-                             'to_grid': E_exp_grid_bysource[source]} for source in E_prod})
+                                  'to_nEPB': E_nEPB_bysource[source],
+                                  'to_grid': E_exp_grid_bysource[source]} for source in E_prod})
+    return temp_balance
+
+def get_annual_balance_forvector(temp_balance):
+    """Compute annual balance for vector from stepwise (temp) balance"""
     annual_balance = {}
     for source in temp_balance:
         annual_balance[source] = {}
@@ -90,21 +94,20 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
             sumforuse = temp_balance_for_source[use].sum()
             if abs(sumforuse) > 0.1:
                 annual_balance[source][use] = sumforuse
-
-    return annual_balance, temp_balance
-
+    return annual_balance
 
 def readdata(filename):
-    """Read input data from filename
+    """Read input data from filename and return data structure
 
-    Returns values indexed by vector, vtype and originoruse
+    Returns dict of array of values indexed by vector, vtype and originoruse
 
-    data[vector][vtype][originoruse] -> array(numsteps)
+    data[vector][vtype][originoruse] -> values as np.array with length=numsteps
 
     * vector is and energy vector (carrier)
     * vtype is either 'PRODUCCION' or 'CONSUMO' por produced or used energy
-    * originoruse defines the energy origin for produced energy (INSITU or COGENERACION)
-      or its end use (EPB or NEPB) for used energy.
+    * originoruse defines:
+      - the energy origin for produced energy (INSITU or COGENERACION)
+      - the energy end use (EPB or NEPB) for used energy
     * values
     """
     with open(filename, 'r') as datafile:
@@ -145,10 +148,11 @@ def calcular_balance(filename, k_rdel):
     for vector in data:
         vdata = data[vector]
         # produccion es un diccionario con las fuentes
-        bal_an, bal_t = calcular_balance_vector(vdata['CONSUMO']['EPB'],
-                                                vdata['CONSUMO']['NEPB'],
-                                                vdata['PRODUCCION'],
-                                                k_rdel)
+        bal_t = calcular_balance_vector(vdata['CONSUMO']['EPB'],
+                                        vdata['CONSUMO']['NEPB'],
+                                        vdata['PRODUCCION'],
+                                        k_rdel)
+        bal_an = get_annual_balance_forvector(bal_t)
         balance[vector] = {'anual': bal_an, 'temporal': bal_t}
     return balance
 
