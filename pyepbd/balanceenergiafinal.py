@@ -24,7 +24,7 @@
 
 import numpy as np
 
-def calcular_balance_vector(vdata, k_rdel):
+def get_temp_balance_forvector(vdata, k_rdel):
 
     E_EPB = vdata['CONSUMO']['EPB']
     E_nEPB = vdata['CONSUMO']['NEPB']
@@ -152,7 +152,7 @@ def calcular_balance(filename, k_rdel):
     for vector in data:
         vdata = data[vector]
         # produccion es un diccionario con las fuentes
-        bal_t = calcular_balance_vector(vdata, k_rdel)
+        bal_t = get_temp_balance_forvector(vdata, k_rdel)
         bal_an = get_annual_balance_forvector(bal_t)
         balance[vector] = {'anual': bal_an, 'temporal': bal_t}
     return balance
