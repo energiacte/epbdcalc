@@ -26,12 +26,12 @@ import numpy as np
 
 def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
 
-    E_prod_tot = sum(E_prod.values()) # total for each step from all origins
+    E_prod_tot = np.sum(E_prod.values(), axis=0) # total for each step from all origins
     E_EPB_t = np.minimum(E_EPB, E_prod_tot) # minimum for each step
 
     #____exportable___
     exportable = E_prod_tot - E_EPB_t
-    factor_exportable_producido = [1 - E_EPB_t[n] / e if e != 0 else 0 for n, e in enumerate(E_prod_tot)]
+    factor_exportable_producido = np.array([1 - E_EPB_t[n] / e if e != 0 else 0 for n, e in enumerate(E_prod_tot)])
     E_exportable_bysource = {source: E_prod[source] * factor_exportable_producido for source in E_prod}
 
     #___nEPB_____
@@ -44,7 +44,7 @@ def calcular_balance_vector(E_EPB, E_nEPB, E_prod, k_rdel):
     # esa energía se minora con k_rdel para su resuministro y con k_exp para su exportación
     exceso_t = E_prod_tot - E_EPB_t - E_nEPB_used_t
     exceso = np.sum(exceso_t)
-    factor_exceso_exportable = [exceso_t[n] / e if e != 0 else 0 for n, e in enumerate(exportable)] #linea 33
+    factor_exceso_exportable = np.array([exceso_t[n] / e if e != 0 else 0 for n, e in enumerate(exportable)])
     E_exceso_bysource = {source: E_exportable_bysource[source] * factor_exceso_exportable for source in E_exportable_bysource}
 
     #_______ EPB no cubierto _____
