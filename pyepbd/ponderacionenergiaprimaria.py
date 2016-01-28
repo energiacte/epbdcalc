@@ -58,8 +58,6 @@ El cálculo está organizado por:
 """
 
 import pandas as pd
-import os
-import pyepbd as ep
 
 def calcula_energia_entrante_pasoA(sources, fp):
     """Energía total ponderada que entra en el paso A en la frontera de evaluación (AB)
@@ -72,9 +70,9 @@ def calcula_energia_entrante_pasoA(sources, fp):
 
     energia_entrante_pasoA = pd.Series({'ren': 0.0, 'nren': 0.0})
     fpA = fp[(fp.uso=='input') & (fp.factor=='A')]
-    for source, value in sources.items():
-        if 'input' in value.keys():
-            #~ print 'source', source
+    for source in sources:
+        value = sources[source]
+        if 'input' in value:
             factor_paso_A = fpA[(fpA.fuente==source)][['ren', 'nren']].iloc[0]
             energia_entrante_pasoA = energia_entrante_pasoA + factor_paso_A * value['input']
     return energia_entrante_pasoA
@@ -92,12 +90,13 @@ def calcula_energia_saliente_pasoA(sources, fpA):
     to_grid = pd.Series({'ren': 0.0, 'nren': 0.0})
     fpA_to_nEPB = fpA[(fpA.uso=='to_nEPB')]
     fpA_to_grid = fpA[(fpA.uso=='to_nEPB')]
-    for source, value in sources.items():
-        if 'to_nEPB' in value.keys():
+    for source in sources:
+        value = sources[source]
+        if 'to_nEPB' in value:
             fp_tmp = fpA_to_nEPB[fpA_to_nEPB.fuente==source][['ren', 'nren']].iloc[0]
             to_nEPB = to_nEPB + fp_tmp * value['to_nEPB']
 
-        if 'to_grid' in value.keys():
+        if 'to_grid' in value:
             fp_tmp = fpA_to_grid[fpA_to_grid.fuente== source][['ren', 'nren']].iloc[0]
             to_grid = to_grid + fp_tmp * value['to_grid']
 
@@ -134,12 +133,13 @@ def calcula_ahorro_pasoB(sources, fp, k_exp):
     to_grid = pd.Series({'ren': 0.0, 'nren': 0.0})
     fpB = fp[fp.factor=='B']
     fpA = fp[fp.factor=='A']
-    for source, value in sources.items():
-        if 'to_nEPB' in value.keys():
+    for source in sources:
+        value = sources[source]
+        if 'to_nEPB' in value:
             fpB_tmp= fpB[(fpB.uso=='to_nEPB') & (fpB.fuente==source)][['ren','nren']].iloc[0]
             fpA_tmp= fpA[(fpA.uso=='to_nEPB') & (fpA.fuente==source)][['ren','nren']].iloc[0]
             to_nEPB = to_nEPB + (fpB_tmp - fpA_tmp) * value['to_nEPB']
-        if 'to_grid' in value.keys():
+        if 'to_grid' in value:
             fpB_tmp= fpB[(fpB.uso=='to_grid') & (fpB.fuente==source)][['ren','nren']].iloc[0]
             fpA_tmp= fpA[(fpA.uso=='to_grid') & (fpA.fuente==source)][['ren','nren']].iloc[0]
             to_grid = to_grid + (fpB_tmp - fpA_tmp) * value['to_grid']
@@ -184,8 +184,10 @@ def pondera_energia_primaria(balance, fp, k_exp):
     Devuelve un diccionario con las claves 'ren' y 'nren' que corresponden
     a la parte renovable y no renovable.
     """
-    EP = pd.DataFrame({'EP':{'ren': 0.0, 'nren': 0.0}, 'EPpasoA':{'ren': 0.0, 'nren': 0.0}})
-    for vector, sources in balance.items():
-        EPparcial = calcula_eficiencia_energetica_vec(vector, sources, fp, k_exp)
-        EP = EP + EPparcial
+    EP = pd.DataFrame({'EP': {'ren': 0.0,
+                              'nren': 0.0},
+                       'EPpasoA': {'ren': 0.0,
+                                   'nren': 0.0}})
+    for vector in balance:
+        EP = EP + calcula_eficiencia_energetica_vec(vector, balance[vector], fp, k_exp)
     return EP
