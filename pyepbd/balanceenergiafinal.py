@@ -24,91 +24,19 @@
 
 import numpy as np
 
-def get_temp_balance_forvector(vdata, k_rdel):
+# origin for produced energy must be either 'INSITU' or 'COGENERACION'
+VALIDORIGINS = ['INSITU', 'COGENERACION']
 
-    E_EPB = vdata['CONSUMO']['EPB']
-    E_nEPB = vdata['CONSUMO']['NEPB']
-    E_prod = vdata['PRODUCCION']
-
-    E_prod_tot = E_prod['INSITU'] + E_prod['COGENERACION']
-    E_EPB_t = np.minimum(E_EPB, E_prod_tot) # minimum for each step
-
-    #____exportable___
-    exportable = E_prod_tot - E_EPB_t
-    factor_exportable_producido = np.array([1 - E_EPB_t[n] / e if e != 0 else 0 for n, e in enumerate(E_prod_tot)])
-    E_exportable_bysource = {source: E_prod[source] * factor_exportable_producido for source in E_prod}
-
-    #___nEPB_____
-    E_nEPB_used_t = np.minimum(exportable, E_nEPB)
-    factor_nEPB_exportable = [E_nEPB_used_t[n] / e if e != 0 else 0 for n, e in enumerate(exportable)]
-    E_nEPB_bysource = {source: E_exportable_bysource[source] * factor_nEPB_exportable for source in E_exportable_bysource}
-
-    # ____exceso ___
-    # parte de la exportable que no va a nEPB
-    # esa energía se minora con k_rdel para su resuministro y con k_exp para su exportación
-    exceso_t = E_prod_tot - E_EPB_t - E_nEPB_used_t
-    exceso = np.sum(exceso_t)
-    factor_exceso_exportable = np.array([exceso_t[n] / e if e != 0 else 0 for n, e in enumerate(exportable)])
-    E_exceso_bysource = {source: E_exportable_bysource[source] * factor_exceso_exportable for source in E_exportable_bysource}
-
-    #_______ EPB no cubierto _____
-    E_EPB_unfilled_t = E_EPB - E_EPB_t
-    E_EPB_unfilled = np.sum(E_EPB_unfilled_t)
-
-    #_______ resuministrada _____
-    # la resuministrada se puede ver desde el punto de vista de la producción,
-    # cuando se recoge esa energía, o desde el punto de vista del consumo,
-    # cunado se sirve esa energía recogida. El total es el mismo, pero los valores
-    # temporales varían.
-    maxima_rdel = min(E_EPB_unfilled, exceso)
-    E_rdel_total = k_rdel * maxima_rdel # resuministrable permitida
-    factor_resuministrada_producida = E_rdel_total / exceso
-    # Valor no usado
-    # E_rdel_bysource = {source: E_exceso_bysource[source] * factor_resuministrada_producida for source in E_exceso_bysource}
-
-    E_rdel_t = factor_resuministrada_producida * exceso_t
-    factor_unfilled_rdel = E_rdel_total / E_EPB_unfilled
-
-    E_rdel_servida_t = factor_unfilled_rdel * E_EPB_unfilled_t
-
-    # ___ energía suministrada por la red ____
-    # Valor no usado
-    # E_del_grid = sum(E_EPB) - sum(E_EPB_t) - sum(E_rdel_t)
-    E_del_grid_t = E_EPB - E_EPB_t - E_rdel_servida_t
-    E_exp_grid = exceso - E_rdel_total
-    prop_exceso_red = E_exp_grid / exceso if exceso != 0 else 0
-    E_exp_grid_bysource = {source: E_exceso_bysource[source] * prop_exceso_red for source in E_exceso_bysource}
-    # Valor no usado
-    # E_exp_grid_t = sum(E_exp_grid_bysource.values())
-
-    temp_balance = {'grid': {'input': sum(E_del_grid_t)}}
-
-    temp_balance.update({source: {'input': E_prod[source],
-                                  'to_nEPB': E_nEPB_bysource[source],
-                                  'to_grid': E_exp_grid_bysource[source]} for source in E_prod})
-    return temp_balance
-
-def get_annual_balance_forvector(temp_balance):
-    """Compute annual balance for vector from stepwise (temp) balance"""
-    annual_balance = {}
-    for source in temp_balance:
-        annual_balance[source] = {}
-        temp_balance_for_source = temp_balance[source]
-        for use in temp_balance_for_source:
-            sumforuse = temp_balance_for_source[use].sum()
-            if abs(sumforuse) > 0.1:
-                annual_balance[source][use] = sumforuse
-    return annual_balance
-
-def readdata(filename):
+# TODO: move to input/output module
+def readenergyfile(filename):
     """Read input data from filename and return data structure
 
-    Returns dict of array of values indexed by vector, vtype and originoruse
+    Returns dict of array of values indexed by carrier, ctype and originoruse
 
-    data[vector][vtype][originoruse] -> values as np.array with length=numsteps
+    data[carrier][ctype][originoruse] -> values as np.array with length=numsteps
 
-    * vector is and energy vector (carrier)
-    * vtype is either 'PRODUCCION' or 'CONSUMO' por produced or used energy
+    * carrier is an energy carrier
+    * ctype is either 'PRODUCCION' or 'CONSUMO' por produced or used energy
     * originoruse defines:
       - the energy origin for produced energy (INSITU or COGENERACION)
       - the energy end use (EPB or NEPB) for used energy
@@ -123,37 +51,145 @@ def readdata(filename):
         data = {}
         for ii, line in enumerate(lines[1:]):
             fields = line.strip().split(',')
-            vector, vtype, originoruse = fields[0:3]
+            carrier, ctype, originoruse = fields[0:3]
             values = np.array(fields[3:]).astype(np.float)
 
             # Checks
             #TODO: handle Exceptions in CLI
             if len(values) != numsteps:
-                raise ValueError, ("All input must use the same number of steps. "
+                raise ValueError, ("All input must have the same number of timesteps. "
                                    "Problem found in line %i of %s\n\t%s" % (ii + 2, filename, line))
-            if vtype not in ('PRODUCCION', 'CONSUMO'):
-                raise ValueError, "Vector type is not 'CONSUMO' or 'PRODUCCION' in line %i\n\t%s" % (ii+2, line)
+            if ctype not in ('PRODUCCION', 'CONSUMO'):
+                raise ValueError, "Carrier type is not 'CONSUMO' or 'PRODUCCION' in line %i\n\t%s" % (ii+2, line)
             if originoruse not in ('EPB', 'NEPB', 'INSITU', 'COGENERACION'):
                 raise ValueError, ("Origin or end use is not 'EPB', 'NEPB', 'INSITU' or 'COGENERACION'"
                                    " in line %i\n\t%s" % (ii+2, line))
 
-            if vector not in data:
-                data[vector] = {'CONSUMO': {'EPB': np.zeros(numsteps),
-                                            'NEPB': np.zeros(numsteps)},
-                                'PRODUCCION': {'INSITU': np.zeros(numsteps),
-                                               'COGENERACION': np.zeros(numsteps)}}
+            if carrier not in data:
+                data[carrier] = {'CONSUMO': {'EPB': np.zeros(numsteps),
+                                             'NEPB': np.zeros(numsteps)},
+                                 'PRODUCCION': {'INSITU': np.zeros(numsteps),
+                                                'COGENERACION': np.zeros(numsteps)}}
 
-            data[vector][vtype][originoruse] = data[vector][vtype][originoruse] + values
+            data[carrier][ctype][originoruse] = data[carrier][ctype][originoruse] + values
     return data
 
-def calcular_balance(filename, k_rdel):
-    data = readdata(filename)
-    balance = {}
-    for vector in data:
-        vdata = data[vector]
-        # produccion es un diccionario con las fuentes
-        bal_t = get_temp_balance_forvector(vdata, k_rdel)
-        bal_an = get_annual_balance_forvector(bal_t)
-        balance[vector] = {'anual': bal_an, 'temporal': bal_t}
-    return balance
+def components_t_forcarrier(vdata, k_rdel):
+    """Calculate energy components for each time step from energy carrier data
+
+    This follows the EN15603 procedure for calculation of delivered and
+    exported energy components.
+    """
+
+    # Energy used by technical systems for EPB services, for each time step
+    E_EPus_t = vdata['CONSUMO']['EPB']
+    # Energy used by technical systems for non-EPB services, for each time step
+    E_nEPus_t = vdata['CONSUMO']['NEPB']
+    numsteps = E_EPus_t.size
+
+    # (Electricity) produced on-site and inside the assessment boundary, by origin
+    E_pr_t_byorigin = vdata['PRODUCCION']
+    # (Electric) energy produced on-site and inside the assessment boundary, for each time step (formula 23)
+    E_pr_t = np.sum(E_pr_t_byorigin[origin] for origin in VALIDORIGINS)
+
+    # Produced energy from all origins for EPB services for each time step (formula 24)
+    E_pr_used_EPus_t = np.minimum(E_EPus_t, E_pr_t)
+
+    ## Exported energy for each time step (produced energy not consumed in EPB uses) (formula 25)
+    E_exp_t = E_pr_t - E_pr_used_EPus_t
+
+    # Exported energy by production origin for each time step, weigthing done by produced energy
+    hasprod = (E_pr_t != 0)
+    F_exp_t = np.zeros(numsteps)
+    F_exp_t[hasprod] = E_exp_t[hasprod] / E_pr_t[hasprod]
+    E_exp_t_byorigin = {origin: E_pr_t_byorigin[origin] * F_exp_t for origin in VALIDORIGINS}
+
+    # Exported (electric) energy used for non-EPB uses for each time step (formula 26)
+    E_exp_used_nEPus_t = np.minimum(E_exp_t, E_nEPus_t)
+    # Exported energy used for non-EPB services for each time step, by origin, weighting done by exported energy
+    hasexported = (E_exp_t != 0)
+    F_exp_used_nEPus_t = np.zeros(numsteps)
+    F_exp_used_nEPus_t[hasexported] = E_exp_used_nEPus_t[hasexported] / E_exp_t[hasexported]
+    E_exp_used_nEPus_t_byorigin = {origin: E_exp_t_byorigin[origin] * F_exp_used_nEPus_t for origin in VALIDORIGINS}
+
+    # Exported energy not used for any service for each time step (formula 27)
+    # Note: this is later affected by k_rdel for redelivery and k_exp for exporting
+    E_exp_nused_t = E_exp_t - E_exp_used_nEPus_t
+    # Exported energy not used for any service for each time step, by origin, weighting done by exported energy
+    F_exp_nused_t = np.zeros(numsteps)
+    F_exp_nused_t[hasexported] = E_exp_nused_t[hasexported] / E_exp_t[hasexported]
+    E_exp_nused_t_byorigin = {origin: E_exp_t_byorigin[origin] * F_exp_nused_t for origin in VALIDORIGINS}
+
+    # Annual exported energy not used for any service (formula 28)
+    E_exp_nused_an = np.sum(E_exp_nused_t)
+
+    # Delivered (electric) energy for each time step (formula 29)
+    E_del_t = E_EPus_t - E_pr_used_EPus_t
+    # Annual delivered (electric) energy for EPB uses (formula 30)
+    E_del_an = np.sum(E_del_t)
+
+    # Annual temporary exported (electric) energy (formula 31)
+    E_exp_tmp_an = np.minimum(E_exp_nused_an, E_del_an)
+
+    # Temporary exported energy for each time step (formula 32)
+    # E_exp_tmp_t = np.zeros(numsteps) if (E_exp_nused_an == 0) else E_exp_tmp_an * E_exp_nused_t / E_exp_nused_an # not used
+
+    # Redelivered energy for each time step (formula 33)
+    E_del_rdel_t = np.zeros(numsteps) if (E_del_an == 0) else E_exp_tmp_an * E_del_t / E_del_an
+    # Annual redelivered energy
+    # E_del_rdel_an = np.sum(E_del_rdel_t) # not used
+
+    # Exported (electric) energy to the grid for each time step (formula 34)
+    # E_exp_grid_t = E_exp_nused_t - E_exp_tmp_t # not used
+    
+    # Annual exported (electric) energy to the grid (formula 35)
+    E_exp_grid_an = E_exp_nused_an - E_exp_tmp_an
+    # Energy exported to grid, by origin, weighting done by exported and not used energy
+    F_exp_grid_an = E_exp_grid_an / E_exp_nused_an if E_exp_nused_an != 0 else 0
+    E_exp_grid_t_byorigin = {origin: E_exp_nused_t_byorigin[origin] * F_exp_grid_an for origin in VALIDORIGINS}
+
+    # (Electric) energy delivered by the grid for each time step (formula 36)
+    # E_del_grid_t = E_del_t - E_del_rdel_t  # not used
+
+    # Annual (electric) energy delivered by the grid (formula 37)
+    # E_del_grid_an = E_del_an - E_del_rdel_an # not used
+
+    # Corrected delivered energy for each time step (formula 38)
+    E_del_t_corr = E_del_t - k_rdel * E_del_rdel_t
+
+    # Corrected temporary exported energy (formula 39)
+    # E_exp_tmp_t_corr = E_exp_tmp_t * (1 - k_rdel) # not used
+
+    components_t = {'grid': {'input': sum(E_del_t_corr)}}
+
+    components_t.update({origin: {'input': E_pr_t_byorigin[origin],
+                                  'to_nEPB': E_exp_used_nEPus_t_byorigin[origin],
+                                  'to_grid': E_exp_grid_t_byorigin[origin]} for origin in VALIDORIGINS})
+    return components_t
+
+def components_an_forcarrier(components_t):
+    """Calculate annual energy components for carrier from time step components"""
+    components_an = {}
+    for origin in components_t: # This is grid + VALIDORIGINS
+        components_an[origin] = {}
+        components_t_byorigin = components_t[origin]
+        for use in components_t_byorigin:
+            sumforuse = components_t_byorigin[use].sum()
+            # TODO Outer code depends on components_an[origin][use] not being defined
+            # TODO so we can't use components[origin][use] = sumforuse if abs(sumforuse) > 0.1 or 0.0
+            # TODO see calcula_energia_entrante_pasoA for the ponderaenergiaprimaria module
+            if abs(sumforuse) > 0.1:
+                components_an[origin][use] = sumforuse
+    return components_an
+
+def energycomponents(energydata, k_rdel):
+    "Calculate timestep and annual energy components from input data"
+
+    components = {}
+    for carrier in energydata:
+        bal_t = components_t_forcarrier(energydata[carrier], k_rdel)
+        bal_an = components_an_forcarrier(bal_t)
+        components[carrier] = {'temporal': bal_t,
+                               'anual': bal_an}
+    return components
 

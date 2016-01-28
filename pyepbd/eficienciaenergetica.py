@@ -23,7 +23,7 @@
 # SOFTWARE.
 
 import pandas as pd
-from balanceenergiafinal import calcular_balance
+from balanceenergiafinal import energycomponents, readenergyfile
 from ponderacionenergiaprimaria import pondera_energia_primaria
 from vista import ver_balance
 
@@ -71,8 +71,9 @@ def calcula_eficiencia_energetica(datafile, k_rdel=None, k_exp=None, fp=None):
     fp = (FACTORESDEPASOOFICIALES if fp is None
           else pd.read_csv(fp, skipinitialspace=True, comment='#', skip_blank_lines=True))
 
-    balance = calcular_balance(datafile, k_rdel)
-    EP = pondera_energia_primaria(balance, fp, k_exp)
+    data = readenergyfile(datafile)
+    components = energycomponents(data, k_rdel)
+    EP = pondera_energia_primaria(components, fp, k_exp)
 
     return EP
 

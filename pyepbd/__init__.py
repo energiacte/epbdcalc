@@ -24,7 +24,7 @@
 
 from eficienciaenergetica import calcula_eficiencia_energetica
 from ponderacionenergiaprimaria import pondera_energia_primaria
-from balanceenergiafinal import calcular_balance
+from balanceenergiafinal import energycomponents, readenergyfile
 from vista import verInd, ver_balance, ver_datos_entrada
 
 __version__ = '2015.10.16'
