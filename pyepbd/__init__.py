@@ -23,7 +23,6 @@
 # SOFTWARE.
 
 from eficienciaenergetica import calcula_eficiencia_energetica
-from ponderacionenergiaprimaria import pondera_energia_primaria
 from balanceenergiafinal import energycomponents, readenergyfile
 from vista import verInd, ver_balance, ver_datos_entrada
 
