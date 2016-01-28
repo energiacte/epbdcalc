@@ -157,7 +157,7 @@ El programa calcula la energía importada de las redes de abastecimiento, el por
 This manual documents the \texttt{epbdcalc} application which has been developed under the current agreement by the \textit{Instituto de Ciencias de la Construcción Eduardo Torroja (IETcc-CSIC)} and the spanish \textit{Ministerio de Fomento} and implements the calculation methodology in the current draft of the standard. It has been developed as part of the transposition process of the EPBD into the spanish legislation and to ease the adaptation of the existing energy evaluation tools.
 
 The manual describes the user interface of the\textit{epbdcalc} application and it input and output formats, including the building energy use and generation.
-The application evaluates both the delivered and exported energy according to the evaluation framework. It takes into consideration the different energy factors for each energy carriers as well as the redeliverd energy factor ($k_{rdel}$) and the exported energy factor ($k_{exp}$).
+The application evaluates both the delivered and exported energy according to the evaluation framework. It takes into consideration the different energy factors for each energy carrier as well as the redeliverd energy factor ($k_{rdel}$) and the exported energy factor ($k_{exp}$).
 \end{myquote}
 
 \section{Uso del programa}
@@ -228,9 +228,9 @@ Igualmente, se podría fijar el factor de exportación ($k_{exp}$) así:
 El archivo de datos de entrada proporciona la información de origen y uso de la energía en cada paso de calculo. Para ello usa el formato de \textit{valores separados por comas}\footnote{El formato está documentado en el estándar RFC 4180 (\url{https://tools.ietf.org/html/rfc4180}). Consiste en un archivo de texto que describe una tabla de datos, con una línea por cada fila (registro) y donde los valores de las columnas están separados por comas y usan como separador decimal el punto. Opcionalmente, se puede incluir una línea inicial que da nombre a las columnas} con la siguiente estructura de los registros (filas) de datos, que se muestra de forma esquemática en la \autoref{fig:estructuraVectores}:
 
 \begin{itemize}
-\item campo \texttt{vector}, de nombre del vector;
-\item campo \texttt{tipo}, de definición de si se trata de producción o consumo;
-\item campo \texttt{origendestino}, de identificación de origen o destino de la energía transferida;
+\item campo \texttt{vector}, de nombre del vector energético;
+\item campo \texttt{tipo}, tipo de vector energético (producción o consumo);
+\item campo \texttt{origenouso}, de identificación de origen o destino de la energía transferida;
 \item campos \texttt{valor}, con un dato para cada paso de tiempo.
 \end{itemize}
 
@@ -244,7 +244,7 @@ El archivo de datos de entrada proporciona la información de origen y uso de la
 A continuación se muestra un ejemplo de un conjunto de registros:
 
 \begin{Verbatim}[frame=single]
-    vector,tipo,origendestino
+    vector,tipo,origenouso
     ELECTRICIDAD,CONSUMO,EPB,200.10,160.00,100.32,90.56,50.11,60.00,80.00,70,50,80,120,160
     ELECTRICIDAD,CONSUMO,NEPB,30,30,30,30,30,30,30,30,30,30,30,30
     ELECTRICIDAD,PRODUCCION,INSITU,44,55,77,110,187,209,220,198,176,132,88,55
@@ -289,19 +289,19 @@ Con las siguientes particularidades:
 \item los suministros de la red no tienen que ser especificados cuando este sea único por vector energético.
 \end{itemize}
 
-\subsubsection{Campo \texttt{origendestino}}
+\subsubsection{Campo \texttt{origenouso}}
 
-El campo \texttt{origendestino} contiene información sobre el origen o destino de la energía.
+El campo \texttt{origenouso} contiene información sobre el origen o destino de la energía.
 
 Para registros en los que el campo \texttt{tipo} sea igual a \texttt{PRODUCCION}, los valores admitidos para cada vector energético y que definen el origen de la producción, son los definidos en la \autoref{tab:fuentesPermitidas}. En esta tabla se observa cómo se considera la producción de vectores energéticos distintos a los de la red únicamente en el caso de la electricidad o de procesos que extraen energía del medio ambiente. Igualmente, se diferencia la electricidad producida \textit{in situ} mediante cogeneración del resto de producción eléctrica \textit{in situ}.
 
 \begin{table}[H]
 \centering
 \small
-\caption{Valores admitidos para el campo \texttt{origendestino} para la producción de energía}\label{tab:fuentesPermitidas}
+\caption{Valores admitidos para el campo \texttt{origenouso} para la producción de energía}\label{tab:fuentesPermitidas}
 \begin{tabular}{ll}
     \toprule
-    \textbf{Vector definido en el campo \texttt{vector}} & \textbf{Valores admitidos del campo \texttt{origendestino}}\\
+    \textbf{Vector definido en el campo \texttt{vector}} & \textbf{Valores admitidos del campo \texttt{origenouso}}\\
     \midrule
     \texttt{ELECTRICIDAD}             & \texttt{INSITU}, \texttt{COGENERACION}\\
     \texttt{ELECTRICIDADCANARIAS}     & \texttt{INSITU}, \texttt{COGENERACION}\\
@@ -323,7 +323,7 @@ Para registros en los que el campo \texttt{tipo} sea igual a \texttt{CONSUMO}, e
 
 Estos campos contienen los valores numéricos de consumo o producción para cada paso de tiempo, usando el punto como separador decimal (se recomienda el uso de dos decimales).
 
-En el caso de que en un archivo aparezcan varios registros con idénticos valores en los campos \texttt{vector}, \texttt{tipo} y \texttt{origendestino}, el programa sumará los datos de los campos \texttt{valor} en cada paso de tiempo y trabajará como si se hubiese definido un único registro con la suma de los datos. Esto permite dejar al programa la tarea de agregación de valores y puede resultar últi, por ejemplo, para definir las producciones electricas de varios sistemas fotovoltaicos.
+En el caso de que en un archivo aparezcan varios registros con idénticos valores en los campos \texttt{vector}, \texttt{tipo} y \texttt{origenouso}, el programa sumará los datos de los campos \texttt{valor} en cada paso de tiempo y trabajará como si se hubiese definido un único registro con la suma de los datos. Esto permite dejar al programa la tarea de agregación de valores y puede resultar últi, por ejemplo, para definir las producciones electricas de varios sistemas fotovoltaicos.
 
 Todos los registros deben emplear número igual de pasos de tiempo, o el programa emitirá un error.
 
