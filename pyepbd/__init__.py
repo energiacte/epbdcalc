@@ -24,6 +24,6 @@
 
 from eficienciaenergetica import calcula_eficiencia_energetica
 from balanceenergiafinal import energycomponents, readenergyfile
-from vista import verInd, ver_balance, ver_datos_entrada
+from vista import formatIndicators, ver_balance, ver_datos_entrada
 
 __version__ = '2015.10.16'

@@ -76,13 +76,13 @@ def concepto(vector, tipo, origendestino, valor, nombre_fichero = None):
         f.writelines('%s,%s,%s,' % (vector, tipo, origendestino) + ','.join([str(e) for e in valor]) + '\n')
 
 
-def verificar(EPB, res, texto=None):
+def verificar(EPB, res):
     import pandas as pd
     res = pd.Series({'ren': res[0], 'nren': res[1]})
     res = EPB.EP - pd.Series(res)
     if abs(res.sum()) > 2:
         print 'Resultado no coincidente: ', res.sum()
-        ep.verInd(EPB, texto)
+        print ep.formatIndicators(EPB)
         print '#####################################################'
         print '--------------------'
         return False

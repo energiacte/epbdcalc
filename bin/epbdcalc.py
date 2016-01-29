@@ -84,9 +84,10 @@ if __name__ == '__main__':
     EP = ep.calcula_eficiencia_energetica(args.vecfile.name, k_rdel=args.krdel, k_exp=args.kexp,
         fp=fpdatafile)
 
-    cadenasalida = ep.verInd(EP, texto='Archivo de entrada: %s' % args.vecfile.name)
+    cadenasalida = ['Archivo de entrada: %s\n' % args.vecfile.name,
+                    ep.formatIndicators(EP)]
+    print ''.join(cadenasalida)
 
     if args.outputfile:
         print 'Guardando resultados en el archivo:', args.outputfile.name
         args.outputfile.writelines(cadenasalida)
-

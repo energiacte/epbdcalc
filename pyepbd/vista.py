@@ -24,20 +24,22 @@
 
 import numpy as np
 
-def verInd(EP, texto=None):
+def formatIndicators(EP):
+    """Format energy efficiency indicators as string from primary energy data"""
 
-    total = EP.EP['ren'] + EP.EP['nren']
-    salida = [texto + '\n'] if texto else []
-    salida.append('EP           | EPpasoA\n')
-    salida.append('ren =' + str(round(EP.EP['ren'], 1)).rjust(8) +
-                  '| ren =' + str(round(EP.EPpasoA['ren'], 1)).rjust(8) + '\n')
-    salida.append('nren=' + str(round(EP.EP['nren'], 1)).rjust(8) +
-                  '| nren=' + str(round(EP.EPpasoA['nren'], 1)).rjust(8) +'\n')
-    salida.append('tot =' + str(round(total, 1)).rjust(8) + '|\n')
-    salida.append('RER =' + str(round((EP.EP['ren'] / total), 2)).rjust(8) + '|\n')
-    print ''.join(salida)
+    epren, epnren = EP.EP['ren'], EP.EP['nren']
+    eparen, epanren = EP.EPpasoA['ren'], EP.EPpasoA['nren']
+    total = epren + epnren
 
-    return salida
+    txt = ("EP           | EPpasoA\n"
+           "ren ={:>8.1f}| ren ={:>8.1f}\n"
+           "nren={:>8.1f}| nren={:>8.1f}\n"
+           "tot ={:>8.1f}|\n"
+           "RER ={:>8.2f}|\n").format(epren, eparen,
+                                      epren, epanren,
+                                      total,
+                                      epren / total)
+    return txt
 
 def ver_balance(balance):
     #import balance
