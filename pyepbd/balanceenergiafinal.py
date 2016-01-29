@@ -339,7 +339,7 @@ def pondera_energia_primaria(balance, fp, k_exp):
         EP = EP + calcula_eficiencia_energetica_vec(vector, balance[vector], fp, k_exp)
     return EP
 
-def calcula_eficiencia(data, k_rdel, k_exp, fp):
+def calcula_eficiencia(data, k_rdel, fp, k_exp):
     """Balance total de la energía ponderada usada por el edificio y ahorrada a la red.
 
     Es el balance de energía en la frontera de evaluación AB, descontada la

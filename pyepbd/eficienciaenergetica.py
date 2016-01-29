@@ -59,7 +59,7 @@ El cálculo está organizado por:
 
 from balanceenergiafinal import readenergyfile, calcula_eficiencia
 
-def calcula_eficiencia_energetica(datafile, k_rdel=None, k_exp=None, fp=None):
+def calcula_eficiencia_energetica(datafile, k_rdel, fp, k_exp):
     """Balance total de la energía ponderada usada por el edificio y ahorrada a la red.
 
     Es el balance de energía en la frontera de evaluación AB, descontada la
@@ -74,6 +74,6 @@ def calcula_eficiencia_energetica(datafile, k_rdel=None, k_exp=None, fp=None):
     """
 
     data = readenergyfile(datafile)
-    EP = calcula_eficiencia(data, k_rdel, k_exp, fp)
+    EP = calcula_eficiencia(data, k_rdel, fp, k_exp)
 
     return EP
