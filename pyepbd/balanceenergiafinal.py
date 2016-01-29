@@ -74,6 +74,16 @@ def readenergyfile(filename):
             data[carrier][ctype][originoruse] = data[carrier][ctype][originoruse] + values
     return data
 
+def readfactors(filename):
+    """Read energy weighting factors data from file"""
+    
+    return pd.read_csv(filename,
+                       skipinitialspace=True,
+                       comment='#',
+                       skip_blank_lines=True)
+
+#####################
+    
 def components_t_forcarrier(vdata, k_rdel):
     """Calculate energy components for each time step from energy carrier data
 

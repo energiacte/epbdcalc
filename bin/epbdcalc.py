@@ -36,6 +36,7 @@ else:
     warnings.simplefilter('ignore')
 
 import pyepbd as ep
+import pandas as pd
 
 COPY = u"""\tversión: %s
 \t(c) 2015 Ministerio de Fomento
@@ -70,19 +71,24 @@ if __name__ == '__main__':
         parser.print_help()
         sys.exit(2)
 
+    if args.krdel is None:
+        print u'Usando factor de resuministro (k_rdel) predeterminado'
+    k_rdel = ep.K_RDEL if args.krdel is None else args.krdel
+
+    if args.kexp is None:
+        print u'Usando factor de exportación (k_exp) predeterminado'
+    k_exp  = ep.K_EXP if args.kexp is None else args.kexp
+
     if args.fpfile:
         fpdatafile = args.fpfile
         print u'Archivo de factores de paso: ', fpdatafile.name, '\n'
     else:
         fpdatafile = None
         print u'Usando factores de paso predeterminados'
-    if args.krdel is None:
-        print u'Usando factor de resuministro (k_rdel) predeterminado'
-    if args.kexp is None:
-        print u'Usando factor de exportación (k_exp) predeterminado'
+    fP = (ep.FACTORESDEPASOOFICIALES if args.fpfile is None
+          else ep.readfactors(args.fpfile))
 
-    EP = ep.calcula_eficiencia_energetica(args.vecfile.name, k_rdel=args.krdel, k_exp=args.kexp,
-        fp=fpdatafile)
+    EP = ep.calcula_eficiencia_energetica(args.vecfile.name, k_rdel, k_exp, fP)
 
     cadenasalida = ['Archivo de entrada: %s\n' % args.vecfile.name,
                     ep.formatIndicators(EP)]

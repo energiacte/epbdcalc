@@ -23,7 +23,8 @@
 # SOFTWARE.
 
 from eficienciaenergetica import calcula_eficiencia_energetica
-from balanceenergiafinal import energycomponents, readenergyfile
+from balanceenergiafinal import energycomponents, readenergyfile, readfactors
 from vista import formatIndicators
+from settings import *
 
 __version__ = '2015.10.16'
