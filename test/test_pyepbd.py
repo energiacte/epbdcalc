@@ -33,6 +33,7 @@ from pyepbd import (FACTORESDEPASOOFICIALES,
                     formatIndicators, readfactors)
 
 def check(EPB, res):
+    """Check that result is within valid range"""
     res = EPB.EP - pd.Series({'ren': res[0], 'nren': res[1]})
     if abs(res.sum()) > 2.0:
         print 'Resultado no coincidente: ', res.sum()
@@ -43,102 +44,88 @@ def check(EPB, res):
     else:
         return True
 
+def epfromfile(filename, krdel, kexp, fp):
+    """Compute primary energy (weighted energy) from data in filename"""
+    datafile = os.path.join(currpath, filename)
+    return calcula_eficiencia_energetica(datafile, krdel, fp, kexp)
+
 TESTFP = readfactors(os.path.join(currpath, '../data/factores_paso_test.csv'))
 CTEFP = FACTORESDEPASOOFICIALES
 TESTKRDEL = 1.0
 TESTKEXP = 1.0
 
 def test_ejemplo1base():
-    EP = calcula_eficiencia_energetica(os.path.join(currpath, 'ejemplo1base.csv'),
-                                       k_rdel=TESTKRDEL, k_exp=TESTKEXP, fp=TESTFP)
+    EP = epfromfile('ejemplo1base.csv', TESTKRDEL, TESTKEXP, TESTFP)
     assert check(EP, [50.0, 200.0]) == True
 
 def test_ejemplo1base_fail():
-    EP = calcula_eficiencia_energetica(os.path.join(currpath, 'ejemplo1base.csv'),
-                                       k_rdel=TESTKRDEL, k_exp=TESTKEXP, fp=TESTFP)
+    EP = epfromfile('ejemplo1base.csv', TESTKRDEL, TESTKEXP, TESTFP)
     assert check(EP, [53.0, 200.0]) == False
 
 def test_ejemplo1base_normativo():
-    EP = calcula_eficiencia_energetica(os.path.join(currpath, 'ejemplo1base.csv'),
-                                       k_rdel=TESTKRDEL, k_exp=TESTKEXP, fp=CTEFP)
+    EP = epfromfile('ejemplo1base.csv', TESTKRDEL, TESTKEXP, CTEFP)
     assert check(EP, [34.1, 208.20]) == True
 
 def test_ejemplo1PV():
-    EP = calcula_eficiencia_energetica( os.path.join(currpath, 'ejemplo1PV.csv'),
-                                        k_rdel=TESTKRDEL, k_exp=TESTKEXP, fp=TESTFP)
+    EP = epfromfile('ejemplo1PV.csv', TESTKRDEL, TESTKEXP, TESTFP)
     assert check(EP, [75.0, 100.0]) == True
 
 def test_ejemplo1PV_normativo():
-    EP = calcula_eficiencia_energetica(os.path.join(currpath, 'ejemplo1PV.csv'),
-                                       k_rdel=TESTKRDEL, k_exp=TESTKEXP, fp=CTEFP)
+    EP = epfromfile('ejemplo1PV.csv', TESTKRDEL, TESTKEXP, CTEFP)
     assert check(EP, [67.1, 104.1]) == True
 
 def test_ejemplo1xPV():
-    EP = calcula_eficiencia_energetica(os.path.join(currpath, 'ejemplo1xPV.csv'),
-                                       k_rdel=TESTKRDEL, k_exp=TESTKEXP, fp=TESTFP)
+    EP = epfromfile('ejemplo1xPV.csv', TESTKRDEL, TESTKEXP, TESTFP)
     assert check(EP, [120.0, -80.0]) == True
 
 def test_ejemplo1xPV_normativo():
-    EP = calcula_eficiencia_energetica(os.path.join(currpath, 'ejemplo1xPV.csv'),
-                                       k_rdel=TESTKRDEL, k_exp=TESTKEXP, fp=CTEFP)
+    EP = epfromfile('ejemplo1xPV.csv', TESTKRDEL, TESTKEXP, CTEFP)
     assert check(EP, [120.0, -80.0]) == True
 
 def test_ejemplo1xPVk0():
-    EP = calcula_eficiencia_energetica(os.path.join(currpath, 'ejemplo1xPV.csv'),
-                                       k_rdel=TESTKRDEL, k_exp=0.0, fp=TESTFP)
+    EP = epfromfile('ejemplo1xPV.csv', TESTKRDEL, 0.0, TESTFP)
     assert check(EP, [100.0, 0.0]) == True
 
 def test_ejemplo1xPVk0_normativo():
-    EP = calcula_eficiencia_energetica(os.path.join(currpath, 'ejemplo1xPV.csv'),
-                                       k_rdel=TESTKRDEL, k_exp=0.0, fp=CTEFP)
+    EP = epfromfile('ejemplo1xPV.csv', TESTKRDEL, 0.0, CTEFP)
     assert check(EP, [100.0, 0.0]) == True
 
 def test_ejemplo2xPVgas():
-    EP = calcula_eficiencia_energetica(os.path.join(currpath, 'ejemplo2xPVgas.csv'),
-                                       k_rdel=TESTKRDEL, k_exp=TESTKEXP, fp=TESTFP)
+    EP = epfromfile('ejemplo2xPVgas.csv', TESTKRDEL, TESTKEXP, TESTFP)
     assert check(EP, [30.0, 169.0]) == True
 
 def test_ejemplo2xPVgas_normativo():
-    EP = calcula_eficiencia_energetica(os.path.join(currpath, 'ejemplo2xPVgas.csv'),
-                                       k_rdel=TESTKRDEL, k_exp=TESTKEXP, fp=CTEFP)
+    EP = epfromfile('ejemplo2xPVgas.csv', TESTKRDEL, TESTKEXP, CTEFP)
     assert check(EP, [30.9, 186.1]) == True
 
 def test_ejemplo3PVBdC():
-    EP = calcula_eficiencia_energetica(os.path.join(currpath, 'ejemplo3PVBdC.csv'),
-                                       k_rdel=TESTKRDEL, k_exp=TESTKEXP, fp=TESTFP)
+    EP = epfromfile('ejemplo3PVBdC.csv', TESTKRDEL, TESTKEXP, TESTFP)
     assert check(EP, [180.0, 38.0]) == True
 
 def test_ejemplo3PVBdC_normativo():
-    EP = calcula_eficiencia_energetica(os.path.join(currpath, 'ejemplo3PVBdC.csv'),
-                                       k_rdel=TESTKRDEL, k_exp=TESTKEXP, fp=CTEFP)
+    EP = epfromfile('ejemplo3PVBdC.csv', TESTKRDEL, TESTKEXP, CTEFP)
     assert check(EP, [177.5, 39.6]) == True
 
 def test_ejemplo4cgnfosil():
-    EP = calcula_eficiencia_energetica(os.path.join(currpath, 'ejemplo4cgnfosil.csv'),
-                                       k_rdel=TESTKRDEL, k_exp=TESTKEXP, fp=TESTFP)
+    EP = epfromfile('ejemplo4cgnfosil.csv', TESTKRDEL, TESTKEXP, TESTFP)
     assert check(EP, [-14.0, 227.0]) == True
 
 def test_ejemplo4cgnfosil_normativo():
-    EP = calcula_eficiencia_energetica(os.path.join(currpath, 'ejemplo4cgnfosil.csv'),
-                                       k_rdel=TESTKRDEL, k_exp=TESTKEXP, fp=CTEFP)
+    EP = epfromfile('ejemplo4cgnfosil.csv', TESTKRDEL, TESTKEXP, CTEFP)
     assert check(EP, [-12.7, 251]) == True
 
 def test_ejemplo5cgnbiogas():
-    EP = calcula_eficiencia_energetica(os.path.join(currpath, 'ejemplo5cgnbiogas.csv'),
-                                       k_rdel=TESTKRDEL, k_exp=TESTKEXP, fp=TESTFP)
+    EP = epfromfile('ejemplo5cgnbiogas.csv', TESTKRDEL, TESTKEXP, TESTFP)
     assert check(EP, [159.0, 69.0]) == True
 
 def test_ejemplo5cgnbiogas_normativo():
-    EP = calcula_eficiencia_energetica(os.path.join(currpath, 'ejemplo5cgnbiogas.csv'),
-                                       k_rdel=TESTKRDEL, k_exp=TESTKEXP, fp=CTEFP)
+    EP = epfromfile('ejemplo5cgnbiogas.csv', TESTKRDEL, TESTKEXP, CTEFP)
     assert check(EP, [148.9, 76.4]) == True
 
 def test_ejemplo6K3():
-    EP = calcula_eficiencia_energetica(os.path.join(currpath, 'ejemplo6K3.csv'),
-                                       k_rdel=TESTKRDEL, k_exp=TESTKEXP, fp=TESTFP)
+    EP = epfromfile('ejemplo6K3.csv', TESTKRDEL, TESTKEXP, TESTFP)
     assert check(EP, [1385.5, -662]) == True
 
 def test_ejemplo6K3_normativo():
-    EP = calcula_eficiencia_energetica(os.path.join(currpath, 'ejemplo6K3.csv'),
-                                       k_rdel=TESTKRDEL, k_exp=TESTKEXP, fp=CTEFP)
+    EP = epfromfile('ejemplo6K3.csv', TESTKRDEL, TESTKEXP, CTEFP)
     assert check(EP, [1385.5, -662]) == True
