@@ -41,30 +41,6 @@ def formatIndicators(EP):
                                       epren / total)
     return txt
 
-def ver_balance(balance):
-    #import balance
-    print '___balance___'
-    for vector, datos_periodo in balance.items():
-        print 'vector: ',vector
-        for periodo, datos_fuentes in datos_periodo.items():
-            print '  periodo:', periodo
-            for fuente, usos in datos_fuentes.items():
-                print '    fuente', fuente
-                for uso, valor in usos.items():
-                    print '      uso', uso, redondeo(valor)
-    print '--------------'
-
-def ver_datos_entrada(vector_data):
-    print '___ vector data ____'
-    for vector, balance_vector in vector_data.items():
-        print 'vector: ',vector#, '\tclaves', balance_vector.keys()
-        for fuente, usos in balance_vector['anual'].items():
-            print '  fuente: ', fuente
-            for uso, valor in usos.items():
-                print '    uso', uso, redondeo(valor)
-    print '--------------'
-
-
 def redondeo(objeto, n=0):
     if (isinstance(objeto, list) or isinstance(objeto, np.ndarray)):
         if n == 0:

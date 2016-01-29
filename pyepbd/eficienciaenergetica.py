@@ -59,7 +59,6 @@ El cálculo está organizado por:
 
 import pandas as pd
 from balanceenergiafinal import energycomponents, readenergyfile
-from vista import ver_balance
 
 K_EXP = 1.0
 K_RDEL = 1.0
