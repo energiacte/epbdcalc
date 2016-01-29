@@ -57,9 +57,7 @@ El cálculo está organizado por:
     - destino o uso de la energía.
 """
 
-import pandas as pd
-from . import settings
-from balanceenergiafinal import energycomponents, readenergyfile, pondera_energia_primaria, calcula_eficiencia
+from balanceenergiafinal import readenergyfile, calcula_eficiencia
 
 def calcula_eficiencia_energetica(datafile, k_rdel=None, k_exp=None, fp=None):
     """Balance total de la energía ponderada usada por el edificio y ahorrada a la red.
@@ -74,6 +72,7 @@ def calcula_eficiencia_energetica(datafile, k_rdel=None, k_exp=None, fp=None):
     Devuelve un diccionario con las claves 'ren' y 'nren' que corresponden
     a la parte renovable y no renovable.
     """
+
     data = readenergyfile(datafile)
     EP = calcula_eficiencia(data, k_rdel, k_exp, fp)
 
