@@ -22,6 +22,41 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+""" Calcula la eficiencia energética como balance entre la energía usada y la ahorrada a la red.
+
+El proceso de calculo de la eficiencia energética se calcula en dos pasos:
+
+- En un primer paso se consideran las producciones y consumos de cada combustible,
+  que se equilibran mediante el suministro de la red correspondiente.
+
+- Después se aplican los pasos A, de importación, y B, de exportación y ahorro,
+  para obtener la eficiencia energética del caso considerado.
+
+La red proporciona la cantidad suficiente de cada tipo de combustible para
+equilibrar el balance entre producción y consumo. Además, es necesario obtener qué
+parte de la demanda energética no ha podido ser satisfecha instantáneamente pero
+podría serlo con la energía producida en otros pasos de cálculo. Esto se regula
+mediante el parámetro normativo de resuministro ($k_{rdel}$).
+
+Realizado el calculo del balance, los valores energéticos se agrupan en unos pocos
+conceptos con valores anuales de los que se obtendrá el indicador de eficiencia
+energética según indica la norma \textit{ISO/DIS 52000-1:2015} aplicando los pasos A y B.
+
+Estos indicadores tienen una parte renovable y otra no renovable, lo que permite
+calcular el valor de consumo energético total, además del porcentaje de uso de
+energías renovables.
+
+
+Las funciones devuelven un diccionario con la parte renovable y no renovable
+de los indicadores, que aportan en base anual, aunque el cálculo se realice
+en pasos temporales menores.
+
+El cálculo está organizado por:
+    - vectores energéticos
+    - fuentes de energía
+    - destino o uso de la energía.
+"""
+
 import numpy as np
 
 # origin for produced energy must be either 'INSITU' or 'COGENERACION'

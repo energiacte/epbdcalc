@@ -22,8 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from eficienciaenergetica import calcula_eficiencia_energetica
-from balanceenergiafinal import energycomponents, readenergyfile, readfactors
+from balanceenergiafinal import energycomponents, readenergyfile, readfactors, calcula_eficiencia
 from vista import formatIndicators
 from settings import *
 

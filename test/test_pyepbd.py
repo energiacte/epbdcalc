@@ -29,7 +29,8 @@ currpath = os.path.abspath(os.path.dirname(__file__))
 sys.path.append(os.path.join(currpath, '..'))
 
 from pyepbd import (FACTORESDEPASOOFICIALES,
-                    calcula_eficiencia_energetica,
+                    calcula_eficiencia,
+                    readenergyfile,
                     formatIndicators, readfactors)
 
 def check(EPB, res):
@@ -47,7 +48,8 @@ def check(EPB, res):
 def epfromfile(filename, krdel, kexp, fp):
     """Compute primary energy (weighted energy) from data in filename"""
     datafile = os.path.join(currpath, filename)
-    return calcula_eficiencia_energetica(datafile, krdel, fp, kexp)
+    data = readenergyfile(datafile)
+    return calcula_eficiencia(data, krdel, fp, kexp)
 
 TESTFP = readfactors(os.path.join(currpath, '../data/factores_paso_test.csv'))
 CTEFP = FACTORESDEPASOOFICIALES

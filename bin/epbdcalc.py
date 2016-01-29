@@ -88,7 +88,8 @@ if __name__ == '__main__':
     fP = (ep.FACTORESDEPASOOFICIALES if args.fpfile is None
           else ep.readfactors(args.fpfile))
 
-    EP = ep.calcula_eficiencia_energetica(args.vecfile.name, k_rdel, fP, k_exp)
+    data = ep.readenergyfile(args.vecfile.name)
+    EP = ep.calcula_eficiencia(data, k_rdel, fP, k_exp)
 
     cadenasalida = ['Archivo de entrada: %s\n' % args.vecfile.name,
                     ep.formatIndicators(EP)]
