@@ -58,6 +58,7 @@ El cálculo está organizado por:
 """
 
 import numpy as np
+import pandas as pd
 
 # origin for produced energy must be either 'INSITU' or 'COGENERACION'
 VALIDORIGINS = ['INSITU', 'COGENERACION']
@@ -118,7 +119,7 @@ def readfactors(filename):
                        comment='#',
                        skip_blank_lines=True)
 
-#####################
+########################################################
     
 def components_t_forcarrier(vdata, k_rdel):
     """Calculate energy components for each time step from energy carrier data
@@ -214,7 +215,7 @@ def components_t_forcarrier(vdata, k_rdel):
     return components_t
 
 def components_an_forcarrier(components_t):
-    """Calculate annual energy components for carrier from time step components"""
+    """Calculate annual energy composition by carrier from time step components"""
     components_an = {}
     for origin in components_t: # This is grid + VALIDORIGINS
         components_an[origin] = {}
@@ -229,7 +230,7 @@ def components_an_forcarrier(components_t):
     return components_an
 
 def energycomponents(energydata, k_rdel):
-    "Calculate timestep and annual energy components from input data"
+    "Calculate timestep and annual energy composition by carrier from input data"
 
     components = {}
     for carrier in energydata:
@@ -240,25 +241,24 @@ def energycomponents(energydata, k_rdel):
     return components
 
 ####################################################
-import pandas as pd
 
-def calcula_energia_entrante_pasoA(sources, fp):
-    """Energía total ponderada que entra en el paso A en la frontera de evaluación (AB)
+def delivered_weighted_energy_stepA(components, fp):
+    """Total delivered weighted energy entering the assessment boundary in step A
 
-    La energía que entra se pondera según su origen.
+    Energy is weighted depending on its origin (by source).
 
-    Devuelve un diccionario con las claves 'ren' y 'nren' que corresponden
-    a la parte renovable y no renovable.
+    This function returns a data structure with keys 'ren' and 'nren' corresponding
+    to the renewable and not renewable share of this weighted energy (step A).
     """
 
-    energia_entrante_pasoA = pd.Series({'ren': 0.0, 'nren': 0.0})
+    delivered_wenergy_stepA = pd.Series({'ren': 0.0, 'nren': 0.0})
     fpA = fp[(fp.uso=='input') & (fp.factor=='A')]
-    for source in sources:
-        values = sources[source]
+    for source in components:
+        values = components[source]
         if 'input' in values:
             factor_paso_A = fpA[(fpA.fuente==source)][['ren', 'nren']].iloc[0]
-            energia_entrante_pasoA = energia_entrante_pasoA + factor_paso_A * values['input']
-    return energia_entrante_pasoA
+            delivered_wenergy_stepA = delivered_wenergy_stepA + factor_paso_A * values['input']
+    return delivered_wenergy_stepA
 
 def exported_weighted_energy_stepA(components, fpA):
     """Total exported weighted energy going outside the assessment boundary in step A
@@ -340,14 +340,14 @@ def weighted_energy(data, k_rdel, fp, k_exp):
         fp_cr = fp[fp.vector==carrier]
         components_cr_an = components[carrier]['anual']
 
-        energia_entrante_pasoA = calcula_energia_entrante_pasoA(components_cr_an, fp_cr)
+        delivered_wenergy_stepA = delivered_weighted_energy_stepA(components_cr_an, fp_cr)
         exported_wenergy_stepA = exported_weighted_energy_stepA(components_cr_an, fp_cr)
-        balance_pasoA = energia_entrante_pasoA - exported_wenergy_stepA
+        balance_stepA = delivered_wenergy_stepA - exported_wenergy_stepA
 
-        ahorro_pasoB = gridsavings_stepB(components_cr_an, fp_cr, k_exp)
-        eficiencia_energetica = balance_pasoA - ahorro_pasoB
+        gsavings_stepB = gridsavings_stepB(components_cr_an, fp_cr, k_exp)
+        weighted_energy_stepAB = balance_stepA - gsavings_stepB
 
-        EP_carrier = pd.DataFrame({'EP': eficiencia_energetica, 'EPpasoA': balance_pasoA})
+        EP_carrier = pd.DataFrame({'EP': weighted_energy_stepAB, 'EPpasoA': balance_stepA})
 
         EP = EP + EP_carrier
     return EP
