@@ -260,31 +260,31 @@ def calcula_energia_entrante_pasoA(sources, fp):
             energia_entrante_pasoA = energia_entrante_pasoA + factor_paso_A * values['input']
     return energia_entrante_pasoA
 
-def calcula_energia_saliente_pasoA(sources, fpA):
-    """Energía total ponderada que sale en el paso A por la frontera de evaluación (AB)
+def exported_weighted_energy_stepA(components, fpA):
+    """Total exported weighted energy going outside the assessment boundary in step A
 
-    La energía que sale se pondera según su destino.
+    Energy is weighted depending on its destination (non-EPB uses or grid).
 
-    Devuelve un diccionario con las claves 'ren' y 'nren' que corresponden
-    a la parte renovable y no renovable.
+    This function returns a data structure with keys 'ren' and 'nren' corresponding
+    to the renewable and not renewable share of this weighted energy (step A).
     """
 
     to_nEPB = pd.Series({'ren': 0.0, 'nren': 0.0})
     to_grid = pd.Series({'ren': 0.0, 'nren': 0.0})
-    fpA_to_nEPB = fpA[(fpA.uso=='to_nEPB')]
-    fpA_to_grid = fpA[(fpA.uso=='to_nEPB')]
-    for source in sources:
-        value = sources[source]
-        if 'to_nEPB' in value:
-            fp_tmp = fpA_to_nEPB[fpA_to_nEPB.fuente==source][['ren', 'nren']].iloc[0]
-            to_nEPB = to_nEPB + fp_tmp * value['to_nEPB']
+    fpAnEPB = fpA[(fpA.uso=='to_nEPB')]
+    fpAgrid = fpA[(fpA.uso=='to_nEPB')]
+    for source in components:
+        destinations = components[source]
+        if 'to_nEPB' in destinations:
+            fp_tmp = fpAnEPB[fpAnEPB.fuente==source][['ren', 'nren']].iloc[0]
+            to_nEPB = to_nEPB + fp_tmp * destinations['to_nEPB']
 
-        if 'to_grid' in value:
-            fp_tmp = fpA_to_grid[fpA_to_grid.fuente== source][['ren', 'nren']].iloc[0]
-            to_grid = to_grid + fp_tmp * value['to_grid']
+        if 'to_grid' in destinations:
+            fp_tmp = fpAgrid[fpAgrid.fuente== source][['ren', 'nren']].iloc[0]
+            to_grid = to_grid + fp_tmp * destinations['to_grid']
 
-    energia_saliente_pasoA = to_nEPB + to_grid
-    return energia_saliente_pasoA
+    exported_energy_stepA = to_nEPB + to_grid
+    return exported_energy_stepA
 
 def gridsavings_stepB(components, fp, k_exp):
     """Avoided weighted energy resources in the grid due to exported electricity
@@ -341,8 +341,8 @@ def weighted_energy(data, k_rdel, fp, k_exp):
         components_cr_an = components[carrier]['anual']
 
         energia_entrante_pasoA = calcula_energia_entrante_pasoA(components_cr_an, fp_cr)
-        energia_saliente_pasoA = calcula_energia_saliente_pasoA(components_cr_an, fp_cr)
-        balance_pasoA = energia_entrante_pasoA - energia_saliente_pasoA
+        exported_wenergy_stepA = exported_weighted_energy_stepA(components_cr_an, fp_cr)
+        balance_pasoA = energia_entrante_pasoA - exported_wenergy_stepA
 
         ahorro_pasoB = gridsavings_stepB(components_cr_an, fp_cr, k_exp)
         eficiencia_energetica = balance_pasoA - ahorro_pasoB
