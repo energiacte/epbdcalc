@@ -22,8 +22,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from balanceenergiafinal import energycomponents, readenergyfile, readfactors, weighted_energy
+from energycalculations import readenergyfile, readfactors, weighted_energy
 from vista import formatIndicators
 from settings import *
 
-__version__ = '2015.10.16'
+__version__ = '2016.02.01'
