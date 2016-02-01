@@ -23,7 +23,7 @@
 # SOFTWARE.
 
 from energycalculations import readenergyfile, readfactors, weighted_energy
-from vista import formatIndicators
+from inputoutput import formatIndicators
 from settings import *
 
 __version__ = '2016.02.01'
