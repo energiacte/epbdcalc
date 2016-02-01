@@ -89,7 +89,7 @@ if __name__ == '__main__':
           else ep.readfactors(args.fpfile))
 
     data = ep.readenergyfile(args.vecfile.name)
-    EP = ep.calcula_eficiencia(data, k_rdel, fP, k_exp)
+    EP = ep.weighted_energy(data, k_rdel, fP, k_exp)
 
     cadenasalida = ['Archivo de entrada: %s\n' % args.vecfile.name,
                     ep.formatIndicators(EP)]

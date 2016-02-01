@@ -285,21 +285,6 @@ def calcula_energia_saliente_pasoA(sources, fpA):
     energia_saliente_pasoA = to_nEPB + to_grid
     return energia_saliente_pasoA
 
-def calcula_balance_pasoA(pasoA_o, pasoA_d):
-    """Balance de la energía total ponderada, en el paso A.
-
-    El balance se realiza en la frontera de evaluación (AB).
-    La característica de este balance es que los factores de entrada y
-    los de salida son iguales. Se obtiene la diferencia entre la energía
-    importada y exportada.
-
-    Devuelve un diccionario con las claves 'ren' y 'nren' que corresponden
-    a la parte renovable y no renovable del balance en el paso A.
-    """
-
-    balance_pasoA = pasoA_o - pasoA_d
-    return balance_pasoA
-
 def calcula_ahorro_pasoB(sources, fp, k_exp):
     """Energia total ponderada ahorrada por la red.
 
@@ -329,65 +314,36 @@ def calcula_ahorro_pasoB(sources, fp, k_exp):
     ahorro_pasoB = k_exp * (to_nEPB + to_grid)
     return ahorro_pasoB
 
-def calcula_eficiencia_energetica_forcarrier(carrier, sources, fp, k_exp):
-    """Balance total de la energía ponderada de un vector energético
+def weighted_energy(data, k_rdel, fp, k_exp):
+    """Total weighted energy (step A + B) = used energy (step A) - saved energy (step B)
 
-    Es el balance de energía para un vector energético en la frontera de
-    evaluación descontada la parte que ahorra la red debido a la exportación.
+    The energy saved to the grid due to exportation (step B) is substracted
+    from the the energy balance in the asessment boundary AB (step A).
+    This is  computed for all energy carrier and all energy sources.
 
-    Este total descuenta al obtenido en el paso A lo que la red ahorra
-    debido a la exportación de energía por la frontera (AB).
+    This function returns a data structure with keys 'ren' and 'nren'
+    corresponding to the renewable and not renewable parts of the balance.
 
-    Devuelve un diccionario con las claves 'ren' y 'nren' que corresponden
-    a la parte renovable y no renovable de la eficiencia energética
-    medida como energía primaria.
+    In the context of the CTE regulation weighted energy corresponds to
+    primary energy.
     """
-    fp_vec = fp[fp.vector==carrier]
-    sources_an = sources['anual']
-
-    energia_entrante_pasoA = calcula_energia_entrante_pasoA(sources_an, fp_vec)
-    energia_saliente_pasoA = calcula_energia_saliente_pasoA(sources_an, fp_vec)
-    balance_pasoA = calcula_balance_pasoA(energia_entrante_pasoA, energia_saliente_pasoA)
-    ahorro_pasoB = calcula_ahorro_pasoB(sources_an, fp_vec, k_exp)
-    eficiencia_energetica = balance_pasoA - ahorro_pasoB
-
-    return pd.DataFrame({'EP': eficiencia_energetica, 'EPpasoA': balance_pasoA})
-
-def pondera_energia_primaria(components, fp, k_exp):
-    """Balance total de la energía ponderada usada por el edificio y ahorrada a la red.
-
-    Es el balance de energía en la frontera de evaluación descontada la
-    parte que ahorra la red debido a la exportación para todos los
-    vectores energéticos y todas las fuentes.
-
-    Este total descuenta al obtenido en el paso A lo que la red ahorra
-    debido a la exportación de energía por la frontera (AB).
-
-    Devuelve un diccionario con las claves 'ren' y 'nren' que corresponden
-    a la parte renovable y no renovable.
-    """
+    components = energycomponents(data, k_rdel)
     EP = pd.DataFrame({'EP': {'ren': 0.0,
                               'nren': 0.0},
                        'EPpasoA': {'ren': 0.0,
                                    'nren': 0.0}})
     for carrier in components:
-        EP = EP + calcula_eficiencia_energetica_forcarrier(carrier, components[carrier], fp, k_exp)
-    return EP
+        fp_cr = fp[fp.vector==carrier]
+        components_cr_an = components[carrier]['anual']
 
-def calcula_eficiencia(data, k_rdel, fp, k_exp):
-    """Balance total de la energía ponderada usada por el edificio y ahorrada a la red.
+        energia_entrante_pasoA = calcula_energia_entrante_pasoA(components_cr_an, fp_cr)
+        energia_saliente_pasoA = calcula_energia_saliente_pasoA(components_cr_an, fp_cr)
+        balance_pasoA = energia_entrante_pasoA - energia_saliente_pasoA
 
-    Es el balance de energía en la frontera de evaluación AB, descontada la
-    parte que ahorra la red debido a la exportación, para todos los
-    vectores energéticos y todas las fuentes.
+        ahorro_pasoB = calcula_ahorro_pasoB(components_cr_an, fp_cr, k_exp)
+        eficiencia_energetica = balance_pasoA - ahorro_pasoB
 
-    Este total descuenta al obtenido en el paso A lo que la red ahorra
-    debido a la exportación de energía por la frontera (AB).
+        EP_carrier = pd.DataFrame({'EP': eficiencia_energetica, 'EPpasoA': balance_pasoA})
 
-    Devuelve un diccionario con las claves 'ren' y 'nren' que corresponden
-    a la parte renovable y no renovable.
-    """
-    components = energycomponents(data, k_rdel)
-    EP = pondera_energia_primaria(components, fp, k_exp)
-
+        EP = EP + EP_carrier
     return EP
