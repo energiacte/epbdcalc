@@ -40,23 +40,3 @@ def formatIndicators(EP):
                                       total,
                                       epren / total)
     return txt
-
-def redondeo(objeto, n=0):
-    if (isinstance(objeto, list) or isinstance(objeto, np.ndarray)):
-        if n == 0:
-            return int(round(sum(objeto),n)),[int(round(e,n)) for e in objeto]
-        else:
-            return round(sum(objeto),n),[round(e,n) for e in objeto]
-    elif isinstance(objeto, dict):
-        salida = ['\n']
-        for clave, valor in objeto.items():
-            if isinstance(valor, float):
-                salida.append('%s %.2f\n' % (clave, valor))
-        return ''.join(salida)
-            #print type(valor)
-    elif isinstance(objeto, float):
-        return round(objeto,n)
-    else:
-        print objeto
-        return type(objeto),'no reconozco este tipo en la función redondeo'
-
