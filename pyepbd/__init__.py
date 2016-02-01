@@ -22,8 +22,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from energycalculations import readenergyfile, readfactors, weighted_energy
-from inputoutput import formatIndicators
+from energycalculations import weighted_energy
+from inputoutput import formatIndicators, readenergyfile, readfactors
 from settings import *
 
 __version__ = '2016.02.01'

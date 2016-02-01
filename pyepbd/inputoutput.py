@@ -22,10 +22,71 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""Input and output utilities for energy efficiency data handling"""
+
 import numpy as np
+import pandas as pd
+
+def readenergyfile(filename):
+    """Read input data from filename and return data structure
+
+    Returns dict of array of values indexed by carrier, ctype and originoruse
+
+    data[carrier][ctype][originoruse] -> values as np.array with length=numsteps
+
+    * carrier is an energy carrier
+    * ctype is either 'PRODUCCION' or 'CONSUMO' por produced or used energy
+    * originoruse defines:
+      - the energy origin for produced energy (INSITU or COGENERACION)
+      - the energy end use (EPB or NEPB) for used energy
+    * values
+    """
+    with open(filename, 'r') as datafile:
+        lines = datafile.readlines()
+
+        # Find number of calculation steps used
+        numsteps = len(lines[1].split(',')[3:])
+
+        data = {}
+        for ii, line in enumerate(lines[1:]):
+            fields = line.strip().split(',')
+            carrier, ctype, originoruse = fields[0:3]
+            values = np.array(fields[3:]).astype(np.float)
+
+            # Checks
+            #TODO: handle Exceptions in CLI
+            if len(values) != numsteps:
+                raise ValueError, ("All input must have the same number of timesteps. "
+                                   "Problem found in line %i of %s\n\t%s" % (ii+2, filename, line))
+            if ctype not in ('PRODUCCION', 'CONSUMO'):
+                raise ValueError, "Carrier type is not 'CONSUMO' or 'PRODUCCION' in line %i\n\t%s" % (ii+2, line)
+            if originoruse not in ('EPB', 'NEPB', 'INSITU', 'COGENERACION'):
+                raise ValueError, ("Origin or end use is not 'EPB', 'NEPB', 'INSITU' or 'COGENERACION'"
+                                   " in line %i\n\t%s" % (ii+2, line))
+
+            if carrier not in data:
+                data[carrier] = {'CONSUMO': {'EPB': np.zeros(numsteps),
+                                             'NEPB': np.zeros(numsteps)},
+                                 'PRODUCCION': {'INSITU': np.zeros(numsteps),
+                                                'COGENERACION': np.zeros(numsteps)}}
+
+            data[carrier][ctype][originoruse] = data[carrier][ctype][originoruse] + values
+    return data
+
+def readfactors(filename):
+    """Read energy weighting factors data from file"""
+
+    # TODO: check valid sources
+    return pd.read_csv(filename,
+                       skipinitialspace=True,
+                       comment='#',
+                       skip_blank_lines=True)
 
 def formatIndicators(EP):
-    """Format energy efficiency indicators as string from primary energy data"""
+    """Format energy efficiency indicators as string from primary energy data
+
+    In the context of the CTE regulations, this refers to primary energy values.
+    """
 
     epren, epnren = EP.EP['ren'], EP.EP['nren']
     eparen, epanren = EP.EPpasoA['ren'], EP.EPpasoA['nren']
