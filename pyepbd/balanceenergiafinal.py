@@ -253,10 +253,10 @@ def calcula_energia_entrante_pasoA(sources, fp):
     energia_entrante_pasoA = pd.Series({'ren': 0.0, 'nren': 0.0})
     fpA = fp[(fp.uso=='input') & (fp.factor=='A')]
     for source in sources:
-        value = sources[source]
-        if 'input' in value:
+        values = sources[source]
+        if 'input' in values:
             factor_paso_A = fpA[(fpA.fuente==source)][['ren', 'nren']].iloc[0]
-            energia_entrante_pasoA = energia_entrante_pasoA + factor_paso_A * value['input']
+            energia_entrante_pasoA = energia_entrante_pasoA + factor_paso_A * values['input']
     return energia_entrante_pasoA
 
 def calcula_energia_saliente_pasoA(sources, fpA):
@@ -329,7 +329,7 @@ def calcula_ahorro_pasoB(sources, fp, k_exp):
     ahorro_pasoB = k_exp * (to_nEPB + to_grid)
     return ahorro_pasoB
 
-def calcula_eficiencia_energetica_vec(vector, sources, fp, k_exp):
+def calcula_eficiencia_energetica_forcarrier(carrier, sources, fp, k_exp):
     """Balance total de la energía ponderada de un vector energético
 
     Es el balance de energía para un vector energético en la frontera de
@@ -342,18 +342,18 @@ def calcula_eficiencia_energetica_vec(vector, sources, fp, k_exp):
     a la parte renovable y no renovable de la eficiencia energética
     medida como energía primaria.
     """
-    fp_vec = fp[fp.vector==vector]
-    sources = sources['anual']
+    fp_vec = fp[fp.vector==carrier]
+    sources_an = sources['anual']
 
-    energia_entrante_pasoA = calcula_energia_entrante_pasoA(sources, fp_vec)
-    energia_saliente_pasoA = calcula_energia_saliente_pasoA(sources, fp_vec)
+    energia_entrante_pasoA = calcula_energia_entrante_pasoA(sources_an, fp_vec)
+    energia_saliente_pasoA = calcula_energia_saliente_pasoA(sources_an, fp_vec)
     balance_pasoA = calcula_balance_pasoA(energia_entrante_pasoA, energia_saliente_pasoA)
-    ahorro_pasoB = calcula_ahorro_pasoB(sources, fp_vec, k_exp)
+    ahorro_pasoB = calcula_ahorro_pasoB(sources_an, fp_vec, k_exp)
     eficiencia_energetica = balance_pasoA - ahorro_pasoB
 
     return pd.DataFrame({'EP': eficiencia_energetica, 'EPpasoA': balance_pasoA})
 
-def pondera_energia_primaria(balance, fp, k_exp):
+def pondera_energia_primaria(components, fp, k_exp):
     """Balance total de la energía ponderada usada por el edificio y ahorrada a la red.
 
     Es el balance de energía en la frontera de evaluación descontada la
@@ -370,8 +370,8 @@ def pondera_energia_primaria(balance, fp, k_exp):
                               'nren': 0.0},
                        'EPpasoA': {'ren': 0.0,
                                    'nren': 0.0}})
-    for vector in balance:
-        EP = EP + calcula_eficiencia_energetica_vec(vector, balance[vector], fp, k_exp)
+    for carrier in components:
+        EP = EP + calcula_eficiencia_energetica_forcarrier(carrier, components[carrier], fp, k_exp)
     return EP
 
 def calcula_eficiencia(data, k_rdel, fp, k_exp):
