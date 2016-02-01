@@ -166,7 +166,7 @@ def components_an_forcarrier(components_t):
             sumforuse = components_t_byorigin[use].sum()
             # TODO Outer code depends on components_an[origin][use] not being defined
             # TODO so we can't use components[origin][use] = sumforuse if abs(sumforuse) > 0.1 or 0.0
-            # TODO see calcula_energia_entrante_pasoA for the ponderaenergiaprimaria module
+            # TODO see delivered_weighted_energy_stepA for this module
             if abs(sumforuse) > 0.1:
                 components_an[origin][use] = sumforuse
     return components_an
@@ -185,9 +185,9 @@ def energycomponents(energydata, k_rdel):
 ####################################################
 
 def delivered_weighted_energy_stepA(components, fp):
-    """Total delivered weighted energy entering the assessment boundary in step A
+    """Total delivered (or produced) weighted energy entering the assessment boundary in step A
 
-    Energy is weighted depending on its origin (by source).
+    Energy is weighted depending on its origin (by source or grid).
 
     This function returns a data structure with keys 'ren' and 'nren' corresponding
     to the renewable and not renewable share of this weighted energy (step A).
@@ -196,10 +196,10 @@ def delivered_weighted_energy_stepA(components, fp):
     delivered_wenergy_stepA = pd.Series({'ren': 0.0, 'nren': 0.0})
     fpA = fp[(fp.uso=='input') & (fp.factor=='A')]
     for source in components:
-        values = components[source]
-        if 'input' in values:
+        origins = components[source]
+        if 'input' in origins:
             factor_paso_A = fpA[(fpA.fuente==source)][['ren', 'nren']].iloc[0]
-            delivered_wenergy_stepA = delivered_wenergy_stepA + factor_paso_A * values['input']
+            delivered_wenergy_stepA = delivered_wenergy_stepA + factor_paso_A * origins['input']
     return delivered_wenergy_stepA
 
 def exported_weighted_energy_stepA(components, fpA):
