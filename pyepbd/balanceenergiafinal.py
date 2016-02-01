@@ -111,7 +111,8 @@ def readenergyfile(filename):
 
 def readfactors(filename):
     """Read energy weighting factors data from file"""
-    
+
+    # TODO: check valid sources
     return pd.read_csv(filename,
                        skipinitialspace=True,
                        comment='#',
@@ -285,34 +286,37 @@ def calcula_energia_saliente_pasoA(sources, fpA):
     energia_saliente_pasoA = to_nEPB + to_grid
     return energia_saliente_pasoA
 
-def calcula_ahorro_pasoB(sources, fp, k_exp):
-    """Energia total ponderada ahorrada por la red.
+def gridsavings_stepB(components, fp, k_exp):
+    """Avoided weighted energy resources in the grid due to exported electricity
 
-    Este valor representa la energía ponderada que ahorra la red
-    debido a la exportación de energía por la frontera (AB).
+    The computation is done for a single energy carrier, considering the
+    exported energy used for non-EPB uses (to_nEPB) and the energy exported
+    to the grid (to_grid), each with its own weigting factors and k_exp.
 
-    Devuelve un diccionario con las claves 'ren' y 'nren' que corresponden
-    a la parte renovable y no renovable de la eficiencia energética,
-    medida como energía primaria, en el paso B.
+    This function returns a data structure with keys 'ren' and 'nren' corresponding
+    to the renewable and not renewable share of this weighted energy (step B).
     """
 
     to_nEPB = pd.Series({'ren': 0.0, 'nren': 0.0})
     to_grid = pd.Series({'ren': 0.0, 'nren': 0.0})
-    fpB = fp[fp.factor=='B']
     fpA = fp[fp.factor=='A']
-    for source in sources:
-        value = sources[source]
-        if 'to_nEPB' in value:
-            fpB_tmp= fpB[(fpB.uso=='to_nEPB') & (fpB.fuente==source)][['ren','nren']].iloc[0]
-            fpA_tmp= fpA[(fpA.uso=='to_nEPB') & (fpA.fuente==source)][['ren','nren']].iloc[0]
-            to_nEPB = to_nEPB + (fpB_tmp - fpA_tmp) * value['to_nEPB']
-        if 'to_grid' in value:
-            fpB_tmp= fpB[(fpB.uso=='to_grid') & (fpB.fuente==source)][['ren','nren']].iloc[0]
-            fpA_tmp= fpA[(fpA.uso=='to_grid') & (fpA.fuente==source)][['ren','nren']].iloc[0]
-            to_grid = to_grid + (fpB_tmp - fpA_tmp) * value['to_grid']
+    fpB = fp[fp.factor=='B']
+    fpAnEPB,fpAgrid = fpA[fpA.uso=='to_nEPB'], fpA[fpA.uso=='to_grid']
+    fpBnEPB,fpBgrid = fpB[fpB.uso=='to_nEPB'], fpB[fpB.uso=='to_grid']
+    
+    for source in components:
+        destinations = components[source]
+        if 'to_nEPB' in destinations:
+            fpA_tmp= fpAnEPB[fpAnEPB.fuente==source][['ren','nren']].iloc[0]
+            fpB_tmp= fpBnEPB[fpBnEPB.fuente==source][['ren','nren']].iloc[0]
+            to_nEPB = to_nEPB + (fpB_tmp - fpA_tmp) * destinations['to_nEPB']
+        if 'to_grid' in destinations:
+            fpA_tmp= fpAgrid[fpAgrid.fuente==source][['ren','nren']].iloc[0]
+            fpB_tmp= fpBgrid[fpBgrid.fuente==source][['ren','nren']].iloc[0]
+            to_grid = to_grid + (fpB_tmp - fpA_tmp) * destinations['to_grid']
 
-    ahorro_pasoB = k_exp * (to_nEPB + to_grid)
-    return ahorro_pasoB
+    gridsavings = k_exp * (to_nEPB + to_grid)
+    return gridsavings
 
 def weighted_energy(data, k_rdel, fp, k_exp):
     """Total weighted energy (step A + B) = used energy (step A) - saved energy (step B)
@@ -340,7 +344,7 @@ def weighted_energy(data, k_rdel, fp, k_exp):
         energia_saliente_pasoA = calcula_energia_saliente_pasoA(components_cr_an, fp_cr)
         balance_pasoA = energia_entrante_pasoA - energia_saliente_pasoA
 
-        ahorro_pasoB = calcula_ahorro_pasoB(components_cr_an, fp_cr, k_exp)
+        ahorro_pasoB = gridsavings_stepB(components_cr_an, fp_cr, k_exp)
         eficiencia_energetica = balance_pasoA - ahorro_pasoB
 
         EP_carrier = pd.DataFrame({'EP': eficiencia_energetica, 'EPpasoA': balance_pasoA})
