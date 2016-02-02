@@ -36,7 +36,6 @@ else:
     warnings.simplefilter('ignore')
 
 import pyepbd as ep
-import pandas as pd
 
 COPY = u"""\tversión: %s
 \t(c) 2015 Ministerio de Fomento
