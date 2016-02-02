@@ -1,9 +1,12 @@
+include Makefile
 include LICENSE.txt
 include LICENSE_ES.txt
 include HACKING.txt
-include Makefile
 include NEWS.txt
 include README.rst
-include requirements.txt
 include TODO.txt
+include CONTRIBUTORS.txt
+include requirements.txt
 recursive-include data *.csv
+recursive-include test *.csv
+recursive-include test *.py
