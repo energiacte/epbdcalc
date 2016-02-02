@@ -35,7 +35,7 @@ from pyepbd import __version__
 include_files = []
 
 ## Let's add data dirs from pyepbd
-pats = ['data/*.csv']
+pats = ['pyepbd/examples/*.csv']
 staticfiles = ['Manual_epbdcalc.pdf',
                'README.rst',
                'NEWS.txt',
