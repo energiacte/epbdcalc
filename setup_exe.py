@@ -38,7 +38,7 @@ include_files = []
 pats = ['data/*.csv']
 staticfiles = ['Manual_epbdcalc.pdf',
                'README.rst',
-               'NEWS.rst',
+               'NEWS.txt',
                'HACKING.txt',
                'LICENSE.txt',
                'LICENSE_ES.txt',
@@ -72,7 +72,7 @@ buildOptions = dict(
     )
 
 README = open('README.rst').read()
-NEWS = open('NEWS.rst').read()
+NEWS = open('NEWS.txt').read()
 setup(
     name="epbdcalc",
     author="Rafael Villar Burke, Daniel Jiménez González",
