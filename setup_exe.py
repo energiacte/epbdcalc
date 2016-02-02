@@ -79,22 +79,51 @@ setup(
     version=__version__,
     description="Cálculo de la eficiencia energética según ISO/DIS 52000-1:2015",
     long_description=README + '\n\n' + NEWS,
+    url="https://github.com/pachi/epbdcalc",
+    license="MIT",
+    # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
+    classifiers=[
+        # How mature is this project? Common values are
+        #   3 - Alpha
+        #   4 - Beta
+        #   5 - Production/Stable
+        'Development Status :: 5 - Production/Stable',
+
+        # Indicate who your project is intended for
+        'Intended Audience :: Science/Research',
+        'Topic :: Scientific/Engineering',
+
+        # Pick your license as you wish (should match "license" above)
+        'License :: OSI Approved :: MIT License',
+
+        # Specify the Python versions you support here. In particular, ensure
+        # that you indicate whether you support Python 2, Python 3 or both.
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: Implementation :: CPython',
+
+        # Environment
+        'Environment :: Console',
+    ],
+    keywords=u"energía,edificación,CTE,energy,buildings",
+
+    # You can just specify the packages manually here if your project is
+    # simple. Or you can use find_packages().
+    packages=find_packages(exclude=['build', 'data', 'res', 'contrib', 'docs', 'test']),
+
+    # List run-time dependencies here.  These will be installed by pip when
+    # your project is installed. For an analysis of "install_requires" vs pip's
+    # requirements files see:
+    # https://packaging.python.org/en/latest/requirements.html
+    install_requires=['pandas', 'numpy'],
+
+    # List additional groups of dependencies here (e.g. development
+    # dependencies). You can install these using the following syntax,
+    # for example:
+    # $ pip install -e .[dev,test]
+    extras_require={
+        'test': ['pytest'],
+    },
+
     options=dict(build_exe=buildOptions),
     executables=executables,
-    # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
-    classifiers=[
-        'Development Status :: 5 - Production/Stable',
-        'Environment :: MacOS X',
-        'Environment :: Win32 (MS Windows)',
-        'Environment :: X11 Applications',
-        'Environment :: Console',
-        'Intended Audience :: Science/Research',
-        'License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)',
-        'Natural Language :: Spanish',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: Implementation :: CPython',
-        'Topic :: Scientific/Engineering'],
-    keywords=u"energía,edificación,CTE",
-    url="http://www.ietcc.csic.es/",
-    license="GPL-2.0+"
 )
