@@ -26,4 +26,4 @@ from energycalculations import weighted_energy
 from inputoutput import formatIndicators, readenergyfile, readfactors
 from settings import *
 
-__version__ = '2016.02.01'
+__version__ = '20160201'
