@@ -106,7 +106,7 @@ setup(
         'Environment :: Console',
         'Operating System :: OS Independent'
     ],
-    keywords=u"energía,edificación,CTE,energy,buildings",
+    keywords=[u"energía", u"edificación", u"CTE", u"energy", u"buildings"],
     options=dict(build_exe=buildOptions),
     executables=executables,
 )
