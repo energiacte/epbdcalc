@@ -29,7 +29,15 @@ import os, sys
 from glob import glob
 from cx_Freeze import setup, Executable
 
-from pyepbd import __version__
+def find_version(*file_paths, **kwargs):
+    with codecs.open(os.path.join(os.path.dirname(__file__), *file_paths),
+                     encoding=kwargs.get("encoding", "utf8")) as fp:
+        version_file = fp.read()
+    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]",
+                              version_file, re.M)
+    if version_match:
+        return version_match.group(1)
+    raise RuntimeError("Unable to find version string.")
 
 ## Create the list of includes as cx_freeze likes
 include_files = []
@@ -77,7 +85,7 @@ setup(
     name="pyepbd",
     author="Rafael Villar Burke, Daniel Jiménez González",
     author_email='pachi@ietcc.csic.es',
-    version=__version__,
+    version=find_version("pyepbd", "__init__.py"),
     description="Cálculo de la eficiencia energética según ISO/DIS 52000-1:2015",
     long_description=README + '\n\n' + NEWS,
     url="https://github.com/pachi/epbdcalc",
