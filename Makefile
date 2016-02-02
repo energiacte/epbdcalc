@@ -65,6 +65,9 @@ test:
 	$(PYTHON) -m pytest
 	$(PYTHON) bin/epbdcalc.py test/ejemplo6K3.csv
 
+coverage:
+	$(PYTHON) -m pytest --cov pyepbd --cov-report=html
+
 clean:
 	rm -rf build dist MANIFEST setup.nsi README.html Manual_epbdcalc.pdf
 	find . -name *.pyc -exec rm {} \;

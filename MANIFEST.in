@@ -10,3 +10,4 @@ include requirements.txt
 recursive-include data *.csv
 recursive-include test *.csv
 recursive-include test *.py
+include test/.coveragerc
