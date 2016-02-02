@@ -74,7 +74,7 @@ buildOptions = dict(
 README = open('README.rst').read()
 NEWS = open('NEWS.txt').read()
 setup(
-    name="epbdcalc",
+    name="pyepbd",
     author="Rafael Villar Burke, Daniel Jiménez González",
     author_email='pachi@ietcc.csic.es',
     version=__version__,
