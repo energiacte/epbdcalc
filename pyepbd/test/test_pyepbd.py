@@ -51,8 +51,8 @@ def epfromfile(filename, krdel, kexp, fp):
     data = readenergyfile(datafile)
     return weighted_energy(data, krdel, fp, kexp)
 
-TESTFP = readfactors(os.path.join(currpath, '../data/factores_paso_test.csv'))
-CTEFP = FACTORESDEPASOOFICIALES
+TESTFP = readfactors(os.path.join(currpath, '../examples/factores_paso_test.csv'))
+CTEFP = readfactors(os.path.join(currpath, '../examples/factores_paso_20140203.csv'))
 TESTKRDEL = 1.0
 TESTKEXP = 1.0
 
