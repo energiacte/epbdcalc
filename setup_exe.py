@@ -28,6 +28,7 @@ $ python setup.py build
 import os, sys
 from glob import glob
 from cx_Freeze import setup, Executable
+
 from pyepbd import __version__
 
 ## Create the list of includes as cx_freeze likes
@@ -105,25 +106,6 @@ setup(
         'Environment :: Console',
     ],
     keywords=u"energía,edificación,CTE,energy,buildings",
-
-    # You can just specify the packages manually here if your project is
-    # simple. Or you can use find_packages().
-    packages=find_packages(exclude=['build', 'data', 'res', 'contrib', 'docs', 'test']),
-
-    # List run-time dependencies here.  These will be installed by pip when
-    # your project is installed. For an analysis of "install_requires" vs pip's
-    # requirements files see:
-    # https://packaging.python.org/en/latest/requirements.html
-    install_requires=['pandas', 'numpy'],
-
-    # List additional groups of dependencies here (e.g. development
-    # dependencies). You can install these using the following syntax,
-    # for example:
-    # $ pip install -e .[dev,test]
-    extras_require={
-        'test': ['pytest'],
-    },
-
     options=dict(build_exe=buildOptions),
     executables=executables,
 )
