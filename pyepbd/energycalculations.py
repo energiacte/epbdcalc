@@ -164,9 +164,12 @@ def components_an_forcarrier(components_t):
         components_t_byorigin = components_t[origin]
         for use in components_t_byorigin:
             sumforuse = components_t_byorigin[use].sum()
-            # TODO Outer code depends on components_an[origin][use] not being defined
-            # TODO so we can't use components[origin][use] = sumforuse if abs(sumforuse) > 0.1 or 0.0
-            # TODO see delivered_weighted_energy_stepA for this module
+            # TODO we need to know numsteps to make this shortcut work
+            # TODO some input data doesn't have timestep data and this fails
+            # try:
+            #     components_an[origin][use] = sumforuse if abs(sumforuse) > 0.1 else np.zeros(numsteps)
+            # except:
+            #     print origin, use, sumforuse, components_an
             if abs(sumforuse) > 0.1:
                 components_an[origin][use] = sumforuse
     return components_an
