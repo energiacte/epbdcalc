@@ -24,21 +24,7 @@
 
 """Cálculo de la eficiencia energética de los edificios según ISO/DIS 52000-1:2005"""
 
-import os, sys
-import warnings
-
-import argparse
-import sys
-
-if not hasattr(sys, 'frozen'):
-    currpath = os.path.abspath(os.path.dirname(__file__))
-    upperpath = os.path.abspath(os.path.join(currpath, '..'))
-    sys.path.append(upperpath)
-else:
-    currpath, upperpath = None, None
-    warnings.simplefilter('ignore')
-
-from pyepbd import cli
+from .cli import main
 
 if __name__ == '__main__':
-    cli.main()
+    main()
