@@ -62,11 +62,9 @@ base = None
 #if sys.platform == "win32":
 #    base = "Win32GUI"
 
-executables = [
-    Executable("bin/epbdcalc.py",
-               base=None
-    )
-]
+executables = [Executable("bin/epbdcalc.py",
+                          base=None,
+                          targetname="epbdcalc.exe")]
 
 buildOptions = dict(
     compressed=False,
