@@ -212,14 +212,14 @@ El programa está concebido para calcular la eficiencia energética con los fact
 Por ejemplo, los archivos de prueba que se distribuyen con el programa usan un archivo de factores de paso del siguiente modo:
 
 \begin{Verbatim}
-	$ epbdcalc ./data/ejemplo1base.csv -f ./data/factores_paso_test.csv 
+	$ epbdcalc ../examples/ejemplo1base.csv -f ../examples/factores_paso_test.csv 
 \end{Verbatim}
 %$
 
 Igualmente, se podría fijar el factor de exportación ($k_{exp}$) así:
 
 \begin{Verbatim}
-	$ epbdcalc ./data/ejemplo1xPV.csv -f ./data/factores_paso_test.csv --kexp=0.0
+	$ epbdcalc ../examples/ejemplo1xPV.csv -f ../examples/factores_paso_test.csv --kexp=0.0
 \end{Verbatim}
 %$
 
@@ -351,7 +351,7 @@ El programa ofrece, además de dichos indicadores, la descomposición consumo to
 
 Esta salida se realiza a través de la salida estándar, pudiendo indicar mediante la opción \texttt{-o} o \texttt{--outfile} que se almacene en un archivo, tal como se describe en el la sección \autoref{sec:usoprograma}, de \nameref{sec:usoprograma}. A continuación se muestra un ejemplo de la salida generada:
 
-\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../data/ejemplo1base_salida.csv}
+\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo1base_salida.csv}
 
 \clearpage
 \newpage
@@ -387,7 +387,7 @@ En el caso base todos los sistemas del edificio funcionan con un único vector e
 
 El archivo de definición del caso sería (\texttt{ejemplo1base.csv}):
 
-\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../data/ejemplo1base.csv}
+\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo1base.csv}
 
 La llamada al programa se realizaría así:
 
@@ -397,13 +397,13 @@ La llamada al programa se realizaría así:
 
 El archivo de salida (\texttt{ejemplo1base\_salida.csv}):
 
-\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../data/ejemplo1base_salida.csv}
+\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo1base_salida.csv}
 
 \subsubsection{Aporte de energía fotovoltaica}
 
 Una variante del anterior supone la introducción de energía fotovoltaica por un valor de la mitad de lo consumido en EPB, de 50 kWh. De manera que se añade un concepto que refleje este aporte (\textit{ejemplo1PV.csv}):
 
-\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../data/ejemplo1PV.csv}
+\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo1PV.csv}
 
 La llamada al programa se realizaría así:
 
@@ -413,13 +413,13 @@ La llamada al programa se realizaría así:
 
 Que daría como resultado (\textit{ejemplo1PV\_salida.csv}):
 
-\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../data/ejemplo1PV_salida.csv}
+\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo1PV_salida.csv}
 
 \subsubsection{Exceso de energía fotovoltaica}
 
 En esta ocasión el sistema fotovoltaico produce más energía de la que se demanda para cubrir los servicios EPB. Este hecho se refleja en la entrada de datos \texttt{ejemplo1xPV.csv}):
 
-\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../data/ejemplo1xPV.csv}
+\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo1xPV.csv}
 
 La llamada al programa se realizaría así:
 
@@ -429,12 +429,12 @@ La llamada al programa se realizaría así:
 
 Los valores de salida son \texttt{ejemplo1xPV.csv}:
 
-\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../data/ejemplo1xPV_salida.csv}
+\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo1xPV_salida.csv}
 
 \subsection{Ejemplo 2: Sistema de gas natural con apoyo eléctrico}
 En el ejemplo 2 la demanda energética es cubierta con una caldera que consume 190 kWh, existiendo un consumo eléctrico menor de apoyo de 20 kWh. Además existe una instalación fotovoltaica que aporta 40 kWh anuales. Todo ello queda recogido en el fichero de datos \texttt{ejemplo2PVgas.csv}:
 
-\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../data/ejemplo2PVgas.csv}
+\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo2PVgas.csv}
 
 La llamada al programa se realizaría así:
 
@@ -444,12 +444,12 @@ La llamada al programa se realizaría así:
 
 El resultado es (\texttt{ejemplo2PVgas\_salida.csv}):
 
-\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../data/ejemplo2PVgas_salida.csv}
+\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo2PVgas_salida.csv}
 
 \subsection{Ejemplo 3: Sistema de bomba de calor con apoyo fotovoltaico.}
 El ejemplo 3 recoge el caso de un sistema con bomba de calor que cubre toda la demanda de EPB. Esta bomba de calor eléctrica consume 59 kWh, de los cuales 40 son de origen fotovoltaico. Esa energía se usa para bombear 131 kWh del medio ambiente. El archivo de definición \texttt{ejemplo3PVBdC.csv}:
 
-\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../data/ejemplo3PVBdC.csv}
+\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo3PVBdC.csv}
 
 La llamada al programa se realizaría así:
 
@@ -459,12 +459,12 @@ La llamada al programa se realizaría así:
 
 Los valores de salida son (\texttt{ejemplo3PVBdC\_salida.csv}):
 
-\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../data/ejemplo3PVBdC_salida.csv}
+\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo3PVBdC_salida.csv}
 
 \subsection{Ejemplo 4: Caldera y sistema de cogeneración con combustible fósil.}
 En el ejemplo 4 hay presente una caldera de gas natural que consume 100 kWh y una máquina de cogeneración que consume 158 kWh, también de gas natural. Como resultado de la cogeneración se generan 48 kWh de electricidad de los cuales 28 son exportados a la red. La entrada de datos sería la recogida en el archivo \texttt{ejemplo4cgnfosil.csv}:
 
-\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../data/ejemplo4cgnfosil.csv}
+\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo4cgnfosil.csv}
 
 La llamada al programa se realizaría así:
 
@@ -474,12 +474,12 @@ La llamada al programa se realizaría así:
 
 El resultado es (\texttt{ejemplo4cgnfosil\_salida.csv}):
 
-\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../data/ejemplo4cgnfosil_salida.csv}
+\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo4cgnfosil_salida.csv}
 
 \subsection{Ejemplo 5: Caldera y sistema de cogeneración con combustible renovable.}
 Este ejemplo 5 es idéntico al anterior con la salvedad de que los 158 kWh que consume el sistema de cogeneración provienen de fuentes renovables (\texttt{ejemplo5cgnbiogas.csv}):
 
-\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../data/ejemplo5cgnbiogas.csv}
+\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo5cgnbiogas.csv}
 
 La llamada al programa se realizaría así:
 
@@ -489,7 +489,7 @@ La llamada al programa se realizaría así:
 
 La salida es \texttt{ejemplo5cgnbiogas\_salida.csv}:
 
-\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../data/ejemplo5cgnbiogas_salida.csv}
+\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo5cgnbiogas_salida.csv}
 
 
 \subsection{Ejemplo 6: Calculo con varios pasos y valores para no EPB}
@@ -499,7 +499,7 @@ Además sí se consideran una serie de consumos energéticos para servicios que 
 
 El sistema se tan simple como el del ejemplo 1, con la variante de la existencia de un sistema fotovoltaico que aporta una parte del consumo eléctrico. Los valores de entrada corresponden a la tabla K.1 del citado informe (\texttt{ejemplo6K3.csv}):
 
-\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../data/ejemplo6K3.csv}
+\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo6K3.csv}
 
 La llamada al programa se realizaría así:
 
@@ -509,6 +509,6 @@ La llamada al programa se realizaría así:
 
 Los indicadores de eficiencia energética son \texttt{ejemplo6K3\_salida.csv}:
 
-\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../data/ejemplo6K3_salida.csv}
+\VerbatimInput[frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo6K3_salida.csv}
 
 \end{document}
