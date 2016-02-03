@@ -22,7 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Auxiliary module to create test files"""
+"""Auxiliary module to create output files"""
 
 import os
 import numpy as np
@@ -63,7 +63,7 @@ def createfile(nombre_fichero, data):
                     print u'__error__ no reconozco a %s como fuente/destino, no está en la lista' % originoruse, VALID_ORIGINORUSE
                 if isinstance(values, int):
                     values = [values]
-                datalines.append('%s,%s,%s,' % (carrier, ctype, originoruse) + ','.join([str(e) for e in values]) + '\n')
+                datalines.append('%s,%s,%s,' % (carrier, ctype, originoruse) + ','.join(['%.2f' % e for e in values]) + '\n')
             f.writelines(datalines)
 
 if __name__ == "__main__":
