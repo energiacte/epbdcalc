@@ -91,13 +91,9 @@ def formatIndicators(EP):
     epren, epnren = EP.EP['ren'], EP.EP['nren']
     eparen, epanren = EP.EPpasoA['ren'], EP.EPpasoA['nren']
     total = epren + epnren
-
-    txt = ("EP           | EPpasoA\n"
-           "ren ={:>8.1f}| ren ={:>8.1f}\n"
-           "nren={:>8.1f}| nren={:>8.1f}\n"
-           "tot ={:>8.1f}|\n"
-           "RER ={:>8.2f}|\n").format(epren, eparen,
-                                      epren, epanren,
-                                      total,
-                                      epren / total)
+    totala = eparen + epanren
+    txt = ("EP(step A)  , ren ={:>8.1f}, nren={:>8.1f}, tot ={:>8.1f}, RER ={:>8.2f}\n"
+           "EP(step A+B), ren ={:>8.1f}, nren={:>8.1f}, tot ={:>8.1f}, RER ={:>8.2f}\n"
+           ).format(eparen, epanren, totala, eparen / totala,
+                    epren,  epnren, total, epren / total)
     return txt

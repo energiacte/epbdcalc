@@ -1,6 +1,3 @@
-Archivo de entrada: ejemplo5cgnbiogas.csv
-    EP       |   EPpasoA
-ren =   159.8| ren =   145.8
-nren=    69.8| nren=   125.8
-tot =   229.6|
-RER =     0.7|
+ejemplo5cgnbiogas.csv
+EP(step A)  , ren =   145.8, nren=   125.8, tot =   271.6, RER =    0.54
+EP(step A+B), ren =   159.8, nren=    69.8, tot =   229.6, RER =    0.70

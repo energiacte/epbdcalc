@@ -1,6 +1,3 @@
-Archivo de entrada: ejemplo4cgnfosil.csv
-    EP       |   EPpasoA
-ren =   -14.0| ren =   -28.0
-nren=   227.8| nren=   283.8
-tot =   213.8|
-RER =   -0.07|
+ejemplo4cgnfosil.csv
+EP(step A)  , ren =   -28.0, nren=   283.8, tot =   255.8, RER =   -0.11
+EP(step A+B), ren =   -14.0, nren=   227.8, tot =   213.8, RER =   -0.07

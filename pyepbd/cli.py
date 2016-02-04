@@ -80,7 +80,7 @@ def main():
     data = readenergyfile(args.vecfile.name)
     EP = weighted_energy(data, k_rdel, fP, k_exp)
 
-    cadenasalida = ['Archivo de entrada: %s\n' % args.vecfile.name,
+    cadenasalida = ['%s\n' % args.vecfile.name,
                     formatIndicators(EP)]
     print ''.join(cadenasalida)
 

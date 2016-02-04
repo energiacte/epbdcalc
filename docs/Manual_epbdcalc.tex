@@ -170,16 +170,18 @@ La interacción con el programa se produce a través de la línea de comandos (s
 \begin{Verbatim}[fontsize=\small]
 	$ epbdcalc ./directorio/datos_entrada.csv
 \end{Verbatim}
+%$
 
+La ejecución del programa realiza el procesado del archivo de entrada de datos (\texttt{datos\_entrada.csv} en el ejemplo) y emite los resultados  del cálculo del balance de energía primaria por pantalla, pudiendo enviar la salida a un archivo mediante la opción \texttt{-o}:
 
-La ejecución del programa realiza el procesado del archivo de entrada de datos (\texttt{datos\_entrada.csv} en el ejemplo) y resulta en la generación de un archivo de igual nombre con el sufijo \texttt{\_salida}, almacenado en el directorio del archivo de datos, con el resultado del cálculo del balance de energía primaria.
+\VerbatimInput[fontsize=\small, frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo1base_salida.csv}
 
 La invocación del programa sin un archivo de datos de entrada o usando las opciones \texttt{-h} o \texttt{--help}:
 
 \begin{Verbatim}[fontsize=\small]
 	$ epbdcalc --h
 \end{Verbatim}
-
+%$
 
  muestra la ayuda de uso:
 
@@ -207,28 +209,30 @@ La invocación del programa sin un archivo de datos de entrada o usando las opci
 \end{Verbatim}
 
 
-El programa está concebido para calcular la eficiencia energética con los factores de paso y los parámetros de resuministro y exportación normativos, aunque, mediante distintas opciones del programa es posible realizar los cálculos con otros valores.
+El programa está concebido para calcular la eficiencia energética con factores de paso y parámetros de resuministro y exportación arbitrarios, aunque emplea de manera predeterminada valores (pre)-normativos.
 
 Por ejemplo, los archivos de prueba que se distribuyen con el programa usan un archivo de factores de paso del siguiente modo:
 
 \begin{Verbatim}[fontsize=\small]
 	$ epbdcalc ../examples/ejemplo1base.csv -f ../examples/factores_paso_test.csv 
 \end{Verbatim}
+%$
 
-Igualmente, se podría fijar el factor de exportación ($k_{exp}$) así:
+Igualmente, se podría fijar el factor de exportación ($k_{exp}$) y el de resuministro ($k_{rdel}$) así:
 
 \begin{Verbatim}[fontsize=\small]
-	$ epbdcalc ../examples/ejemplo1xPV.csv -f ../examples/factores_paso_test.csv --kexp=0.0
+	$ epbdcalc ../examples/ejemplo1xPV.csv -f ../examples/factores.csv --kexp 0.1 --krdel 0.9
 \end{Verbatim}
+%$
 
 \subsection{Entrada de datos}
 
-El archivo de datos de entrada proporciona la información de origen y uso de la energía en cada paso de calculo. Para ello usa el formato de \textit{valores separados por comas}\footnote{El formato está documentado en el estándar RFC 4180 (\url{https://tools.ietf.org/html/rfc4180}). Consiste en un archivo de texto que describe una tabla de datos, con una línea por cada fila (registro) y donde los valores de las columnas están separados por comas y usan como separador decimal el punto. Opcionalmente, se puede incluir una línea inicial que da nombre a las columnas} con la siguiente estructura de los registros (filas) de datos, que se muestra de forma esquemática en la \autoref{fig:estructuraVectores}:
+El archivo de datos de entrada proporciona la información de origen y uso de la energía en cada paso de calculo. Este archivo usa el formato de \textit{valores separados por comas}\footnote{El formato está documentado en el estándar RFC 4180 (\url{https://tools.ietf.org/html/rfc4180}). Consiste en un archivo de texto que describe una tabla de datos, con una línea por cada fila (registro) y donde los valores de las columnas están separados por comas y usan como separador decimal el punto. Opcionalmente, se puede incluir una línea inicial que da nombre a las columnas} con una estructura de registros (filas) que se muestra de forma esquemática en la \autoref{fig:estructuraVectores}:
 
 \begin{itemize}
 \item campo \texttt{vector}, de nombre del vector energético;
-\item campo \texttt{tipo}, tipo de vector energético (producción o consumo);
-\item campo \texttt{origenouso}, de identificación de origen o destino de la energía transferida;
+\item campo \texttt{tipo}, que indica si se trata de energía producida o suministrada;
+\item campo \texttt{origenouso}, que identifica el origen de la energía producida o el uso de la energía suministrada;
 \item campos \texttt{valor}, con un dato para cada paso de tiempo.
 \end{itemize}
 
@@ -285,7 +289,7 @@ El campo \texttt{tipo} puede únicamente contener las cadenas:
 Con las siguientes particularidades:
 
 \begin{itemize}
-\item Se entiende que todos los suministros pertenecen a la categoría de producción;
+\item Se entiende que todos los suministros pertenecen a la categoría de consumo;
 \item los suministros de la red no tienen que ser especificados cuando este sea único por vector energético.
 \end{itemize}
 

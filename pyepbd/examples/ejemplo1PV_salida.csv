@@ -1,6 +1,3 @@
-Archivo de entrada: ejemplo1PV.csv
-    EP       |   EPpasoA
-ren =    75.0| ren =    75.0
-nren=   100.0| nren=   100.0
-tot =   175.0|
-RER =    0.43|
+ejemplo1PV.csv
+EP(step A)  , ren =    75.0, nren=   100.0, tot =   175.0, RER =    0.43
+EP(step A+B), ren =    75.0, nren=   100.0, tot =   175.0, RER =    0.43

@@ -1,5 +1,3 @@
-___resultado__./data/ejemplo2xPVgas.csv___
- Indicadores   |   EPtotal    |   EPpasoA
- EPtot=   199.0| ren =    30.0| ren =    20.0
- RER  =    0.15| nren=   169.0| nren=   209.0
-----------------------------------------
+ejemplo2xPVgas.csv
+EP(step A)  , ren =    20.0, nren=   209.0, tot =   229.0, RER =    0.09
+EP(step A+B), ren =    30.0, nren=   169.0, tot =   199.0, RER =    0.15

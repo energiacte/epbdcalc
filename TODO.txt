@@ -3,4 +3,6 @@
 - Translate examples
 - Translate more parts of the manual
 - Make output more explicit (step A vs step A+B)
+- Change from 'CONSUMO' (energy use) to 'SUMINISTRO' (delivered energy) as energy carrier type.
 
+  - The energy calculation routines try to calculate de exported to the grid and redelivered electric energy from the delivered energy, including electric energy delivery, and produced energy (on site or from cogeneration). For energy carriers that don't export energy this is trivial, but electric energy sources add complexity to all this.
