@@ -1,16 +1,20 @@
-Uso en desarrollo
-=================
+Development use
+===============
 
   $ pip install -e .
-  $ python bin/epbdcalc
+  $ epbdcalc
+  
+  or
+  
+  $ python -m epbdcalc
 
-HOWTO para publicar nuevas versiones
-==================================
+HOWTO publish new versions
+==========================
 
-Para publicar una nueva versión,
+To publish a new version,
 
-  1) Actualizar fecha y versión en NEWS.txt y pyepbd/__init__.py
-  2) Ejecutar 'make'
-  3) Probar la versión generada en build/exe.mingw-2.7/epbdcalc.exe
-  5) Subir la versión en pyepbd/__init__.py (para la siguiente versión)
+  1) Update version info in NEWS.txt and pyepbd/__init__.py
+  2) Run 'make' to build executable and installer
+  3) Test executable in build/exe.mingw-2.7/epbdcalc.exe
+  4) Test installer
 

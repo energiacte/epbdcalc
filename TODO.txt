@@ -1,4 +1,6 @@
-- Comprobar que el programa falla "bien" cuando se le pasan archivos mal formados
-- Añadir opción para mostrar los valores por defecto de factores de paso, krdel y kexp
-- Traducir README.md y añadir la salida de resultados en el ejemplo, explicando al menos las variables básicas.
-- Traducir la salida y variables básicas en el manual
+- Make program more robust when fed with malformed input (handle exceptions in CLI)
+- Show default values when used, for k_exp, k_rdel and fP
+- Translate examples
+- Translate more parts of the manual
+- Make output more explicit (step A vs step A+B)
+
