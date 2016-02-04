@@ -33,8 +33,8 @@ from .inputoutput import readenergyfile, readfactors, formatIndicators
 def main():
     from .__init__ import __version__
     COPY = u"""\tversión: %s
-\t(c) 2015 Ministerio de Fomento
-\t    2015 Instituto de Ciencias de la Construcción Eduardo Torroja (IETcc-CSIC)
+\t(c) 2015-2016 Ministerio de Fomento
+\t    2015-2016 Instituto de Ciencias de la Construcción Eduardo Torroja (IETcc-CSIC)
 \tAutores: Daniel Jiménez González <danielj@ietcc.csic.es>
 \t         Rafael Villar Burke <pachi@ietcc.csic.es>
 """ % __version__    

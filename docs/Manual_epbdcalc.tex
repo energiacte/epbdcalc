@@ -167,28 +167,28 @@ The application evaluates both the delivered and exported energy according to th
 
 La interacción con el programa se produce a través de la línea de comandos (señalada con \$ en este texto), realizando una llamada al archivo ejecutable \texttt{epbdcalc} (o \texttt{epbdcalc.exe}) en la que se debe indicar la ruta al archivo con los datos energéticos del edificio\footnote{Estos datos se obtienen a partir del proceso de los resultados de un programa de evaluación de la eficiencia energética}, del siguiente modo:
 
-\begin{Verbatim}
+\begin{Verbatim}[fontsize=\small]
 	$ epbdcalc ./directorio/datos_entrada.csv
 \end{Verbatim}
-%$
+
 
 La ejecución del programa realiza el procesado del archivo de entrada de datos (\texttt{datos\_entrada.csv} en el ejemplo) y resulta en la generación de un archivo de igual nombre con el sufijo \texttt{\_salida}, almacenado en el directorio del archivo de datos, con el resultado del cálculo del balance de energía primaria.
 
 La invocación del programa sin un archivo de datos de entrada o usando las opciones \texttt{-h} o \texttt{--help}:
 
-\begin{Verbatim}
+\begin{Verbatim}[fontsize=\small]
 	$ epbdcalc --h
 \end{Verbatim}
-%$
+
 
  muestra la ayuda de uso:
 
-\begin{Verbatim}
+\begin{Verbatim}[fontsize=\small]
     usage: epbdcalc.py [-h] [-f [FPFILE]] [--krdel [KRDEL]] [--kexp [KEXP]] vecfile
 
-	versión: 2015.10.16
-	(c) 2015 Ministerio de Fomento
-	    2015 Instituto de Ciencias de la Construcción Eduardo Torroja (IETcc-CSIC)
+	versión: 1.0
+	(c) 2015-2016 Ministerio de Fomento
+	    2015-2016 Instituto de Ciencias de la Construcción Eduardo Torroja (IETcc-CSIC)
 	Autores: Daniel Jiménez González <danielj@ietcc.csic.es>
 	         Rafael Villar Burke <pachi@ietcc.csic.es>
 

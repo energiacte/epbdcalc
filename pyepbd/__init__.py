@@ -27,4 +27,4 @@ from .inputoutput import formatIndicators, readenergyfile, readfactors
 from .settings import *
 import cli
 
-__version__ = '20160201'
+__version__ = '1.0'
