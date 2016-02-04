@@ -59,7 +59,7 @@ README.html: README.rst res/style.css
 	$(RST2HTML) --stylesheet=./res/style.css README.rst > $@
 
 setup.nsi: setup.nsi.in pyepbd/__init__.py
-	sed 's/@APPNAME@/$(APPNAME)/g; s/@VERSION@/$(VERSION)/g; s/@ARCH@/$(ARCH)/g; s/@DATE@/$(DATE)/g; s/@UPXPATH@/$(UPXPATH)/g; s/@DISTDIR@/$(DISTDIR)/g' setup.nsi.in > setup.nsi
+	sed 's/@APPNAME@/$(APPNAME)/g; s/@VERSION@/$(VERSION)/g; s/@ARCH@/$(ARCH)/g; s/@DATE@/$(DATE)/g; s/@UPXPATH@/$(UPXPATH)/g; s/@DISTDIR@/$(DISTDIR)/g;' setup.nsi.in > tmp && mv tmp setup.nsi
 
 test:
 	$(PYTHON) -m pytest
