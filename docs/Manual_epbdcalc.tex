@@ -247,8 +247,8 @@ A continuación se muestra un ejemplo de un conjunto de registros:
 
 \begin{Verbatim}[fontsize=\small,frame=single]
     vector,tipo,origenouso
-    ELECTRICIDAD,CONSUMO,EPB,200.10,160.00,100.32,90.56,50.11,60.00,80.00,70,50,80,120,160
-    ELECTRICIDAD,CONSUMO,NEPB,30,30,30,30,30,30,30,30,30,30,30,30
+    ELECTRICIDAD,SUMINISTRO,EPB,200.10,160.00,100.32,90.56,50.11,60.00,80.00,70,50,80,120,160
+    ELECTRICIDAD,SUMINISTRO,NEPB,30,30,30,30,30,30,30,30,30,30,30,30
     ELECTRICIDAD,PRODUCCION,INSITU,44,55,77,110,187,209,220,198,176,132,88,55
 \end{Verbatim}
 
@@ -256,7 +256,7 @@ Los valores admitidos en cada uno de los campos del registro se especifican en l
 
 \subsubsection{Campo \texttt{vector}}
 
-Las cadenas de texto admitidas para identificar los vectores energéticos en el campo \texttt{vector} son las siguientes:
+El campo \texttt{vector} \textbf{identifica un vector energético} y puede tomar los siguientes valores:
 
 \begin{multicols}{3}
 \begin{itemize}
@@ -279,23 +279,22 @@ Las cadenas de texto admitidas para identificar los vectores energéticos en el 
 
 \subsubsection{Campo \texttt{tipo}}
 
-El campo \texttt{tipo} puede únicamente contener las cadenas:
+El campo \texttt{tipo} \textbf{indica si el vector energético proviene de un suministro de energía o de producción energética}, admitiendo únicamente los valores:
 
 \begin{itemize}
 \item \texttt{PRODUCCION}
-\item \texttt{CONSUMO}
+\item \texttt{SUMINISTRO}
 \end{itemize}
 
 Con las siguientes particularidades:
 
 \begin{itemize}
-\item Se entiende que todos los suministros pertenecen a la categoría de consumo;
-\item los suministros de la red no tienen que ser especificados cuando este sea único por vector energético.
+\item los suministros de la red no tienen que ser especificados cuando este sea único por vector energético, ya que se pueden obtener mediante el balance energético.
 \end{itemize}
 
 \subsubsection{Campo \texttt{origenouso}}
 
-El campo \texttt{origenouso} contiene información sobre el origen o destino de la energía.
+El campo \texttt{origenouso} \textbf{define el origen de la energía producida y el uso de la energía suministrada}.
 
 Para registros en los que el campo \texttt{tipo} sea igual a \texttt{PRODUCCION}, los valores admitidos para cada vector energético y que definen el origen de la producción, son los definidos en la \autoref{tab:fuentesPermitidas}. En esta tabla se observa cómo se considera la producción de vectores energéticos distintos a los de la red únicamente en el caso de la electricidad o de procesos que extraen energía del medio ambiente. Igualmente, se diferencia la electricidad producida \textit{in situ} mediante cogeneración del resto de producción eléctrica \textit{in situ}.
 
@@ -316,7 +315,7 @@ Para registros en los que el campo \texttt{tipo} sea igual a \texttt{PRODUCCION}
 \end{tabular}
 \end{table}
 
-Para registros en los que el campo \texttt{tipo} sea igual a \texttt{CONSUMO}, es necesario especificar si la energía se destina a usos evaluados en la eficiencia energética (usos EPB) o usos no evaluados (usos no EPB), de modo que los valores permitidos son los siguientes:
+Para registros en los que el campo \texttt{tipo} sea igual a \texttt{SUMINISTRO}, es necesario especificar si la energía se destina a usos evaluados en la eficiencia energética (usos EPB) o usos no evaluados (usos no EPB), de modo que los valores permitidos son los siguientes:
 
 \begin{itemize}
 \item \texttt{EPB}
@@ -325,17 +324,15 @@ Para registros en los que el campo \texttt{tipo} sea igual a \texttt{CONSUMO}, e
 
 \subsubsection{Campos \texttt{valor}}
 
-Estos campos contienen los valores numéricos de consumo o producción para cada paso de tiempo, usando el punto como separador decimal (se recomienda el uso de dos decimales).
+Los campos \texttt{valor} \textbf{contienen los valores de energía suministrada o producida} para cada paso de tiempo\footnote{En el caso de que en un archivo aparezcan varios registros con idénticos valores en los campos \texttt{vector}, \texttt{tipo} y \texttt{origenouso}, el programa sumará los datos de los campos \texttt{valor} en cada paso de tiempo y trabajará como si se hubiese definido un único registro con la suma de los valores de los distintos registros. Esto permite dejar al programa la tarea de agregación de valores y puede resultar útil, por ejemplo, para definir las producciones eléctricas de varios sistemas fotovoltaicos.}. Como separador decimal debe usarse el punto, y se recomienda el uso de dos decimales de precisión.
 
-En el caso de que en un archivo aparezcan varios registros con idénticos valores en los campos \texttt{vector}, \texttt{tipo} y \texttt{origenouso}, el programa sumará los datos de los campos \texttt{valor} en cada paso de tiempo y trabajará como si se hubiese definido un único registro con la suma de los datos. Esto permite dejar al programa la tarea de agregación de valores y puede resultar últi, por ejemplo, para definir las producciones electricas de varios sistemas fotovoltaicos.
-
-Todos los registros deben emplear número igual de pasos de tiempo, o el programa emitirá un error.
+Todos los registros deben emplear número igual de pasos de tiempo.
 
 \subsection{Salida de resultados}
 
 La norma \textit{ISO/DIS 52000-1:2015} establece como indicadores de la eficiencia energética de los edificios el \textit{consumo total de energía primaria} (\texttt{$EP_{tot}$}) y el \textit{porcentaje de energía primaria renovable del consumo total de energía} (\texttt{$RER$}).
 
-El programa ofrece, además de dichos indicadores (para los pasos A+B y A), la descomposición consumo total de energía primaria en su parte renovable (\texttt{$EP_{ren}$}) y no renovable (\texttt{$EP_{nren}$}), como se muestra en la \autoref{tab:indicadoresFinales}.
+El programa ofrece, además de dichos indicadores (para los pasos A y A+B), la descomposición consumo total de energía primaria en su parte renovable (\texttt{$EP_{ren}$}) y no renovable (\texttt{$EP_{nren}$}), como se muestra en la \autoref{tab:indicadoresFinales}.
 
 \begin{table}[H]
 \centering
@@ -345,10 +342,10 @@ El programa ofrece, además de dichos indicadores (para los pasos A+B y A), la d
     \toprule
     \textbf{Indicador} & \textbf{Descripción}\\
     \midrule
-    \texttt{EPren}  & Parte renovable de la energía primaria total\\
-    \texttt{EPnren} & Parte no renovable de la energía primaria total\\
-    \texttt{EPtot}  & Consumo total de energía primaria\\
-    \texttt{RER}    & Fracción de energía primara renovable en el consumo total\\
+    $EP_{ren}$ & Parte renovable de la energía primaria total\\
+    $EP_{nren}$& Parte no renovable de la energía primaria total\\
+    $EP_{tot}$ & Consumo total de energía primaria\\
+    $RER$      & Fracción de energía primaria renovable en el consumo total\\
     \bottomrule
 \end{tabular}
 \end{table}
@@ -403,7 +400,7 @@ El archivo de salida (\texttt{ejemplo1base\_salida.csv}):
 
 \VerbatimInput[fontsize=\small, frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo1base_salida.csv}
 
-\subsubsection{Aporte de energía fotovoltaica}
+\subsubsection{Caso base con producción de energía fotovoltaica}
 
 Una variante del anterior supone la introducción de energía fotovoltaica por un valor de la mitad de lo consumido en EPB, de 50 kWh. De manera que se añade un concepto que refleje este aporte (\textit{ejemplo1PV.csv}):
 
@@ -419,7 +416,7 @@ Que daría como resultado (\textit{ejemplo1PV\_salida.csv}):
 
 \VerbatimInput[fontsize=\small, frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo1PV_salida.csv}
 
-\subsubsection{Exceso de energía fotovoltaica}
+\subsubsection{Caso base con producción de energía fotovoltaica y exportación a la red}
 
 En esta ocasión el sistema fotovoltaico produce más energía de la que se demanda para cubrir los servicios EPB. Este hecho se refleja en la entrada de datos \texttt{ejemplo1xPV.csv}):
 
@@ -436,7 +433,7 @@ Los valores de salida son \texttt{ejemplo1xPV.csv}:
 
 \VerbatimInput[fontsize=\small, frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo1xPV_salida.csv}
 
-\subsection{Ejemplo 2: Sistema de gas natural con apoyo eléctrico}
+\subsection{Ejemplo 2: Sistema de gas natural con apoyo eléctrico y producción fotovoltaica}
 En el ejemplo 2 la demanda energética es cubierta con una caldera que consume 190 kWh, existiendo un consumo eléctrico menor de apoyo de 20 kWh. Además existe una instalación fotovoltaica que aporta 40 kWh anuales. Todo ello queda recogido en el fichero de datos \texttt{ejemplo2PVgas.csv}:
 
 \VerbatimInput[fontsize=\small, frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo2PVgas.csv}
@@ -446,13 +443,14 @@ La llamada al programa se realizaría así:
 \begin{Verbatim}[fontsize=\small]
     $ epbdcalc ejemplo2PVgas.csv -f factores_paso_test.csv
 \end{Verbatim}
+%$
 
 El resultado es (\texttt{ejemplo2PVgas\_salida.csv}):
 
 \VerbatimInput[fontsize=\small, frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo2PVgas_salida.csv}
 
 \subsection{Ejemplo 3: Sistema de bomba de calor con apoyo fotovoltaico.}
-El ejemplo 3 recoge el caso de un sistema con bomba de calor que cubre toda la demanda de EPB. Esta bomba de calor eléctrica consume 59 kWh, de los cuales 40 son de origen fotovoltaico. Esa energía se usa para bombear 131 kWh del medio ambiente. El archivo de definición \texttt{ejemplo3PVBdC.csv}:
+El ejemplo 3 recoge el caso de un sistema con bomba de calor que cubre toda la demanda de EPB. Esta bomba de calor eléctrica consume 59 kWh, de los cuales 40 son de origen fotovoltaico, y permiten al equipo extraer 131 kWh del medio ambiente. El archivo de definición del caso es \texttt{ejemplo3PVBdC.csv}:
 
 \VerbatimInput[fontsize=\small, frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo3PVBdC.csv}
 
@@ -461,13 +459,14 @@ La llamada al programa se realizaría así:
 \begin{Verbatim}[fontsize=\small]
     $ epbdcalc ejemplo3PVBdC.csv -f factores_paso_test.csv
 \end{Verbatim}
+%$
 
 Los valores de salida son (\texttt{ejemplo3PVBdC\_salida.csv}):
 
 \VerbatimInput[fontsize=\small, frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo3PVBdC_salida.csv}
 
 \subsection{Ejemplo 4: Caldera y sistema de cogeneración con combustible fósil.}
-En el ejemplo 4 hay presente una caldera de gas natural que consume 100 kWh y una máquina de cogeneración que consume 158 kWh, también de gas natural. Como resultado de la cogeneración se generan 48 kWh de electricidad de los cuales 28 son exportados a la red. La entrada de datos sería la recogida en el archivo \texttt{ejemplo4cgnfosil.csv}:
+En el ejemplo 4 incluye una caldera de gas natural que consume 100 kWh y una máquina de cogeneración que consume 158 kWh, también de gas natural. Como resultado de la cogeneración se generan 48 kWh de electricidad de los cuales 28 kWh son exportados a la red. La entrada de datos sería la recogida en el archivo \texttt{ejemplo4cgnfosil.csv}:
 
 \VerbatimInput[fontsize=\small, frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo4cgnfosil.csv}
 
@@ -476,13 +475,14 @@ La llamada al programa se realizaría así:
 \begin{Verbatim}[fontsize=\small]
     $ epbdcalc ejemplo4cgnfosil.csv -f factores_paso_test.csv
 \end{Verbatim}
+%$
 
 El resultado es (\texttt{ejemplo4cgnfosil\_salida.csv}):
 
 \VerbatimInput[fontsize=\small, frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo4cgnfosil_salida.csv}
 
 \subsection{Ejemplo 5: Caldera y sistema de cogeneración con combustible renovable.}
-Este ejemplo 5 es idéntico al anterior con la salvedad de que los 158 kWh que consume el sistema de cogeneración provienen de fuentes renovables (\texttt{ejemplo5cgnbiogas.csv}):
+Este ejemplo 5 es idéntico al anterior, con la salvedad de que los 158 kWh que consume el sistema de cogeneración provienen de fuentes renovables (\texttt{ejemplo5cgnbiogas.csv}):
 
 \VerbatimInput[fontsize=\small, frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo5cgnbiogas.csv}
 
@@ -491,18 +491,19 @@ La llamada al programa se realizaría así:
 \begin{Verbatim}[fontsize=\small]
     $ epbdcalc ejemplo5cgnbiogas.csv -f factores_paso_test.csv
 \end{Verbatim}
+%$
 
 La salida es \texttt{ejemplo5cgnbiogas\_salida.csv}:
 
 \VerbatimInput[fontsize=\small, frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo5cgnbiogas_salida.csv}
 
 
-\subsection{Ejemplo 6: Calculo con varios pasos y valores para no EPB}
+\subsection{Ejemplo 6: Calculo con varios pasos y suministro para usos no EPB}
 En el apartado K.3 del informe técnico se comenta mediante variaciones de un caso como se trata la energía exportada temporalmente y resuministrada posteriormente. El paso de cálculo es mensual, ya que con un paso anual no tendría sentido la idea de resuministro.
 
-Además sí se consideran una serie de consumos energéticos para servicios que no van a incluirse dentro de la eficiencia energética del edificio, pero que hay que tenerlos en cuenta en el balance como energía exportada. 
+Además, se consideran consumos energéticos para servicios no incluidos dentro de la eficiencia energética del edificio (según la EPBD), pero que hay que tenerlos en cuenta en el balance como energía exportada. 
 
-El sistema se tan simple como el del ejemplo 1, con la variante de la existencia de un sistema fotovoltaico que aporta una parte del consumo eléctrico. Los valores de entrada corresponden a la tabla K.1 del citado informe (\texttt{ejemplo6K3.csv}):
+El sistema es tan simple como el del ejemplo 1, con la variante de la existencia de un sistema fotovoltaico que aporta una parte del consumo eléctrico. Los valores de entrada corresponden a la tabla K.1 del citado informe (\texttt{ejemplo6K3.csv}):
 
 \VerbatimInput[fontsize=\small, frame=lines, rulecolor=\color{gray}]{../pyepbd/examples/ejemplo6K3.csv}
 
@@ -511,6 +512,7 @@ La llamada al programa se realizaría así:
 \begin{Verbatim}[fontsize=\small]
     $ epbdcalc ejemplo6K3.csv -f factores_paso_test.csv
 \end{Verbatim}
+%$
 
 Los indicadores de eficiencia energética son \texttt{ejemplo6K3\_salida.csv}:
 

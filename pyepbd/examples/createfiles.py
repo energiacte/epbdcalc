@@ -34,7 +34,7 @@ VALIDCARRIERS = ['ELECTRICIDAD', 'ELECTRICIDADCANARIAS', 'ELECTRICIDADBALEARES',
                  'ELECTRICIDADCEUTAMELILLA', 'GASOLEO', 'FUELOIL', 'GLP',
                  'GASNATURAL', 'CARBON', 'BIOMASA', 'BIOMASADENSIFICADA',
                  'BIOCARBURANTE', 'MEDIOAMBIENTE', 'COGENERACION']
-VALIDCTYPES = ['CONSUMO', 'PRODUCCION']
+VALIDCTYPES = ['SUMINISTRO', 'PRODUCCION']
 VALID_ORIGINORUSE = ['EPB', 'NEPB', 'INSITU', 'COGENERACION']
 
 def perfilC(valortotal):
@@ -68,42 +68,42 @@ def createfile(nombre_fichero, data):
 
 if __name__ == "__main__":
     createfile(os.path.join(currpath, 'ejemplo1base.csv'),
-               data=[('ELECTRICIDAD','CONSUMO', 'EPB', perfilC(100))])
+               data=[('ELECTRICIDAD','SUMINISTRO', 'EPB', perfilC(100))])
 
     createfile(os.path.join(currpath, 'ejemplo1PV.csv'),
-               [('ELECTRICIDAD','CONSUMO', 'EPB', perfilC(100)),
+               [('ELECTRICIDAD','SUMINISTRO', 'EPB', perfilC(100)),
                 ('ELECTRICIDAD','PRODUCCION', 'INSITU', perfilC(50))])
 
     createfile(os.path.join(currpath, 'ejemplo1xPV.csv'),
-               [('ELECTRICIDAD','CONSUMO', 'EPB', perfilC(100)),
+               [('ELECTRICIDAD','SUMINISTRO', 'EPB', perfilC(100)),
                 ('ELECTRICIDAD','PRODUCCION', 'INSITU', perfilC(140))])
 
     createfile(os.path.join(currpath, 'ejemplo1xPV.csv'),
-               [('ELECTRICIDAD','CONSUMO', 'EPB', perfilC(100)),
+               [('ELECTRICIDAD','SUMINISTRO', 'EPB', perfilC(100)),
                 ('ELECTRICIDAD','PRODUCCION', 'INSITU', perfilC(140))])
 
     createfile(os.path.join(currpath, 'ejemplo2xPVgas.csv'),
-               [('ELECTRICIDAD','CONSUMO', 'EPB', perfilC(20)),
+               [('ELECTRICIDAD','SUMINISTRO', 'EPB', perfilC(20)),
                 ('ELECTRICIDAD','PRODUCCION','INSITU', perfilP1(40)),
-                ('GASNATURAL','CONSUMO',  'EPB', perfilC(190))])
+                ('GASNATURAL','SUMINISTRO',  'EPB', perfilC(190))])
 
     createfile(os.path.join(currpath, 'ejemplo3PVBdC.csv'),
-               [('ELECTRICIDAD','CONSUMO', 'EPB', perfilC(59)),
+               [('ELECTRICIDAD','SUMINISTRO', 'EPB', perfilC(59)),
                 ('ELECTRICIDAD','PRODUCCION','INSITU', perfilP1(40)),
-                ('MEDIOAMBIENTE','CONSUMO',   'EPB', perfilC(131)),
+                ('MEDIOAMBIENTE','SUMINISTRO',   'EPB', perfilC(131)),
                 ('MEDIOAMBIENTE','PRODUCCION','INSITU', perfilC(131))])
 
     createfile(os.path.join(currpath, 'ejemplo4cgnfosil.csv'),
-               [('GASNATURAL','CONSUMO',  'EPB', perfilC(100)),
-                ('GASNATURAL','CONSUMO',  'EPB', perfilC(158)),
+               [('GASNATURAL','SUMINISTRO',  'EPB', perfilC(100)),
+                ('GASNATURAL','SUMINISTRO',  'EPB', perfilC(158)),
                 ('ELECTRICIDAD','PRODUCCION','COGENERACION', perfilP1(28))])
 
     createfile(os.path.join(currpath, 'ejemplo5cgnbiogas.csv'),
-               [('GASNATURAL','CONSUMO', 'EPB', perfilC(100)),
-                ('BIOCARBURANTE','CONSUMO', 'EPB', perfilC(158)),
+               [('GASNATURAL','SUMINISTRO', 'EPB', perfilC(100)),
+                ('BIOCARBURANTE','SUMINISTRO', 'EPB', perfilC(158)),
                 ('ELECTRICIDAD','PRODUCCION','COGENERACION', perfilP1(28))])
 
     createfile(os.path.join(currpath, 'ejemplo6K3.csv'),
-               [('ELECTRICIDAD','CONSUMO', 'EPB', [200,160,100,90,50,60,80,70,50,80,120,160]),
-                ('ELECTRICIDAD','CONSUMO', 'NEPB', np.ones(12) * 30),
+               [('ELECTRICIDAD','SUMINISTRO', 'EPB', [200,160,100,90,50,60,80,70,50,80,120,160]),
+                ('ELECTRICIDAD','SUMINISTRO', 'NEPB', np.ones(12) * 30),
                 ('ELECTRICIDAD','PRODUCCION', 'INSITU', [44,55,77,110,187,209,220,198,176,132,88,55])])

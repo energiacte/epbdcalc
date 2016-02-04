@@ -71,9 +71,9 @@ def components_t_forcarrier(vdata, k_rdel):
     """
 
     # Energy used by technical systems for EPB services, for each time step
-    E_EPus_t = vdata['CONSUMO']['EPB']
+    E_EPus_t = vdata['SUMINISTRO']['EPB']
     # Energy used by technical systems for non-EPB services, for each time step
-    E_nEPus_t = vdata['CONSUMO']['NEPB']
+    E_nEPus_t = vdata['SUMINISTRO']['NEPB']
     numsteps = E_EPus_t.size
 
     # (Electricity) produced on-site and inside the assessment boundary, by origin
