@@ -25,7 +25,7 @@
 $ python setup.py build
 """
 
-import os, sys
+import os, sys, codecs, re
 from glob import glob
 from cx_Freeze import setup, Executable
 
@@ -64,7 +64,7 @@ base = None
 
 executables = [Executable("bin/epbdcalc.py",
                           base=None,
-                          targetname="epbdcalc.exe")]
+                          targetName="epbdcalc.exe")]
 
 buildOptions = dict(
     compressed=False,
