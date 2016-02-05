@@ -25,6 +25,6 @@
 from .energycalculations import weighted_energy
 from .inputoutput import formatIndicators, readenergyfile, readfactors
 from .settings import *
-import cli
+from . import cli
 
 __version__ = '1.0'

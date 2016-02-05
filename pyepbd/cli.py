@@ -61,19 +61,19 @@ def main():
         sys.exit(2)
 
     if args.krdel is None:
-        print u'Usando factor de resuministro (k_rdel) predeterminado'
+        print(u'Usando factor de resuministro (k_rdel) predeterminado')
     k_rdel = K_RDEL if args.krdel is None else args.krdel
 
     if args.kexp is None:
-        print u'Usando factor de exportación (k_exp) predeterminado'
+        print(u'Usando factor de exportación (k_exp) predeterminado')
     k_exp  = K_EXP if args.kexp is None else args.kexp
 
     if args.fpfile:
         fpdatafile = args.fpfile
-        print u'Archivo de factores de paso: ', fpdatafile.name, '\n'
+        print(u'Archivo de factores de paso: ', fpdatafile.name, '\n')
     else:
         fpdatafile = None
-        print u'Usando factores de paso predeterminados'
+        print(u'Usando factores de paso predeterminados')
     fP = (FACTORESDEPASOOFICIALES if args.fpfile is None
           else readfactors(args.fpfile))
 
@@ -82,10 +82,10 @@ def main():
 
     cadenasalida = ['%s\n' % args.vecfile.name,
                     formatIndicators(EP)]
-    print ''.join(cadenasalida)
+    print(''.join(cadenasalida))
 
     if args.outputfile:
-        print 'Guardando resultados en el archivo:', args.outputfile.name
+        print('Guardando resultados en el archivo:', args.outputfile.name)
         args.outputfile.writelines(cadenasalida)
 
 if __name__ == '__main__':

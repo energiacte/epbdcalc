@@ -24,6 +24,7 @@
 
 """Auxiliary module to create output files"""
 
+from io import open
 import os
 import numpy as np
 
@@ -56,11 +57,11 @@ def createfile(nombre_fichero, data):
             datalines = []
             for carrier, ctype, originoruse, values in data:
                 if carrier not in VALIDCARRIERS:
-                    print u'__error__ no reconozco a %s como vector, no está en la lista' % carrier, VALIDCARRIERS
+                    print(u'__error__ no reconozco a %s como vector, no está en la lista' % carrier, VALIDCARRIERS)
                 if ctype not in VALIDCTYPES:
-                    print u'__error__ no reconozco a %s como tipo, no está en la lista' % ctype, VALIDCTYPES
+                    print(u'__error__ no reconozco a %s como tipo, no está en la lista' % ctype, VALIDCTYPES)
                 if originoruse not in VALID_ORIGINORUSE:
-                    print u'__error__ no reconozco a %s como fuente/destino, no está en la lista' % originoruse, VALID_ORIGINORUSE
+                    print(u'__error__ no reconozco a %s como fuente/destino, no está en la lista' % originoruse, VALID_ORIGINORUSE)
                 if isinstance(values, int):
                     values = [values]
                 datalines.append('%s,%s,%s,' % (carrier, ctype, originoruse) + ','.join(['%.2f' % e for e in values]) + '\n')

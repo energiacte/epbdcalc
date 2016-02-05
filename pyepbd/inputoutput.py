@@ -24,6 +24,7 @@
 
 """Input and output utilities for energy efficiency data handling"""
 
+from io import open
 import numpy as np
 import pandas as pd
 
@@ -56,13 +57,13 @@ def readenergyfile(filename):
             # Checks
             #TODO: handle Exceptions in CLI
             if len(values) != numsteps:
-                raise ValueError, ("All input must have the same number of timesteps. "
-                                   "Problem found in line %i of %s\n\t%s" % (ii+2, filename, line))
+                raise ValueError("All input must have the same number of timesteps. "
+                                 "Problem found in line %i of %s\n\t%s" % (ii+2, filename, line))
             if ctype not in ('PRODUCCION', 'SUMINISTRO'):
-                raise ValueError, "Carrier type is not 'SUMINISTRO' or 'PRODUCCION' in line %i\n\t%s" % (ii+2, line)
+                raise ValueError("Carrier type is not 'SUMINISTRO' or 'PRODUCCION' in line %i\n\t%s" % (ii+2, line))
             if originoruse not in ('EPB', 'NEPB', 'INSITU', 'COGENERACION'):
-                raise ValueError, ("Origin or end use is not 'EPB', 'NEPB', 'INSITU' or 'COGENERACION'"
-                                   " in line %i\n\t%s" % (ii+2, line))
+                raise ValueError(("Origin or end use is not 'EPB', 'NEPB', 'INSITU' or 'COGENERACION'"
+                                  " in line %i\n\t%s" % (ii+2, line)))
 
             if carrier not in data:
                 data[carrier] = {'SUMINISTRO': {'EPB': np.zeros(numsteps),
