@@ -68,6 +68,12 @@ test:
 coverage:
 	$(PYTHON) -m pytest --cov pyepbd --cov-report=html
 
+#https://python-packaging-user-guide.readthedocs.org/en/latest/distributing/#packaging-your-project
+dist:
+	$(PYTHON) setup.py bdist_wheel
+	$(PYTHON) setup.py sdist
+	twine upload dist/*
+
 clean:
 	rm -rf build dist MANIFEST setup.nsi README.html Manual_epbdcalc.pdf
 	find . -name *.pyc -exec rm {} \;
