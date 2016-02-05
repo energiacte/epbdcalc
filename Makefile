@@ -62,7 +62,7 @@ setup.nsi: setup.nsi.in pyepbd/__init__.py
 	sed 's/@APPNAME@/$(APPNAME)/g; s/@VERSION@/$(VERSION)/g; s/@ARCH@/$(ARCH)/g; s/@DATE@/$(DATE)/g; s/@UPXPATH@/$(UPXPATH)/g; s/@DISTDIR@/$(DISTDIR)/g;' setup.nsi.in > tmp && mv tmp setup.nsi
 
 test:
-	$(PYTHON) -m pytest
+	$(PYTHON) -m pytest pyepbd
 	$(PYTHON) bin/epbdcalc.py pyepbd/examples/ejemplo6K3.csv
 
 coverage:
