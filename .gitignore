@@ -4,3 +4,4 @@ setup.nsi
 docs/imagenes/*.eps
 docs/imagenes/*.svg
 README.html
+htmlcov/
