@@ -66,7 +66,7 @@ test:
 	$(PYTHON) bin/epbdcalc.py pyepbd/examples/ejemplo6K3.csv
 
 coverage:
-	$(PYTHON) -m pytest --cov pyepbd --cov-report=html
+	$(PYTHON) -m pytest --cov --cov-report=html pyepbd
 
 #https://python-packaging-user-guide.readthedocs.org/en/latest/distributing/#packaging-your-project
 dist:
