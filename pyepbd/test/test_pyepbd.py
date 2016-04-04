@@ -37,10 +37,10 @@ def check(EPB, res):
     """Check that result is within valid range"""
     res = EPB.EP - pd.Series({'ren': res[0], 'nren': res[1]})
     if abs(res.sum()) > 2.0:
-        print 'Resultado no coincidente: ', res.sum()
-        print formatIndicators(EPB)
-        print '#####################################################'
-        print '--------------------'
+        print('Resultado no coincidente: ', res.sum())
+        print(formatIndicators(EPB))
+        print('#####################################################')
+        print('--------------------')
         return False
     else:
         return True
