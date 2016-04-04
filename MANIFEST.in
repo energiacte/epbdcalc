@@ -8,5 +8,4 @@ include TODO.txt
 include CONTRIBUTORS.txt
 include requirements.txt
 recursive-include pyepbd/examples *.csv
-recursive-include pyepbd/test *.csv
 include pyepbd/test/.coveragerc
