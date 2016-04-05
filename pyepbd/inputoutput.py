@@ -89,12 +89,17 @@ def ep2string(EP):
     In the context of the CTE regulations, this refers to primary energy values.
     """
 
-    epren, epnren = EP.EP['ren'], EP.EP['nren']
     eparen, epanren = EP.EPpasoA['ren'], EP.EPpasoA['nren']
-    total = epren + epnren
-    totala = eparen + epanren
+    epatotal = eparen + epanren
+    eparer = eparen / epatotal if epatotal else 0.0
+
+    epren, epnren = EP.EP['ren'], EP.EP['nren']
+    eptotal = epren + epnren
+    eprer = epren / eptotal if eptotal else 0.0
+
     txt = ("EP(step A)  , ren ={:>8.1f}, nren={:>8.1f}, tot ={:>8.1f}, RER ={:>8.2f}\n"
            "EP(step A+B), ren ={:>8.1f}, nren={:>8.1f}, tot ={:>8.1f}, RER ={:>8.2f}\n"
-           ).format(eparen, epanren, totala, eparen / totala,
-                    epren,  epnren, total, epren / total)
+           ).format(eparen, epanren, epatotal, eparer,
+                    epren,  epnren, eptotal, eprer)
+
     return txt
