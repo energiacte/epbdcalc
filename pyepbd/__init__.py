@@ -23,7 +23,7 @@
 # SOFTWARE.
 
 from .energycalculations import weighted_energy
-from .inputoutput import ep2string, readenergyfile, readfactors
+from .inputoutput import readenergydata, readenergyfile, readfactors, ep2string, ep2dict
 from .settings import *
 from . import cli
 
