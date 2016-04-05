@@ -47,12 +47,13 @@ def readenergyfile(filename):
 
         # Find number of calculation steps used
         numsteps = len(lines[1].split(',')[3:])
+        datalines = lines[1:]
 
-        data = {}
-        for ii, line in enumerate(lines[1:]):
+        parsedlines = []
+        for ii, line in enumerate(datalines):
             fields = line.strip().split(',')
             carrier, ctype, originoruse = fields[0:3]
-            values = np.array(fields[3:]).astype(np.float)
+            values = fields[3:]
 
             # Checks
             #TODO: handle Exceptions in CLI
@@ -64,14 +65,23 @@ def readenergyfile(filename):
             if originoruse not in ('EPB', 'NEPB', 'INSITU', 'COGENERACION'):
                 raise ValueError(("Origin or end use is not 'EPB', 'NEPB', 'INSITU' or 'COGENERACION'"
                                   " in line %i\n\t%s" % (ii+2, line)))
+            parsedlines.append({"carrier": carrier, "ctype": ctype, "originoruse": originoruse, "values": values})
 
-            if carrier not in data:
-                data[carrier] = {'SUMINISTRO': {'EPB': np.zeros(numsteps),
-                                             'NEPB': np.zeros(numsteps)},
-                                 'PRODUCCION': {'INSITU': np.zeros(numsteps),
-                                                'COGENERACION': np.zeros(numsteps)}}
+    data = {}
+    for ii, parsedline in enumerate(parsedlines):
+        carrier = parsedline['carrier']
+        ctype = parsedline['ctype']
+        originoruse = parsedline['originoruse']
+        values = np.array(parsedline['values']).astype(np.float)
 
-            data[carrier][ctype][originoruse] = data[carrier][ctype][originoruse] + values
+        if carrier not in data:
+            data[carrier] = {'SUMINISTRO': {'EPB': np.zeros(numsteps),
+                                            'NEPB': np.zeros(numsteps)},
+                             'PRODUCCION': {'INSITU': np.zeros(numsteps),
+                                            'COGENERACION': np.zeros(numsteps)}}
+
+        data[carrier][ctype][originoruse] = data[carrier][ctype][originoruse] + values
+
     return data
 
 def readfactors(filename):
