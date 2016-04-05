@@ -103,3 +103,23 @@ def ep2string(EP):
                     epren,  epnren, eptotal, eprer)
 
     return txt
+
+def ep2dict(EP):
+    """Format energy efficiency indicators as dict from primary energy data
+
+    In the context of the CTE regulations, this refers to primary energy values.
+    """
+
+    eparen, epanren = EP.EPpasoA['ren'], EP.EPpasoA['nren']
+    epatotal = eparen + epanren
+    eparer = eparen / epatotal if epatotal else 0.0
+
+    epren, epnren = EP.EP['ren'], EP.EP['nren']
+    eptotal = epren + epnren
+    eprer = epren / eptotal if eptotal else 0.0
+
+    epdict = {"EPAren": eparen, "EPAnren": epanren, "EPAtotal": epatotal, "EPArer": eparer,
+              "EPren": epren, "EPnren": epnren, "EPtotal": eptotal, "EPrer": eprer}
+
+    return epdict
+
