@@ -24,9 +24,47 @@
 
 """Input and output utilities for energy efficiency data handling"""
 
+# TODO: handle exceptions in CLI
+
 from io import open
 import numpy as np
 import pandas as pd
+
+def readenergydata(datalist):
+    """Read input data from list and return data structure
+
+    Returns dict of array of values indexed by carrier, ctype and originoruse
+
+    data[carrier][ctype][originoruse] -> values as np.array with length=numsteps
+
+    * carrier is an energy carrier
+    * ctype is either 'PRODUCCION' or 'SUMINISTRO' por produced or used energy
+    * originoruse defines:
+      - the energy origin for produced energy (INSITU or COGENERACION)
+      - the energy end use (EPB or NEPB) for used energy
+    * values
+    """
+    numsteps = max(len(data['values']) for data in datalist)
+
+    energydata = {}
+    for ii, data in enumerate(datalist):
+        carrier = data['carrier']
+        ctype = data['ctype']
+        originoruse = data['originoruse']
+        values = np.array(data['values']).astype(np.float)
+
+        if len(values) != numsteps:
+            raise ValueError("All input must have the same number of timesteps. "
+                             "Problem found in line %i:\n\t%s" % (ii+1, line))
+
+        if carrier not in energydata:
+            energydata[carrier] = {'SUMINISTRO': {'EPB': np.zeros(numsteps),
+                                                  'NEPB': np.zeros(numsteps)},
+                                   'PRODUCCION': {'INSITU': np.zeros(numsteps),
+                                                  'COGENERACION': np.zeros(numsteps)}}
+
+        energydata[carrier][ctype][originoruse] = energydata[carrier][ctype][originoruse] + values
+    return energydata
 
 def readenergyfile(filename):
     """Read input data from filename and return data structure
@@ -43,46 +81,22 @@ def readenergyfile(filename):
     * values
     """
     with open(filename, 'r') as datafile:
-        lines = datafile.readlines()
-
-        # Find number of calculation steps used
-        numsteps = len(lines[1].split(',')[3:])
-        datalines = lines[1:]
-
-        parsedlines = []
-        for ii, line in enumerate(datalines):
+        datalines = []
+        for ii, line in enumerate(datafile):
+            if line.startswith('vector') or line.startswith('#'):
+                continue
             fields = line.strip().split(',')
             carrier, ctype, originoruse = fields[0:3]
             values = fields[3:]
 
-            # Checks
-            #TODO: handle Exceptions in CLI
-            if len(values) != numsteps:
-                raise ValueError("All input must have the same number of timesteps. "
-                                 "Problem found in line %i of %s\n\t%s" % (ii+2, filename, line))
             if ctype not in ('PRODUCCION', 'SUMINISTRO'):
                 raise ValueError("Carrier type is not 'SUMINISTRO' or 'PRODUCCION' in line %i\n\t%s" % (ii+2, line))
             if originoruse not in ('EPB', 'NEPB', 'INSITU', 'COGENERACION'):
                 raise ValueError(("Origin or end use is not 'EPB', 'NEPB', 'INSITU' or 'COGENERACION'"
                                   " in line %i\n\t%s" % (ii+2, line)))
-            parsedlines.append({"carrier": carrier, "ctype": ctype, "originoruse": originoruse, "values": values})
 
-    data = {}
-    for ii, parsedline in enumerate(parsedlines):
-        carrier = parsedline['carrier']
-        ctype = parsedline['ctype']
-        originoruse = parsedline['originoruse']
-        values = np.array(parsedline['values']).astype(np.float)
-
-        if carrier not in data:
-            data[carrier] = {'SUMINISTRO': {'EPB': np.zeros(numsteps),
-                                            'NEPB': np.zeros(numsteps)},
-                             'PRODUCCION': {'INSITU': np.zeros(numsteps),
-                                            'COGENERACION': np.zeros(numsteps)}}
-
-        data[carrier][ctype][originoruse] = data[carrier][ctype][originoruse] + values
-
-    return data
+            datalines.append({"carrier": carrier, "ctype": ctype, "originoruse": originoruse, "values": values})
+    return readenergydata(datalines)
 
 def readfactors(filename):
     """Read energy weighting factors data from file"""
