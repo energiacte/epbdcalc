@@ -31,14 +31,14 @@ sys.path.append(os.path.join(currpath, '..'))
 from pyepbd import (FACTORESDEPASOOFICIALES,
                     weighted_energy,
                     readenergyfile,
-                    formatIndicators, readfactors)
+                    ep2string, readfactors)
 
 def check(EPB, res):
     """Check that result is within valid range"""
     res = EPB.EP - pd.Series({'ren': res[0], 'nren': res[1]})
     if abs(res.sum()) > 2.0:
         print('Resultado no coincidente: ', res.sum())
-        print(formatIndicators(EPB))
+        print(ep2string(EPB))
         print('#####################################################')
         print('--------------------')
         return False

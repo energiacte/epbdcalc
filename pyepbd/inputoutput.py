@@ -83,7 +83,7 @@ def readfactors(filename):
                        comment='#',
                        skip_blank_lines=True)
 
-def formatIndicators(EP):
+def ep2string(EP):
     """Format energy efficiency indicators as string from primary energy data
 
     In the context of the CTE regulations, this refers to primary energy values.

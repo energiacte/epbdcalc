@@ -28,7 +28,7 @@ import argparse
 import sys
 from .settings import K_EXP, K_RDEL, FACTORESDEPASOOFICIALES
 from .energycalculations import weighted_energy
-from .inputoutput import readenergyfile, readfactors, formatIndicators
+from .inputoutput import readenergyfile, readfactors, ep2string
 
 def main():
     from .__init__ import __version__
@@ -37,7 +37,7 @@ def main():
 \t    2015-2016 Instituto de Ciencias de la Construcción Eduardo Torroja (IETcc-CSIC)
 \tAutores: Daniel Jiménez González <danielj@ietcc.csic.es>
 \t         Rafael Villar Burke <pachi@ietcc.csic.es>
-""" % __version__    
+""" % __version__
     parser = argparse.ArgumentParser(description=u'Cálculo de la eficiencia energética según ISO/DIS 52000-1:2015 y CTE DB-HE',
                                      usage=u"%(prog)s [-h] [-f [FPFILE]] [--krdel [KRDEL]] [--kexp [KEXP]] vecfile\n\n" + COPY,
                                      formatter_class=argparse.RawTextHelpFormatter)
@@ -81,7 +81,7 @@ def main():
     EP = weighted_energy(data, k_rdel, fP, k_exp)
 
     cadenasalida = ['%s\n' % args.vecfile.name,
-                    formatIndicators(EP)]
+                    ep2string(EP)]
     print(''.join(cadenasalida))
 
     if args.outputfile:
