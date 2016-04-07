@@ -64,6 +64,7 @@ setup.nsi: setup.nsi.in pyepbd/__init__.py
 test:
 	$(PYTHON) -m pytest pyepbd
 	$(PYTHON) bin/epbdcalc.py pyepbd/examples/ejemplo6K3.csv
+	$(PYTHON) bin/epbdcalc.py pyepbd/examples/ejemplo3PVBdC.csv
 
 coverage:
 	$(PYTHON) -m pytest --cov --cov-report=html pyepbd
