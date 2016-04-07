@@ -41,8 +41,15 @@ def readenergydata(datalist):
     * ctype is either 'PRODUCCION' or 'SUMINISTRO' por produced or used energy
     * originoruse defines:
       - the energy origin for produced energy (INSITU or COGENERACION)
-      - the energy end use (EPB or NEPB) for used energy
+      - the energy end use (EPB or NEPB) for delivered energy
     * values
+
+    List of energy components has the following structure:
+
+    [ {'carrier': carrier1, 'ctype': ctype1, 'originoruse': originoruse1, 'values': values1},
+      {'carrier': carrier2, 'ctype': ctype2, 'originoruse': originoruse2, 'values': values2},
+      ...
+    ]
     """
     numsteps = max(len(data['values']) for data in datalist)
 
@@ -77,7 +84,7 @@ def readenergyfile(filename):
     * ctype is either 'PRODUCCION' or 'SUMINISTRO' por produced or used energy
     * originoruse defines:
       - the energy origin for produced energy (INSITU or COGENERACION)
-      - the energy end use (EPB or NEPB) for used energy
+      - the energy end use (EPB or NEPB) for delivered energy
     * values
     """
     with open(filename, 'r') as datafile:
