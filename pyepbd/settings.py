@@ -10,10 +10,10 @@
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -39,25 +39,30 @@ K_RDEL = 1.0
 FACTORESDEPASOOFICIALES = pd.DataFrame(
     [
         ['ELECTRICIDAD', 'grid', 'input', 'A', 0.341, 2.082],
-        ['ELECTRICIDADBALEARES', 'grid', 'input', 'A', 0.094, 3.060],
-        ['ELECTRICIDADCANARIAS', 'grid', 'input', 'A', 0.059, 3.058],
-        ['ELECTRICIDADCEUTAMELILLA', 'grid', 'input', 'A', 0.066, 2.759],
+        ['ELECTRICIDADBALEARES', 'grid', 'input', 'A', 0.094, 3.060], # Electricity kind (only for delivery)
+        ['ELECTRICIDADCANARIAS', 'grid', 'input', 'A', 0.059, 3.058], # Electricity kind (only for delivery)
+        ['ELECTRICIDADCEUTAMELILLA', 'grid', 'input', 'A', 0.066, 2.759], # Electricity kind (only for delivery)
         ['ELECTRICIDAD', 'INSITU', 'input', 'A', 1.0, 0.0],
         ['ELECTRICIDAD', 'INSITU', 'to_grid', 'A', 1.0, 0.0],
         ['ELECTRICIDAD', 'INSITU', 'to_nEPB', 'A', 1.0, 0.0],
         ['ELECTRICIDAD', 'INSITU', 'to_grid', 'B', 0.5, 2.0],
         ['ELECTRICIDAD', 'INSITU', 'to_nEPB', 'B', 0.5, 2.0],
-        ['GASOLEO', 'grid', 'input', 'A', 0.003, 1.179],
-        ['GLP', 'grid', 'input', 'A', 0.03, 1.201],
-        ['GASNATURAL', 'grid', 'input', 'A', 0.005, 1.190],
-        ['CARBON', 'grid', 'input', 'A', 0.002, 1.082],
-        # BIOCARBURANTE == BIOMASA DENSIFICADA (PELLETS)
-        ['BIOCARBURANTE', 'grid', 'input', 'A', 1.028, 0.085],
-        ['MEDIOAMBIENTE', 'INSITU', 'input', 'A', 1.0, 0.0],
         ['ELECTRICIDAD', 'COGENERACION', 'input', 'A', 0.0, 0.0],
         ['ELECTRICIDAD', 'COGENERACION', 'to_grid', 'A', 1.0, 0.0],
         ['ELECTRICIDAD', 'COGENERACION', 'to_nEPB', 'A', 1.0, 0.0],
         ['ELECTRICIDAD', 'COGENERACION', 'to_grid', 'B', 0.5, 2.0],
-        ['ELECTRICIDAD', 'COGENERACION', 'to_nEPB', 'B', 0.5, 2.0]
+        ['ELECTRICIDAD', 'COGENERACION', 'to_nEPB', 'B', 0.5, 2.0],
+        ['MEDIOAMBIENTE', 'INSITU', 'input', 'A', 1.0, 0.0],
+        ['MEDIOAMBIENTE', 'INSITU', 'to_grid', 'A', 0.0, 0.0], # no export to grid
+        ['MEDIOAMBIENTE', 'INSITU', 'to_nEPB', 'A', 1.0, 0.0], # export for other uses in step A
+        ['MEDIOAMBIENTE', 'INSITU', 'to_grid', 'B', 0.0, 0.0], # no export to grid
+        ['MEDIOAMBIENTE', 'INSITU', 'to_nEPB', 'B', 0.0, 0.0], # no export for other uses
+        ['MEDIOAMBIENTE', 'grid', 'input', 'A', 1.0, 0.0], # Can always get carrier from the grid
+        # BIOCARBURANTE == BIOMASA DENSIFICADA (PELLETS)
+        ['BIOCARBURANTE', 'grid', 'input', 'A', 1.028, 0.085],
+        ['GASOLEO', 'grid', 'input', 'A', 0.003, 1.179],
+        ['GLP', 'grid', 'input', 'A', 0.03, 1.201],
+        ['GASNATURAL', 'grid', 'input', 'A', 0.005, 1.190],
+        ['CARBON', 'grid', 'input', 'A', 0.002, 1.082],
     ],
     columns=['vector', 'fuente', 'uso', 'factor', 'ren', 'nren'])
