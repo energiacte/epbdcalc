@@ -27,4 +27,4 @@ from .inputoutput import readenergydata, readenergyfile, readfactors, ep2string,
 from .settings import *
 from . import cli
 
-__version__ = '2.0'
+__version__ = '2.1'
