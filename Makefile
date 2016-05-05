@@ -72,6 +72,7 @@ coverage:
 #https://python-packaging-user-guide.readthedocs.org/en/latest/distributing/#packaging-your-project
 .PHONY:dist
 dist:
+	rm -f dist/*.whl dist/*.tar.gz
 	$(PYTHON) setup.py bdist_wheel
 	$(PYTHON) setup.py sdist
 	twine upload dist/*
