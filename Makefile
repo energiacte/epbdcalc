@@ -70,6 +70,7 @@ coverage:
 	$(PYTHON) -m pytest --cov --cov-report=html pyepbd
 
 #https://python-packaging-user-guide.readthedocs.org/en/latest/distributing/#packaging-your-project
+.PHONY:dist
 dist:
 	$(PYTHON) setup.py bdist_wheel
 	$(PYTHON) setup.py sdist
@@ -81,4 +82,4 @@ clean:
 	find . -name *.swp -exec rm {} \;
 
 # Los phony son los que no dependen de archivos y hay que considerar siempre no actualizados (rebuild)
-.PHONY: setup.nsi winbuild clean test
+.PHONY: setup.nsi winbuild clean test dist

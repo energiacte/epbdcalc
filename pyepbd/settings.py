@@ -36,6 +36,8 @@ K_EXP = 1.0
 
 K_RDEL = 1.0
 
+# FpA - weighting factors accounting for the resources used to produce this energy
+# FpB - weighting factors accounting for the resources avoided by the external grid due to the export
 FACTORESDEPASOOFICIALES = pd.DataFrame(
     [
         ['ELECTRICIDAD', 'grid', 'input', 'A', 0.341, 2.082],
@@ -60,9 +62,13 @@ FACTORESDEPASOOFICIALES = pd.DataFrame(
         ['MEDIOAMBIENTE', 'grid', 'input', 'A', 1.0, 0.0], # Can always get carrier from the grid
         # BIOCARBURANTE == BIOMASA DENSIFICADA (PELLETS)
         ['BIOCARBURANTE', 'grid', 'input', 'A', 1.028, 0.085],
+        ['BIOMASA', 'grid', 'input', 'A', 1.003, 0.034],
+        ['BIOMASADENSIFICADA', 'grid', 'input', 'A', 1.028, 0.085],
+        ['CARBON', 'grid', 'input', 'A', 0.002, 1.082],
+        # FUELOIL == GASOLEO
+        ['FUELOIL', 'grid', 'input', 'A', 0.003, 1.179],
+        ['GASNATURAL', 'grid', 'input', 'A', 0.005, 1.190],
         ['GASOLEO', 'grid', 'input', 'A', 0.003, 1.179],
         ['GLP', 'grid', 'input', 'A', 0.03, 1.201],
-        ['GASNATURAL', 'grid', 'input', 'A', 0.005, 1.190],
-        ['CARBON', 'grid', 'input', 'A', 0.002, 1.082],
     ],
     columns=['vector', 'fuente', 'uso', 'factor', 'ren', 'nren'])
