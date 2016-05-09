@@ -38,7 +38,7 @@ def readenergydata(datalist):
     data[carrier][ctype][originoruse] -> values as np.array with length=numsteps
 
     * carrier is an energy carrier
-    * ctype is either 'PRODUCCION' or 'SUMINISTRO' por produced or used energy
+    * ctype is either 'PRODUCCION' or 'CONSUMO' por produced or used energy
     * originoruse defines:
       - the energy origin for produced energy (INSITU or COGENERACION)
       - the energy end use (EPB or NEPB) for delivered energy
@@ -65,7 +65,7 @@ def readenergydata(datalist):
                              "Problem found in line %i:\n\t%s" % (ii+1, line))
 
         if carrier not in energydata:
-            energydata[carrier] = {'SUMINISTRO': {'EPB': np.zeros(numsteps),
+            energydata[carrier] = {'CONSUMO': {'EPB': np.zeros(numsteps),
                                                   'NEPB': np.zeros(numsteps)},
                                    'PRODUCCION': {'INSITU': np.zeros(numsteps),
                                                   'COGENERACION': np.zeros(numsteps)}}
@@ -81,7 +81,7 @@ def readenergyfile(filename):
     data[carrier][ctype][originoruse] -> values as np.array with length=numsteps
 
     * carrier is an energy carrier
-    * ctype is either 'PRODUCCION' or 'SUMINISTRO' por produced or used energy
+    * ctype is either 'PRODUCCION' or 'CONSUMO' por produced or used energy
     * originoruse defines:
       - the energy origin for produced energy (INSITU or COGENERACION)
       - the energy end use (EPB or NEPB) for delivered energy
@@ -96,8 +96,8 @@ def readenergyfile(filename):
             carrier, ctype, originoruse = fields[0:3]
             values = fields[3:]
 
-            if ctype not in ('PRODUCCION', 'SUMINISTRO'):
-                raise ValueError("Carrier type is not 'SUMINISTRO' or 'PRODUCCION' in line %i\n\t%s" % (ii+2, line))
+            if ctype not in ('PRODUCCION', 'CONSUMO'):
+                raise ValueError("Carrier type is not 'CONSUMO' or 'PRODUCCION' in line %i\n\t%s" % (ii+2, line))
             if originoruse not in ('EPB', 'NEPB', 'INSITU', 'COGENERACION'):
                 raise ValueError(("Origin or end use is not 'EPB', 'NEPB', 'INSITU' or 'COGENERACION'"
                                   " in line %i\n\t%s" % (ii+2, line)))

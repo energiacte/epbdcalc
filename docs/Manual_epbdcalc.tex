@@ -231,8 +231,8 @@ El archivo de datos de entrada proporciona la información de origen y uso de la
 
 \begin{itemize}
 \item campo \texttt{vector}, de nombre del vector energético;
-\item campo \texttt{tipo}, que indica si se trata de energía producida o suministrada;
-\item campo \texttt{origenouso}, que identifica el origen de la energía producida o el uso de la energía suministrada;
+\item campo \texttt{tipo}, que indica si se trata de energía producida o consumida;
+\item campo \texttt{origenouso}, que identifica el origen de la energía producida o el uso de la energía consumida;
 \item campos \texttt{valor}, con un dato para cada paso de tiempo.
 \end{itemize}
 
@@ -247,8 +247,8 @@ A continuación se muestra un ejemplo de un conjunto de registros:
 
 \begin{Verbatim}[fontsize=\small,frame=single]
     vector,tipo,origenouso
-    ELECTRICIDAD,SUMINISTRO,EPB,200.10,160.00,100.32,90.56,50.11,60.00,80.00,70,50,80,120,160
-    ELECTRICIDAD,SUMINISTRO,NEPB,30,30,30,30,30,30,30,30,30,30,30,30
+    ELECTRICIDAD,CONSUMO,EPB,200.10,160.00,100.32,90.56,50.11,60.00,80.00,70,50,80,120,160
+    ELECTRICIDAD,CONSUMO,NEPB,30,30,30,30,30,30,30,30,30,30,30,30
     ELECTRICIDAD,PRODUCCION,INSITU,44,55,77,110,187,209,220,198,176,132,88,55
 \end{Verbatim}
 
@@ -279,17 +279,11 @@ El campo \texttt{vector} \textbf{identifica un vector energético} y puede tomar
 
 \subsubsection{Campo \texttt{tipo}}
 
-El campo \texttt{tipo} \textbf{indica si el vector energético proviene de un suministro de energía o de producción energética}, admitiendo únicamente los valores:
+El campo \texttt{tipo} \textbf{indica si los datos para el vector energético consisten en un consumo de energía o en una producción energética}, admitiendo únicamente los valores:
 
 \begin{itemize}
 \item \texttt{PRODUCCION}
-\item \texttt{SUMINISTRO}
-\end{itemize}
-
-Con las siguientes particularidades:
-
-\begin{itemize}
-\item los suministros de la red no tienen que ser especificados cuando este sea único por vector energético, ya que se pueden obtener mediante el balance energético.
+\item \texttt{CONSUMO}
 \end{itemize}
 
 \subsubsection{Campo \texttt{origenouso}}
@@ -315,7 +309,7 @@ Para registros en los que el campo \texttt{tipo} sea igual a \texttt{PRODUCCION}
 \end{tabular}
 \end{table}
 
-Para registros en los que el campo \texttt{tipo} sea igual a \texttt{SUMINISTRO}, es necesario especificar si la energía se destina a usos evaluados en la eficiencia energética (usos EPB) o usos no evaluados (usos no EPB), de modo que los valores permitidos son los siguientes:
+Para registros en los que el campo \texttt{tipo} sea igual a \texttt{CONSUMO}, es necesario especificar si la energía se destina a usos evaluados en la eficiencia energética (usos EPB) o usos no evaluados (usos no EPB), de modo que los valores permitidos son los siguientes:
 
 \begin{itemize}
 \item \texttt{EPB}

@@ -142,11 +142,11 @@ def test_fromdata():
     # data from ejemplo3PVBdC_normativo
     datalist = [
             {'values': [9.67, 7.74, 4.84, 4.35, 2.42, 2.9, 3.87, 3.39, 2.42, 3.87, 5.8, 7.74],
-             'carrier': 'ELECTRICIDAD', 'ctype': 'SUMINISTRO', 'originoruse': 'EPB'},
+             'carrier': 'ELECTRICIDAD', 'ctype': 'CONSUMO', 'originoruse': 'EPB'},
             {'values': [1.13, 1.42, 1.99, 2.84, 4.82, 5.39, 5.67, 5.11, 4.54, 3.40, 2.27, 1.42],
              'carrier': 'ELECTRICIDAD', 'ctype': 'PRODUCCION', 'originoruse': 'INSITU'},
             {'values': [21.48, 17.18, 10.74, 9.66, 5.37, 6.44, 8.59, 7.52, 5.37, 8.59, 12.89, 17.18],
-             'carrier': 'MEDIOAMBIENTE', 'ctype': 'SUMINISTRO', 'originoruse': 'EPB'},
+             'carrier': 'MEDIOAMBIENTE', 'ctype': 'CONSUMO', 'originoruse': 'EPB'},
             {'values': [21.48, 17.18, 10.74, 9.66, 5.37, 6.44, 8.59, 7.52, 5.37, 8.59, 12.89, 17.18],
              'carrier': 'MEDIOAMBIENTE', 'ctype': 'PRODUCCION', 'originoruse': 'INSITU'}
             ]
