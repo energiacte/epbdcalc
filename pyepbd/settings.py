@@ -49,8 +49,8 @@ FACTORESDEPASOOFICIALES = pd.DataFrame([
     ['ELECTRICIDAD',        'INSITU',       'to_grid',  'B', 0.341, 2.082], # Savings to the grid due to produced and exported to the grid energy
     ['ELECTRICIDAD',        'INSITU',       'to_nEPB',  'B', 0.341, 2.082], # Savings to the grid due to produced and exported to nEPB uses
     ['ELECTRICIDAD',        'COGENERACION', 'input',    'A', 0.000, 0.000], # There is no delivery from grid for this carrier
-    ['ELECTRICIDAD',        'COGENERACION', 'to_grid',  'A', 0.000, 1.000], # User defined!
-    ['ELECTRICIDAD',        'COGENERACION', 'to_nEPB',  'A', 0.000, 1.000], # User defined!
+    ['ELECTRICIDAD',        'COGENERACION', 'to_grid',  'A', 0.000, 2.500], # User defined!
+    ['ELECTRICIDAD',        'COGENERACION', 'to_nEPB',  'A', 0.000, 2.500], # User defined!
     ['ELECTRICIDAD',        'COGENERACION', 'to_grid',  'B', 0.341, 2.082], # Savings to the grid when exporting to the grid
     ['ELECTRICIDAD',        'COGENERACION', 'to_nEPB',  'B', 0.341, 2.082], # Savings to the grid when exporting to nEPB uses
 
@@ -61,8 +61,8 @@ FACTORESDEPASOOFICIALES = pd.DataFrame([
     ['ELECTRICIDADBALEARES','INSITU',       'to_grid',  'B', 0.094, 3.060], # Savings to the grid due to produced and exported to the grid energy
     ['ELECTRICIDADBALEARES','INSITU',       'to_nEPB',  'B', 0.094, 3.060], # Savings to the grid due to produced and exported to nEPB uses
     ['ELECTRICIDADBALEARES','COGENERACION', 'input',    'A', 0.000, 0.000], # There is no delivery from grid for this carrier
-    ['ELECTRICIDADBALEARES','COGENERACION', 'to_grid',  'A', 0.000, 1.000], # User defined!
-    ['ELECTRICIDADBALEARES','COGENERACION', 'to_nEPB',  'A', 0.000, 1.000], # User defined!
+    ['ELECTRICIDADBALEARES','COGENERACION', 'to_grid',  'A', 0.000, 2.500], # User defined!
+    ['ELECTRICIDADBALEARES','COGENERACION', 'to_nEPB',  'A', 0.000, 2.500], # User defined!
     ['ELECTRICIDADBALEARES','COGENERACION', 'to_grid',  'B', 0.094, 3.060], # Savings to the grid when exporting to the grid
     ['ELECTRICIDADBALEARES','COGENERACION', 'to_nEPB',  'B', 0.094, 3.060], # Savings to the grid when exporting to nEPB uses
 
@@ -73,8 +73,8 @@ FACTORESDEPASOOFICIALES = pd.DataFrame([
     ['ELECTRICIDADCANARIAS','INSITU',       'to_grid',  'B', 0.059, 3.058], # Savings to the grid due to produced and exported to the grid energy
     ['ELECTRICIDADCANARIAS','INSITU',       'to_nEPB',  'B', 0.059, 3.058], # Savings to the grid due to produced and exported to nEPB uses
     ['ELECTRICIDADCANARIAS','COGENERACION', 'input',    'A', 0.000, 0.000], # There is no delivery from grid for this carrier
-    ['ELECTRICIDADCANARIAS','COGENERACION', 'to_grid',  'A', 0.000, 1.000], # User defined!
-    ['ELECTRICIDADCANARIAS','COGENERACION', 'to_nEPB',  'A', 0.000, 1.000], # User defined!
+    ['ELECTRICIDADCANARIAS','COGENERACION', 'to_grid',  'A', 0.000, 2.500], # User defined!
+    ['ELECTRICIDADCANARIAS','COGENERACION', 'to_nEPB',  'A', 0.000, 2.500], # User defined!
     ['ELECTRICIDADCANARIAS','COGENERACION', 'to_grid',  'B', 0.059, 3.058], # Savings to the grid when exporting to the grid
     ['ELECTRICIDADCANARIAS','COGENERACION', 'to_nEPB',  'B', 0.059, 3.058], # Savings to the grid when exporting to nEPB uses
 
@@ -85,8 +85,8 @@ FACTORESDEPASOOFICIALES = pd.DataFrame([
     ['ELECTRICIDADCEUTAMELILLA','INSITU',   'to_grid',  'B', 0.066, 2.759], # Savings to the grid due to produced and exported to the grid energy
     ['ELECTRICIDADCEUTAMELILLA','INSITU',   'to_nEPB',  'B', 0.066, 2.759], # Savings to the grid due to produced and exported to nEPB uses
     ['ELECTRICIDADCEUTAMELILLA','COGENERACION','input', 'A', 0.000, 0.000], # There is no delivery from grid for this carrier
-    ['ELECTRICIDADCEUTAMELILLA','COGENERACION','to_grid','A', 0.000, 1.000], # User defined!
-    ['ELECTRICIDADCEUTAMELILLA','COGENERACION','to_nEPB','A', 0.000, 1.000], # User defined!
+    ['ELECTRICIDADCEUTAMELILLA','COGENERACION','to_grid','A', 0.000, 2.500], # User defined!
+    ['ELECTRICIDADCEUTAMELILLA','COGENERACION','to_nEPB','A', 0.000, 2.500], # User defined!
     ['ELECTRICIDADCEUTAMELILLA','COGENERACION','to_grid','B', 0.066, 2.759], # Savings to the grid when exporting to the grid
     ['ELECTRICIDADCEUTAMELILLA','COGENERACION','to_nEPB','B', 0.066, 2.759], # Savings to the grid when exporting to nEPB uses
 
