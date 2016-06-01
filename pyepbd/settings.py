@@ -42,53 +42,53 @@ K_RDEL = 1.0
 # FpB - weighting factors accounting for the resources avoided by the external grid due to the export
 FACTORESDEPASOOFICIALES = pd.DataFrame([
 #  Energy carrier         origin          use         step Fpren  Fpnren
-    ['ELECTRICIDAD',        'grid',         'input',    'A', 0.341, 2.082], # Delivered energy
+    ['ELECTRICIDAD',        'grid',         'input',    'A', 0.414, 1.954], # Delivered energy
     ['ELECTRICIDAD',        'INSITU',       'input',    'A', 1.000, 0.000], # Produced energy
     ['ELECTRICIDAD',        'INSITU',       'to_grid',  'A', 1.000, 0.000], # Produced and exported to the grid
     ['ELECTRICIDAD',        'INSITU',       'to_nEPB',  'A', 1.000, 0.000], # Produced and exported to nEPB uses
-    ['ELECTRICIDAD',        'INSITU',       'to_grid',  'B', 0.341, 2.082], # Savings to the grid due to produced and exported to the grid energy
-    ['ELECTRICIDAD',        'INSITU',       'to_nEPB',  'B', 0.341, 2.082], # Savings to the grid due to produced and exported to nEPB uses
+    ['ELECTRICIDAD',        'INSITU',       'to_grid',  'B', 0.414, 1.954], # Savings to the grid due to produced and exported to the grid energy
+    ['ELECTRICIDAD',        'INSITU',       'to_nEPB',  'B', 0.414, 1.954], # Savings to the grid due to produced and exported to nEPB uses
     ['ELECTRICIDAD',        'COGENERACION', 'input',    'A', 0.000, 0.000], # There is no delivery from grid for this carrier
     ['ELECTRICIDAD',        'COGENERACION', 'to_grid',  'A', 0.000, 2.500], # User defined!
     ['ELECTRICIDAD',        'COGENERACION', 'to_nEPB',  'A', 0.000, 2.500], # User defined!
-    ['ELECTRICIDAD',        'COGENERACION', 'to_grid',  'B', 0.341, 2.082], # Savings to the grid when exporting to the grid
-    ['ELECTRICIDAD',        'COGENERACION', 'to_nEPB',  'B', 0.341, 2.082], # Savings to the grid when exporting to nEPB uses
+    ['ELECTRICIDAD',        'COGENERACION', 'to_grid',  'B', 0.414, 1.954], # Savings to the grid when exporting to the grid
+    ['ELECTRICIDAD',        'COGENERACION', 'to_nEPB',  'B', 0.414, 1.954], # Savings to the grid when exporting to nEPB uses
 
-    ['ELECTRICIDADBALEARES','grid',         'input',    'A', 0.094, 3.060], # Delivered energy
+    ['ELECTRICIDADBALEARES','grid',         'input',    'A', 0.082, 2.968], # Delivered energy
     ['ELECTRICIDADBALEARES','INSITU',       'input',    'A', 1.000, 0.000], # Produced energy
     ['ELECTRICIDADBALEARES','INSITU',       'to_grid',  'A', 1.000, 0.000], # Produced and exported to the grid
     ['ELECTRICIDADBALEARES','INSITU',       'to_nEPB',  'A', 1.000, 0.000], # Produced and exported to nEPB uses
-    ['ELECTRICIDADBALEARES','INSITU',       'to_grid',  'B', 0.094, 3.060], # Savings to the grid due to produced and exported to the grid energy
-    ['ELECTRICIDADBALEARES','INSITU',       'to_nEPB',  'B', 0.094, 3.060], # Savings to the grid due to produced and exported to nEPB uses
+    ['ELECTRICIDADBALEARES','INSITU',       'to_grid',  'B', 0.082, 2.968], # Savings to the grid due to produced and exported to the grid energy
+    ['ELECTRICIDADBALEARES','INSITU',       'to_nEPB',  'B', 0.082, 2.968], # Savings to the grid due to produced and exported to nEPB uses
     ['ELECTRICIDADBALEARES','COGENERACION', 'input',    'A', 0.000, 0.000], # There is no delivery from grid for this carrier
     ['ELECTRICIDADBALEARES','COGENERACION', 'to_grid',  'A', 0.000, 2.500], # User defined!
     ['ELECTRICIDADBALEARES','COGENERACION', 'to_nEPB',  'A', 0.000, 2.500], # User defined!
-    ['ELECTRICIDADBALEARES','COGENERACION', 'to_grid',  'B', 0.094, 3.060], # Savings to the grid when exporting to the grid
-    ['ELECTRICIDADBALEARES','COGENERACION', 'to_nEPB',  'B', 0.094, 3.060], # Savings to the grid when exporting to nEPB uses
+    ['ELECTRICIDADBALEARES','COGENERACION', 'to_grid',  'B', 0.082, 2.968], # Savings to the grid when exporting to the grid
+    ['ELECTRICIDADBALEARES','COGENERACION', 'to_nEPB',  'B', 0.082, 2.968], # Savings to the grid when exporting to nEPB uses
 
-    ['ELECTRICIDADCANARIAS','grid',         'input',    'A', 0.059, 3.058], # Delivered energy
+    ['ELECTRICIDADCANARIAS','grid',         'input',    'A', 0.070, 2.924], # Delivered energy
     ['ELECTRICIDADCANARIAS','INSITU',       'input',    'A', 1.000, 0.000], # Produced energy
     ['ELECTRICIDADCANARIAS','INSITU',       'to_grid',  'A', 1.000, 0.000], # Produced and exported to the grid
     ['ELECTRICIDADCANARIAS','INSITU',       'to_nEPB',  'A', 1.000, 0.000], # Produced and exported to nEPB uses
-    ['ELECTRICIDADCANARIAS','INSITU',       'to_grid',  'B', 0.059, 3.058], # Savings to the grid due to produced and exported to the grid energy
-    ['ELECTRICIDADCANARIAS','INSITU',       'to_nEPB',  'B', 0.059, 3.058], # Savings to the grid due to produced and exported to nEPB uses
+    ['ELECTRICIDADCANARIAS','INSITU',       'to_grid',  'B', 0.070, 2.924], # Savings to the grid due to produced and exported to the grid energy
+    ['ELECTRICIDADCANARIAS','INSITU',       'to_nEPB',  'B', 0.070, 2.924], # Savings to the grid due to produced and exported to nEPB uses
     ['ELECTRICIDADCANARIAS','COGENERACION', 'input',    'A', 0.000, 0.000], # There is no delivery from grid for this carrier
     ['ELECTRICIDADCANARIAS','COGENERACION', 'to_grid',  'A', 0.000, 2.500], # User defined!
     ['ELECTRICIDADCANARIAS','COGENERACION', 'to_nEPB',  'A', 0.000, 2.500], # User defined!
-    ['ELECTRICIDADCANARIAS','COGENERACION', 'to_grid',  'B', 0.059, 3.058], # Savings to the grid when exporting to the grid
-    ['ELECTRICIDADCANARIAS','COGENERACION', 'to_nEPB',  'B', 0.059, 3.058], # Savings to the grid when exporting to nEPB uses
+    ['ELECTRICIDADCANARIAS','COGENERACION', 'to_grid',  'B', 0.070, 2.924], # Savings to the grid when exporting to the grid
+    ['ELECTRICIDADCANARIAS','COGENERACION', 'to_nEPB',  'B', 0.070, 2.924], # Savings to the grid when exporting to nEPB uses
 
-    ['ELECTRICIDADCEUTAMELILLA','grid',     'input',    'A', 0.066, 2.759], # Delivered energy
+    ['ELECTRICIDADCEUTAMELILLA','grid',     'input',    'A', 0.072, 2.718], # Delivered energy
     ['ELECTRICIDADCEUTAMELILLA','INSITU',   'input',    'A', 1.000, 0.000], # Produced energy
     ['ELECTRICIDADCEUTAMELILLA','INSITU',   'to_grid',  'A', 1.000, 0.000], # Produced and exported to the grid
     ['ELECTRICIDADCEUTAMELILLA','INSITU',   'to_nEPB',  'A', 1.000, 0.000], # Produced and exported to nEPB uses
-    ['ELECTRICIDADCEUTAMELILLA','INSITU',   'to_grid',  'B', 0.066, 2.759], # Savings to the grid due to produced and exported to the grid energy
-    ['ELECTRICIDADCEUTAMELILLA','INSITU',   'to_nEPB',  'B', 0.066, 2.759], # Savings to the grid due to produced and exported to nEPB uses
+    ['ELECTRICIDADCEUTAMELILLA','INSITU',   'to_grid',  'B', 0.072, 2.718], # Savings to the grid due to produced and exported to the grid energy
+    ['ELECTRICIDADCEUTAMELILLA','INSITU',   'to_nEPB',  'B', 0.072, 2.718], # Savings to the grid due to produced and exported to nEPB uses
     ['ELECTRICIDADCEUTAMELILLA','COGENERACION','input', 'A', 0.000, 0.000], # There is no delivery from grid for this carrier
     ['ELECTRICIDADCEUTAMELILLA','COGENERACION','to_grid','A', 0.000, 2.500], # User defined!
     ['ELECTRICIDADCEUTAMELILLA','COGENERACION','to_nEPB','A', 0.000, 2.500], # User defined!
-    ['ELECTRICIDADCEUTAMELILLA','COGENERACION','to_grid','B', 0.066, 2.759], # Savings to the grid when exporting to the grid
-    ['ELECTRICIDADCEUTAMELILLA','COGENERACION','to_nEPB','B', 0.066, 2.759], # Savings to the grid when exporting to nEPB uses
+    ['ELECTRICIDADCEUTAMELILLA','COGENERACION','to_grid','B', 0.072, 2.718], # Savings to the grid when exporting to the grid
+    ['ELECTRICIDADCEUTAMELILLA','COGENERACION','to_nEPB','B', 0.072, 2.718], # Savings to the grid when exporting to nEPB uses
 
     ['MEDIOAMBIENTE',       'grid',         'input',    'A', 1.000, 0.000], # Grid is able to deliver this carrier
     ['MEDIOAMBIENTE',       'INSITU',       'input',    'A', 1.000, 0.000], # in-situ production of this carrier
