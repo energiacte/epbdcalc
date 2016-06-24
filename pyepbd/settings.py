@@ -109,4 +109,4 @@ FACTORESDEPASOOFICIALES = pd.DataFrame([
     ['GLP',                 'grid',         'input',    'A', 0.030, 1.201], # Delivered energy
     ['RED1',                'grid',         'input',    'A', 0.000, 1.300], # User defined!, district heating/cooling carrier
     ['RED2',                'grid',         'input',    'A', 0.000, 1.300], # User defined!, district heating/cooling carrier
-], columns=['vector',          'fuente',       'uso',  'factor', 'ren', 'nren'])
+], columns=['vector',          'fuente',       'uso',  'step', 'ren', 'nren'])

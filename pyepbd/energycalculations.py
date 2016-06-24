@@ -197,7 +197,7 @@ def delivered_weighted_energy_stepA(components, fp):
     """
 
     delivered_wenergy_stepA = pd.Series({'ren': 0.0, 'nren': 0.0})
-    fpA = fp[(fp.uso=='input') & (fp.factor=='A')]
+    fpA = fp[(fp.uso=='input') & (fp.step=='A')]
     for source in components:
         origins = components[source]
         if 'input' in origins:
@@ -244,8 +244,8 @@ def gridsavings_stepB(components, fp, k_exp):
 
     to_nEPB = pd.Series({'ren': 0.0, 'nren': 0.0})
     to_grid = pd.Series({'ren': 0.0, 'nren': 0.0})
-    fpA = fp[fp.factor=='A']
-    fpB = fp[fp.factor=='B']
+    fpA = fp[fp.step=='A']
+    fpB = fp[fp.step=='B']
     fpAnEPB,fpAgrid = fpA[fpA.uso=='to_nEPB'], fpA[fpA.uso=='to_grid']
     fpBnEPB,fpBgrid = fpB[fpB.uso=='to_nEPB'], fpB[fpB.uso=='to_grid']
 

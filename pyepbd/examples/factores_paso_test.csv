@@ -1,5 +1,5 @@
-vector, fuente, uso, factor, ren,nren#esto es un comentario, se pueden hacer comentarios aquí
-#también se pueden hacer comentarios aquí
+vector, fuente, uso, step, ren, nren
+
 ELECTRICIDAD, grid, input, A, 0.5, 2.0
 
 ELECTRICIDAD, INSITU, input,   A, 1.0, 0.0
