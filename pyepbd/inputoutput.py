@@ -114,6 +114,23 @@ def readfactors(filename):
                        comment='#',
                        skip_blank_lines=True)
 
+def readfactorsdata(data):
+    """Read weighting factors from data object
+
+    The data object is a list of entries which are themselves lists
+    with the following structure: [carrier, source, use, step, ren, nren]
+    where:
+    - carrirer is the energy carrier name as string (e.g. GLP, MEDIOAMBIENTE...)
+    - source is the source used as string (grid|INSITU|COGENERACION)
+    - use is the energy use as string (input|to_grid|to_nEPB)
+    - step is the calculation step as string (A|B)
+    - ren is the factor value for its renewable share (e.g. 0.008)
+    - nren is the factor value for its non-renewable share (e.g. 2.500)
+    """
+    #TODO: no validation done here
+    return pd.DataFrame(data,
+                        columns=['vector', 'fuente', 'uso', 'step', 'ren', 'nren'])
+
 def ep2string(EP, area=1.0):
     """Format energy efficiency indicators as string from primary energy data
 
