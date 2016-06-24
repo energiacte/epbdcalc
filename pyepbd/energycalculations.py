@@ -62,7 +62,7 @@ import pandas as pd
 
 # origin for produced energy must be either 'INSITU' or 'COGENERACION'
 VALIDORIGINS = ['INSITU', 'COGENERACION']
-    
+
 def components_t_forcarrier(vdata, k_rdel):
     """Calculate energy components for each time step from energy carrier data
 
@@ -130,7 +130,7 @@ def components_t_forcarrier(vdata, k_rdel):
 
     # Exported (electric) energy to the grid for each time step (formula 34)
     # E_exp_grid_t = E_exp_nused_t - E_exp_tmp_t # not used
-    
+
     # Annual exported (electric) energy to the grid (formula 35)
     E_exp_grid_an = E_exp_nused_an - E_exp_tmp_an
     # Energy exported to grid, by origin, weighting done by exported and not used energy
@@ -248,7 +248,7 @@ def gridsavings_stepB(components, fp, k_exp):
     fpB = fp[fp.factor=='B']
     fpAnEPB,fpAgrid = fpA[fpA.uso=='to_nEPB'], fpA[fpA.uso=='to_grid']
     fpBnEPB,fpBgrid = fpB[fpB.uso=='to_nEPB'], fpB[fpB.uso=='to_grid']
-    
+
     for source in components:
         destinations = components[source]
         if 'to_nEPB' in destinations:
