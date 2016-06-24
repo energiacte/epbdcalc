@@ -3,6 +3,29 @@
 News
 ====
 
+4.0
+---
+
+* Factores de paso a energía primaria por defecto iguales a los definidos
+  en el Documento Reconocido del RITE
+* Salida de indicadores con repercusión de superficie (parámetro --area, -A)
+
+3.x
+---
+
+* Factores de paso corregidos en cogeneración (más realistas)
+* Renombrado de SUMINISTRO a CONSUMO
+* Incorporación de CONSUMOS de RED1 y RED2 para soporte de redes de distrito
+
+2.x
+---
+
+* Balance automático de consumos para combustibles
+* Balance automático de consumos para fuentes renovables
+* Exportación de funciones de entrada/salida
+* Exportación de datos en JSON
+* Soporte simultáneo de Python 3 y Python 2
+
 1.0
 ---
 
