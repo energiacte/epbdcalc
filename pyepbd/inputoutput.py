@@ -114,17 +114,19 @@ def readfactors(filename):
                        comment='#',
                        skip_blank_lines=True)
 
-def ep2string(EP):
+def ep2string(EP, area=1.0):
     """Format energy efficiency indicators as string from primary energy data
 
     In the context of the CTE regulations, this refers to primary energy values.
     """
-
-    eparen, epanren = EP.EPpasoA['ren'], EP.EPpasoA['nren']
+    areafactor = 1.0 / area
+    eparen = areafactor * EP.EPpasoA['ren']
+    epanren = areafactor * EP.EPpasoA['nren']
     epatotal = eparen + epanren
     eparer = eparen / epatotal if epatotal else 0.0
 
-    epren, epnren = EP.EP['ren'], EP.EP['nren']
+    epren = areafactor * EP.EP['ren']
+    epnren = areafactor * EP.EP['nren']
     eptotal = epren + epnren
     eprer = epren / eptotal if eptotal else 0.0
 
@@ -135,17 +137,19 @@ def ep2string(EP):
 
     return txt
 
-def ep2dict(EP):
+def ep2dict(EP, area=1.0):
     """Format energy efficiency indicators as dict from primary energy data
 
     In the context of the CTE regulations, this refers to primary energy values.
     """
-
-    eparen, epanren = EP.EPpasoA['ren'], EP.EPpasoA['nren']
+    areafactor = 1.0 / area
+    eparen = areafactor * EP.EPpasoA['ren']
+    epanren = areafactor * EP.EPpasoA['nren']
     epatotal = eparen + epanren
     eparer = eparen / epatotal if epatotal else 0.0
 
-    epren, epnren = EP.EP['ren'], EP.EP['nren']
+    epren = areafactor * EP.EP['ren']
+    epnren = areafactor * EP.EP['nren']
     eptotal = epren + epnren
     eprer = epren / eptotal if eptotal else 0.0
 

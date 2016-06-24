@@ -51,6 +51,9 @@ def main():
                         help=u'factor de resuministro (k_rdel)')
     parser.add_argument('--kexp', nargs='?', default=None, type=float,
                         help=u'factor de exportacion (k_exp)')
+    parser.add_argument('-A', '--area', dest='area', nargs='?',
+                        type=float, default=1.0,
+                        help=u'superficie de referencia')
     parser.add_argument('-o', '--outfile', dest='outputfile', nargs='?',
                         type=argparse.FileType('w'), default=None,
                         help=u'archivo de salida de resultados')
@@ -81,7 +84,7 @@ def main():
     EP = weighted_energy(data, k_rdel, fP, k_exp)
 
     cadenasalida = ['%s\n' % args.vecfile.name,
-                    ep2string(EP)]
+                    ep2string(EP, args.area)]
     print(''.join(cadenasalida))
 
     if args.outputfile:
