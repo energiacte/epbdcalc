@@ -23,8 +23,9 @@
 # SOFTWARE.
 
 from .energycalculations import weighted_energy
-from .inputoutput import readenergydata, readenergyfile, readfactors, ep2string, ep2dict
+from .inputoutput import readenergydata, readenergyfile, readfactors, readfactorsdata
+from .inputoutput import ep2string, ep2dict
 from .settings import *
 from . import cli
 
-__version__ = '3.3'
+__version__ = '4.0'

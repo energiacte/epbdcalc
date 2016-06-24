@@ -80,6 +80,8 @@ def main():
     fP = (FACTORESDEPASOOFICIALES if args.fpfile is None
           else readfactors(args.fpfile))
 
+    print(u'Superficie de referencia: %.2f' % args.area)
+
     data = readenergyfile(args.vecfile.name)
     EP = weighted_energy(data, k_rdel, fP, k_exp)
 
