@@ -61,6 +61,19 @@ README.html: README.rst res/style.css
 setup.nsi: setup.nsi.in pyepbd/__init__.py
 	sed 's/@APPNAME@/$(APPNAME)/g; s/@VERSION@/$(VERSION)/g; s/@ARCH@/$(ARCH)/g; s/@DATE@/$(DATE)/g; s/@UPXPATH@/$(UPXPATH)/g; s/@DISTDIR@/$(DISTDIR)/g;' setup.nsi.in > tmp && mv tmp setup.nsi
 
+FPTEST=pyepbd/examples/factores_paso_test.csv
+createtest:
+	$(PYTHON) pyepbd/examples/createfiles.py
+	$(PYTHON) bin/epbdcalc.py pyepbd/examples/ejemplo1base.csv --krdel 1.0 --kexp 1.0 -f $(FPTEST) -o pyepbd/examples/ejemplo1base_salida.csv
+	$(PYTHON) bin/epbdcalc.py pyepbd/examples/ejemplo1PV.csv --krdel 1.0 --kexp 1.0 -f $(FPTEST) -o pyepbd/examples/ejemplo1PV_salida.csv
+	$(PYTHON) bin/epbdcalc.py pyepbd/examples/ejemplo1xPV.csv --krdel 1.0 --kexp 1.0 -f $(FPTEST) -o pyepbd/examples/ejemplo1xPV_salida.csv
+	$(PYTHON) bin/epbdcalc.py pyepbd/examples/ejemplo2PVgas.csv --krdel 1.0 --kexp 1.0 -f $(FPTEST) -o pyepbd/examples/ejemplo2PVgas_salida.csv
+	$(PYTHON) bin/epbdcalc.py pyepbd/examples/ejemplo2xPVgas.csv --krdel 1.0 --kexp 1.0 -f $(FPTEST) -o pyepbd/examples/ejemplo2xPVgas_salida.csv
+	$(PYTHON) bin/epbdcalc.py pyepbd/examples/ejemplo3PVBdC.csv --krdel 1.0 --kexp 1.0 -f $(FPTEST) -o pyepbd/examples/ejemplo3PVBdC_salida.csv
+	$(PYTHON) bin/epbdcalc.py pyepbd/examples/ejemplo4cgnfosil.csv --krdel 1.0 --kexp 1.0 -f $(FPTEST) -o pyepbd/examples/ejemplo4cgnfosil_salida.csv
+	$(PYTHON) bin/epbdcalc.py pyepbd/examples/ejemplo5cgnbiogas.csv --krdel 1.0 --kexp 1.0 -f $(FPTEST) -o pyepbd/examples/ejemplo5cgnbiogas_salida.csv
+	$(PYTHON) bin/epbdcalc.py pyepbd/examples/ejemplo6K3.csv --krdel 1.0 --kexp 1.0 -f $(FPTEST) -o pyepbd/examples/ejemplo6K3_salida.csv
+
 test:
 	$(PYTHON) -m pytest pyepbd
 	$(PYTHON) bin/epbdcalc.py pyepbd/examples/ejemplo6K3.csv
