@@ -28,4 +28,4 @@ from .inputoutput import ep2string, ep2dict
 from .settings import *
 from . import cli
 
-__version__ = '4.0'
+__version__ = '4.1'

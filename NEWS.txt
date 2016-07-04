@@ -3,8 +3,19 @@
 News
 ====
 
+4.1
+---
+
+*4-jul-2016*
+
+* Exportación de la variable FACTORESDEPASO (lista de factores)
+* Mejora formato de salida en archivos y consola
+* Actualiza documentación
+
 4.0
 ---
+
+*24-jun-2016*
 
 * Factores de paso a energía primaria por defecto iguales a los definidos
   en el Documento Reconocido del RITE
@@ -13,12 +24,16 @@ News
 3.x
 ---
 
+*9-may-2016*
+
 * Factores de paso corregidos en cogeneración (más realistas)
 * Renombrado de SUMINISTRO a CONSUMO
 * Incorporación de CONSUMOS de RED1 y RED2 para soporte de redes de distrito
 
 2.x
 ---
+
+*27-abr-2016*
 
 * Balance automático de consumos para combustibles
 * Balance automático de consumos para fuentes renovables
@@ -29,14 +44,15 @@ News
 1.0
 ---
 
-*Release date: 4-feb-2016*
+*4-feb-2016*
 
-* Move to standard versioning scheme
-* Full refactoring with english documentation
+* Cambio a esquema de versiones estándar
+* Refactorización
+* Documentación en inglés
 
 10.2015
 -------
 
-*Release date: 9-oct-2015*
+*9-oct-2015*
 
-* Initial version
+* Versión inicial
