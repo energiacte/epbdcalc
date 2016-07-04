@@ -31,12 +31,12 @@ import numpy as np
 currpath = os.path.abspath(os.path.dirname(__file__))
 upperpath = os.path.abspath(os.path.join(currpath, '..'))
 
-VALIDCARRIERS = ['ELECTRICIDAD', 'ELECTRICIDADCANARIAS', 'ELECTRICIDADBALEARES',
-                 'ELECTRICIDADCEUTAMELILLA', 'GASOLEO', 'FUELOIL', 'GLP',
-                 'GASNATURAL', 'CARBON', 'BIOMASA', 'BIOMASADENSIFICADA',
-                 'BIOCARBURANTE', 'MEDIOAMBIENTE', 'COGENERACION']
-VALIDCTYPES = ['CONSUMO', 'PRODUCCION']
-VALID_ORIGINORUSE = ['EPB', 'NEPB', 'INSITU', 'COGENERACION']
+VALIDCARRIERS = [u'ELECTRICIDAD', u'ELECTRICIDADCANARIAS', u'ELECTRICIDADBALEARES',
+                 u'ELECTRICIDADCEUTAMELILLA', u'GASOLEO', u'FUELOIL', u'GLP',
+                 u'GASNATURAL', u'CARBON', u'BIOMASA', u'BIOMASADENSIFICADA',
+                 u'BIOCARBURANTE', u'MEDIOAMBIENTE', u'COGENERACION']
+VALIDCTYPES = [u'CONSUMO', u'PRODUCCION']
+VALID_ORIGINORUSE = [u'EPB', u'NEPB', u'INSITU', u'COGENERACION']
 
 def perfilC(valortotal):
     perfil = np.array([0.1639344262, 0.1311475410, 0.0819672131, 0.0737704918, 0.0409836066, 0.0491803279, 0.0655737705, 0.0573770492, 0.0409836066, 0.0655737705, 0.0983606557, 0.1311475410])
@@ -52,7 +52,7 @@ def perfilP2(valortotal):
 
 def createfile(nombre_fichero, data):
     with open(nombre_fichero, 'w') as f:
-        f.writelines('vector,tipo,src_dst\n')
+        f.writelines(u'vector,tipo,src_dst\n')
         if data is not None:
             datalines = []
             for carrier, ctype, originoruse, values in data:
@@ -64,47 +64,48 @@ def createfile(nombre_fichero, data):
                     print(u'__error__ no reconozco a %s como fuente/destino, no está en la lista' % originoruse, VALID_ORIGINORUSE)
                 if isinstance(values, int):
                     values = [values]
-                datalines.append('%s,%s,%s,' % (carrier, ctype, originoruse) + ','.join(['%.2f' % e for e in values]) + '\n')
+                datalines.append(u'%s,%s,%s,' % (carrier, ctype, originoruse) + ','.join(['%.2f' % e for e in values]) + '\n')
             f.writelines(datalines)
 
 if __name__ == "__main__":
     createfile(os.path.join(currpath, 'ejemplo1base.csv'),
-               data=[('ELECTRICIDAD','CONSUMO', 'EPB', perfilC(100))])
+               data=[(u'ELECTRICIDAD',u'CONSUMO', u'EPB', perfilC(100))])
 
     createfile(os.path.join(currpath, 'ejemplo1PV.csv'),
-               [('ELECTRICIDAD','CONSUMO', 'EPB', perfilC(100)),
-                ('ELECTRICIDAD','PRODUCCION', 'INSITU', perfilC(50))])
+               [(u'ELECTRICIDAD',u'CONSUMO', u'EPB', perfilC(100)),
+                (u'ELECTRICIDAD',u'PRODUCCION', u'INSITU', perfilC(50))])
 
     createfile(os.path.join(currpath, 'ejemplo1xPV.csv'),
-               [('ELECTRICIDAD','CONSUMO', 'EPB', perfilC(100)),
-                ('ELECTRICIDAD','PRODUCCION', 'INSITU', perfilC(140))])
+               [(u'ELECTRICIDAD',u'CONSUMO', u'EPB', perfilC(100)),
+                (u'ELECTRICIDAD',u'PRODUCCION', u'INSITU', perfilC(140))])
 
     createfile(os.path.join(currpath, 'ejemplo1xPV.csv'),
-               [('ELECTRICIDAD','CONSUMO', 'EPB', perfilC(100)),
-                ('ELECTRICIDAD','PRODUCCION', 'INSITU', perfilC(140))])
+               [(u'ELECTRICIDAD',u'CONSUMO', u'EPB', perfilC(100)),
+                (u'ELECTRICIDAD',u'PRODUCCION', u'INSITU', perfilC(140))])
 
     createfile(os.path.join(currpath, 'ejemplo2xPVgas.csv'),
-               [('ELECTRICIDAD','CONSUMO', 'EPB', perfilC(20)),
-                ('ELECTRICIDAD','PRODUCCION','INSITU', perfilP1(40)),
-                ('GASNATURAL','CONSUMO',  'EPB', perfilC(190))])
+               [(u'ELECTRICIDAD',u'CONSUMO', u'EPB', perfilC(20)),
+                (u'ELECTRICIDAD',u'PRODUCCION',u'INSITU', perfilP1(40)),
+                (u'GASNATURAL',u'CONSUMO',  u'EPB', perfilC(190))])
 
     createfile(os.path.join(currpath, 'ejemplo3PVBdC.csv'),
-               [('ELECTRICIDAD','CONSUMO', 'EPB', perfilC(59)),
-                ('ELECTRICIDAD','PRODUCCION','INSITU', perfilP1(40)),
-                ('MEDIOAMBIENTE','CONSUMO',   'EPB', perfilC(131)),
-                ('MEDIOAMBIENTE','PRODUCCION','INSITU', perfilC(131))])
+               [(u'ELECTRICIDAD',u'CONSUMO', u'EPB', perfilC(59)),
+                (u'ELECTRICIDAD',u'PRODUCCION',u'INSITU', perfilP1(40)),
+                (u'MEDIOAMBIENTE',u'CONSUMO',   u'EPB', perfilC(131)),
+                (u'MEDIOAMBIENTE',u'PRODUCCION',u'INSITU', perfilC(131))])
 
     createfile(os.path.join(currpath, 'ejemplo4cgnfosil.csv'),
-               [('GASNATURAL','CONSUMO',  'EPB', perfilC(100)),
-                ('GASNATURAL','CONSUMO',  'EPB', perfilC(158)),
-                ('ELECTRICIDAD','PRODUCCION','COGENERACION', perfilP1(28))])
+               [(u'GASNATURAL',u'CONSUMO',  u'EPB', perfilC(100)),
+                (u'GASNATURAL',u'CONSUMO',  u'EPB', perfilC(158)),
+                (u'ELECTRICIDAD',u'PRODUCCION',u'COGENERACION', perfilP1(28))])
 
     createfile(os.path.join(currpath, 'ejemplo5cgnbiogas.csv'),
-               [('GASNATURAL','CONSUMO', 'EPB', perfilC(100)),
-                ('BIOCARBURANTE','CONSUMO', 'EPB', perfilC(158)),
-                ('ELECTRICIDAD','PRODUCCION','COGENERACION', perfilP1(28))])
+               [(u'GASNATURAL',u'CONSUMO', u'EPB', perfilC(100)),
+                (u'BIOCARBURANTE',u'CONSUMO', u'EPB', perfilC(158)),
+                (u'ELECTRICIDAD',u'PRODUCCION',u'COGENERACION', perfilP1(28))])
 
     createfile(os.path.join(currpath, 'ejemplo6K3.csv'),
-               [('ELECTRICIDAD','CONSUMO', 'EPB', [200,160,100,90,50,60,80,70,50,80,120,160]),
-                ('ELECTRICIDAD','CONSUMO', 'NEPB', np.ones(12) * 30),
-                ('ELECTRICIDAD','PRODUCCION', 'INSITU', [44,55,77,110,187,209,220,198,176,132,88,55])])
+               [(u'ELECTRICIDAD',u'CONSUMO', u'EPB', [200,160,100,90,50,60,80,70,50,80,120,160]),
+                (u'ELECTRICIDAD',u'CONSUMO', u'NEPB', np.ones(12) * 30),
+                (u'ELECTRICIDAD',u'PRODUCCION', u'INSITU', [44,55,77,110,187,209,220,198,176,132,88,55])])
+
