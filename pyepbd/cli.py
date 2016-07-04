@@ -59,39 +59,46 @@ def main():
                         help=u'archivo de salida de resultados')
     args = parser.parse_args()
 
+    cadenasalida = []
+
     if not args.vecfile:
         parser.print_help()
         sys.exit(2)
+    cadenasalida.append(u'%s' % args.vecfile.name)
 
     if args.krdel is None:
-        print(u'Usando factor de resuministro (k_rdel) predeterminado')
+        cadenasalida.append(u'Usando factor de resuministro predeterminado (k_rdel = %.2f)' % K_RDEL)
+    else:
+        cadenasalida.append(u'Usando factor de resuministro krdel = %.2f' % args.krdel)
     k_rdel = K_RDEL if args.krdel is None else args.krdel
 
     if args.kexp is None:
-        print(u'Usando factor de exportación (k_exp) predeterminado')
+        cadenasalida.append(u'Usando factor de exportación predeterminado (k_exp = %.2f)' % K_EXP)
+    else:
+        cadenasalida.append(u'Usando factor de exportación kexp = %.2f' % args.kexp)
     k_exp  = K_EXP if args.kexp is None else args.kexp
 
     if args.fpfile:
         fpdatafile = args.fpfile
-        print(u'Archivo de factores de paso: ', fpdatafile.name, '\n')
+        cadenasalida.append(u'Archivo de factores de paso: %s ' % fpdatafile.name)
     else:
         fpdatafile = None
-        print(u'Usando factores de paso predeterminados')
+        cadenasalida.append(u'Usando factores de paso predefinidos')
     fP = (FACTORESDEPASOOFICIALES if args.fpfile is None
           else readfactors(args.fpfile))
 
-    print(u'Superficie de referencia: %.2f' % args.area)
+    cadenasalida.append(u'Superficie de referencia: %.2f' % args.area)
 
     data = readenergyfile(args.vecfile.name)
     EP = weighted_energy(data, k_rdel, fP, k_exp)
 
-    cadenasalida = ['%s\n' % args.vecfile.name,
-                    ep2string(EP, args.area)]
-    print(''.join(cadenasalida))
+    cadenasalida.append(ep2string(EP, args.area))
+    cadenasalida = u'\n'.join(cadenasalida)
+    print(cadenasalida)
 
     if args.outputfile:
-        print('Guardando resultados en el archivo:', args.outputfile.name)
-        args.outputfile.writelines(cadenasalida)
+        print(u'Guardando resultados en el archivo: %s' % args.outputfile.name)
+        args.outputfile.write(cadenasalida.encode('utf-8'))
 
 if __name__ == '__main__':
     main()
