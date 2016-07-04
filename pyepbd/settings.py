@@ -40,7 +40,7 @@ K_RDEL = 1.0
 
 # FpA - weighting factors accounting for the resources used to produce this energy
 # FpB - weighting factors accounting for the resources avoided by the external grid due to the export
-FACTORESDEPASOOFICIALES = pd.DataFrame([
+FACTORESDEPASO = [
 #  Energy carrier         origin          use         step Fpren  Fpnren
     ['ELECTRICIDAD',        'grid',         'input',    'A', 0.414, 1.954], # Delivered energy
     ['ELECTRICIDAD',        'INSITU',       'input',    'A', 1.000, 0.000], # Produced energy
@@ -109,4 +109,8 @@ FACTORESDEPASOOFICIALES = pd.DataFrame([
     ['GLP',                 'grid',         'input',    'A', 0.030, 1.201], # Delivered energy
     ['RED1',                'grid',         'input',    'A', 0.000, 1.300], # User defined!, district heating/cooling carrier
     ['RED2',                'grid',         'input',    'A', 0.000, 1.300], # User defined!, district heating/cooling carrier
-], columns=['vector',          'fuente',       'uso',  'step', 'ren', 'nren'])
+]
+
+FACTORESDEPASOOFICIALES = pd.DataFrame(
+    FACTORESDEPASO,
+    columns=['vector', 'fuente', 'uso', 'step', 'ren', 'nren'])
