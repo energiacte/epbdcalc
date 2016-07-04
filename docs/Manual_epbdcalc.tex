@@ -113,8 +113,8 @@ MADRID ESPAÑA\\TEL: 91 302 04 40\\FAX: 91 302 07 00}
 \begin{center} \footnotesize
 
 \fbox{\parbox{.75\textwidth}{
-\textbf{\copyright ~ 2015 Ministerio de Fomento}\\
-\textbf{\phantom{\copyright ~ 2015 }Instituto de Ciencias de la Construcción Eduardo Torroja (IETcc-CSIC)}\\[5pt]
+\textbf{\copyright ~ 2015-2016 Ministerio de Fomento}\\
+\textbf{\phantom{\copyright ~ 2015-2016 }Instituto de Ciencias de la Construcción Eduardo Torroja (IETcc-CSIC)}\\[5pt]
 \textbf{Autores}:\\[5pt]
 \-\qquad Rafael Villar Burke \href{mailto:pachi@ietcc.csic.es}{<pachi@ietcc.csic.es>}\\
 \-\qquad Daniel Jiménez González \href{mailto:danielj@ietcc.csic.es}{<danielj@ietcc.csic.es>}
@@ -186,25 +186,28 @@ La invocación del programa sin un archivo de datos de entrada o usando las opci
  muestra la ayuda de uso:
 
 \begin{Verbatim}[fontsize=\small]
-    usage: epbdcalc.py [-h] [-f [FPFILE]] [--krdel [KRDEL]] [--kexp [KEXP]] vecfile
+usage: epbdcalc.py [-h] [-f [FPFILE]] [--krdel [KRDEL]] [--kexp [KEXP]] vecfile
 
-	versión: 1.0
+	versión: 4.1
 	(c) 2015-2016 Ministerio de Fomento
 	    2015-2016 Instituto de Ciencias de la Construcción Eduardo Torroja (IETcc-CSIC)
 	Autores: Daniel Jiménez González <danielj@ietcc.csic.es>
 	         Rafael Villar Burke <pachi@ietcc.csic.es>
 
-    Cálculo de la eficiencia energética según ISO/DIS 52000-1:2015 y CTE DB-HE
+Cálculo de la eficiencia energética según ISO/DIS 52000-1:2015 y CTE DB-HE
 
-    positional arguments:
-      vecfile               archivo de datos de los vectores energéticos
-    optional arguments:
-      -h, --help            show this help message and exit
-      -f [FPFILE], --factores [FPFILE]
-                            archivo de definición de los factores de paso
-      --krdel [KRDEL]       factor de resuministro (k_rdel)
-      --kexp [KEXP]         factor de exportacion (k_exp)
-      -o [OUTPUTFILE], --outfile [OUTPUTFILE]
+positional arguments:
+  vecfile               archivo de datos de los vectores energéticos
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f [FPFILE], --factores [FPFILE]
+                        archivo de definición de los factores de paso
+  --krdel [KRDEL]       factor de resuministro (k_rdel)
+  --kexp [KEXP]         factor de exportacion (k_exp)
+  -A [AREA], --area [AREA]
+                        superficie de referencia
+  -o [OUTPUTFILE], --outfile [OUTPUTFILE]
                         archivo de salida de resultados
 \end{Verbatim}
 
@@ -274,8 +277,12 @@ El campo \texttt{vector} \textbf{identifica un vector energético} y puede tomar
 \item \texttt{BIOCARBURANTE}
 \item \texttt{MEDIOAMBIENTE}
 \item \texttt{COGENERACION}
+\item \texttt{RED1}
+\item \texttt{RED2}
 \end{itemize}
 \end{multicols}
+
+Los vectores \texttt{RED1} y \texttt{RED2} están destinados a representar vectores genéricos correspondientes a una red de distrito de frío o calor.
 
 \subsubsection{Campo \texttt{tipo}}
 
