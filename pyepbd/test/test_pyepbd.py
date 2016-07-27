@@ -36,7 +36,7 @@ from pyepbd import (FACTORESDEPASOOFICIALES,
 
 def check(EPB, res):
     """Check that result is within valid range"""
-    res = EPB.EP - pd.Series({'ren': res[0], 'nren': res[1]})
+    res = EPB['EP'] - pd.Series({'ren': res[0], 'nren': res[1]})
     if abs(res.sum()) > 2.0:
         print('Resultado no coincidente: ', res.sum())
         print(ep2string(EPB))

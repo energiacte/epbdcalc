@@ -137,13 +137,13 @@ def ep2string(EP, area=1.0):
     In the context of the CTE regulations, this refers to primary energy values.
     """
     areafactor = 1.0 / area
-    eparen = areafactor * EP.EPpasoA['ren']
-    epanren = areafactor * EP.EPpasoA['nren']
+    eparen = areafactor * EP['EPpasoA']['ren']
+    epanren = areafactor * EP['EPpasoA']['nren']
     epatotal = eparen + epanren
     eparer = eparen / epatotal if epatotal else 0.0
 
-    epren = areafactor * EP.EP['ren']
-    epnren = areafactor * EP.EP['nren']
+    epren = areafactor * EP['EP']['ren']
+    epnren = areafactor * EP['EP']['nren']
     eptotal = epren + epnren
     eprer = epren / eptotal if eptotal else 0.0
 
@@ -160,13 +160,13 @@ def ep2dict(EP, area=1.0):
     In the context of the CTE regulations, this refers to primary energy values.
     """
     areafactor = 1.0 / area
-    eparen = areafactor * EP.EPpasoA['ren']
-    epanren = areafactor * EP.EPpasoA['nren']
+    eparen = areafactor * EP['EPpasoA']['ren']
+    epanren = areafactor * EP['EPpasoA']['nren']
     epatotal = eparen + epanren
     eparer = eparen / epatotal if epatotal else 0.0
 
-    epren = areafactor * EP.EP['ren']
-    epnren = areafactor * EP.EP['nren']
+    epren = areafactor * EP['EP']['ren']
+    epnren = areafactor * EP['EP']['nren']
     eptotal = epren + epnren
     eprer = epren / eptotal if eptotal else 0.0
 

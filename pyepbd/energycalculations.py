@@ -277,22 +277,22 @@ def weighted_energy(data, k_rdel, fp, k_exp):
     primary energy.
     """
     components = energycomponents(data, k_rdel)
-    EP = pd.DataFrame({'EP': {'ren': 0.0,
-                              'nren': 0.0},
-                       'EPpasoA': {'ren': 0.0,
-                                   'nren': 0.0}})
+    EPA = pd.Series({'ren': 0.0, 'nren': 0.0})
+    EPB = pd.Series({'ren': 0.0, 'nren': 0.0})
+
     for carrier in components:
         fp_cr = fp[fp.vector==carrier]
         components_cr_an = components[carrier]['anual']
 
         delivered_wenergy_stepA = delivered_weighted_energy_stepA(components_cr_an, fp_cr)
         exported_wenergy_stepA = exported_weighted_energy_stepA(components_cr_an, fp_cr)
-        balance_stepA = delivered_wenergy_stepA - exported_wenergy_stepA
+        weighted_energy_stepA = delivered_wenergy_stepA - exported_wenergy_stepA
 
         gsavings_stepB = gridsavings_stepB(components_cr_an, fp_cr, k_exp)
-        weighted_energy_stepAB = balance_stepA - gsavings_stepB
+        weighted_energy_stepAB = weighted_energy_stepA - gsavings_stepB
 
-        EP_carrier = pd.DataFrame({'EP': weighted_energy_stepAB, 'EPpasoA': balance_stepA})
+        EPA = EPA + weighted_energy_stepA
+        EPB = EPB + weighted_energy_stepAB
 
-        EP = EP + EP_carrier
+    EP = {'EP': EPB, 'EPpasoA': EPA}
     return EP
