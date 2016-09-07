@@ -34,9 +34,9 @@ import pandas as pd
 
 # These are all provisional values subject to change
 
-K_EXP = 1.0
+K_EXP = 0.0
 
-K_RDEL = 1.0
+K_RDEL = 0.0
 
 # FpA - weighting factors accounting for the resources used to produce this energy
 # FpB - weighting factors accounting for the resources avoided by the external grid due to the export
