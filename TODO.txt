@@ -1,3 +1,6 @@
+- Convertir FACTORESDEPASOOFICIALES a dict
+- Ir eliminando dependencia de Pandas, que es innecesaria
+
 - Make program more robust when fed with malformed input (handle exceptions in CLI)
 - Show default values when used, for k_exp, k_rdel and fP
 - Translate examples

@@ -3,6 +3,13 @@
 News
 ====
 
+5.0
+---
+
+*12-sep-2016*
+
+* Cambio de krdel y kepx a 0.0
+
 4.1
 ---
 
