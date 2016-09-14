@@ -112,5 +112,9 @@ FACTORESDEPASO = [
 ]
 
 FACTORESDEPASOOFICIALES = pd.DataFrame(
-    FACTORESDEPASO,
-    columns=['vector', 'fuente', 'uso', 'step', 'ren', 'nren'])
+    [{'vector': vector, 'fuente': fuente, 'uso': uso, 'step': step, 'ren': fren, 'nren': fnren}
+     for (vector, fuente, uso, step, fren, fnren) in FACTORESDEPASO]
+)
+# FACTORESDEPASOOFICIALES = pd.DataFrame(
+#     FACTORESDEPASO,
+#     columns=['vector', 'fuente', 'uso', 'step', 'ren', 'nren'])

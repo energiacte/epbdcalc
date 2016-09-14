@@ -57,8 +57,28 @@ El cálculo está organizado por:
     - destino o uso de la energía.
 """
 
-import numpy as np
-import pandas as pd
+# Vector utilities --------------------------------------------
+def vecvecmin(vec1, vec2):
+    """Elementwise minimum min res[i] = min(vec1[i], vec2[i])"""
+    return [min(v1, v2) for v1, v2 in zip(vec1, vec2)]
+
+def vecvecsum(args):
+    """Elementwise sum res[i] = vec1[i] + vec2[i]"""
+    return [sum(valsi) for valsi in zip(*args)]
+
+def vecvecdif(vec1, vec2):
+    """Elementwise difference res[i] = vec1[i] - vec2[i]"""
+    return [v1 - v2 for v1, v2 in zip(vec1, vec2)]
+
+def vecvecmul(vec1, vec2):
+    """Elementwise multiplication res[i] = vec1[i] * vec2[i]"""
+    return [v1 * v2 for v1, v2 in zip(vec1, vec2)]
+
+def veckmul(vec1, k):
+    """Multiply vector by scalar"""
+    return [v1 * k for v1 in vec1]
+# --------------------------------------------------------------
+
 
 # origin for produced energy must be either 'INSITU' or 'COGENERACION'
 VALIDORIGINS = ['INSITU', 'COGENERACION']
@@ -74,82 +94,80 @@ def components_t_forcarrier(vdata, k_rdel):
     E_EPus_t = vdata['CONSUMO']['EPB']
     # Energy used by technical systems for non-EPB services, for each time step
     E_nEPus_t = vdata['CONSUMO']['NEPB']
-    numsteps = E_EPus_t.size
+    numsteps = E_EPus_t.size # TODO: numpy method
 
     # (Electricity) produced on-site and inside the assessment boundary, by origin
     E_pr_t_byorigin = vdata['PRODUCCION']
     # (Electric) energy produced on-site and inside the assessment boundary, for each time step (formula 23)
-    E_pr_t = np.sum(E_pr_t_byorigin[origin] for origin in VALIDORIGINS)
+    E_pr_t = vecvecsum([E_pr_t_byorigin[origin] for origin in VALIDORIGINS])
 
     # Produced energy from all origins for EPB services for each time step (formula 24)
-    E_pr_used_EPus_t = np.minimum(E_EPus_t, E_pr_t)
+    E_pr_used_EPus_t = vecvecmin(E_EPus_t, E_pr_t)
 
     ## Exported energy for each time step (produced energy not consumed in EPB uses) (formula 25)
-    E_exp_t = E_pr_t - E_pr_used_EPus_t
+    E_exp_t = vecvecdif(E_pr_t, E_pr_used_EPus_t)
 
     # Exported energy by production origin for each time step, weigthing done by produced energy
-    hasprod = (E_pr_t != 0)
-    F_exp_t = np.zeros(numsteps)
-    F_exp_t[hasprod] = E_exp_t[hasprod] / E_pr_t[hasprod]
-    E_exp_t_byorigin = {origin: E_pr_t_byorigin[origin] * F_exp_t for origin in VALIDORIGINS}
+    F_exp_t = [E_exp_t[i] / E_pr_ti if E_pr_ti != 0 else 0 for (i, E_pr_ti) in enumerate(E_pr_t)]
+    E_exp_t_byorigin = {origin: vecvecmul(E_pr_t_byorigin[origin], F_exp_t) for origin in VALIDORIGINS}
 
     # Exported (electric) energy used for non-EPB uses for each time step (formula 26)
-    E_exp_used_nEPus_t = np.minimum(E_exp_t, E_nEPus_t)
+    E_exp_used_nEPus_t = vecvecmin(E_exp_t, E_nEPus_t)
     # Exported energy used for non-EPB services for each time step, by origin, weighting done by exported energy
-    hasexported = (E_exp_t != 0)
-    F_exp_used_nEPus_t = np.zeros(numsteps)
-    F_exp_used_nEPus_t[hasexported] = E_exp_used_nEPus_t[hasexported] / E_exp_t[hasexported]
-    E_exp_used_nEPus_t_byorigin = {origin: E_exp_t_byorigin[origin] * F_exp_used_nEPus_t for origin in VALIDORIGINS}
+    F_exp_used_nEPus_t = [E_exp_used_nEPus_t[i] / E_exp_ti if E_exp_ti !=0 else 0 for (i, E_exp_ti) in enumerate(E_exp_t)]
+    E_exp_used_nEPus_t_byorigin = {origin: vecvecmul(E_exp_t_byorigin[origin], F_exp_used_nEPus_t) for origin in VALIDORIGINS}
 
     # Exported energy not used for any service for each time step (formula 27)
     # Note: this is later affected by k_rdel for redelivery and k_exp for exporting
-    E_exp_nused_t = E_exp_t - E_exp_used_nEPus_t
+    E_exp_nused_t = vecvecdif(E_exp_t, E_exp_used_nEPus_t)
     # Exported energy not used for any service for each time step, by origin, weighting done by exported energy
-    F_exp_nused_t = np.zeros(numsteps)
-    F_exp_nused_t[hasexported] = E_exp_nused_t[hasexported] / E_exp_t[hasexported]
-    E_exp_nused_t_byorigin = {origin: E_exp_t_byorigin[origin] * F_exp_nused_t for origin in VALIDORIGINS}
+    F_exp_nused_t = [E_exp_nused_t[i] / E_exp_ti if E_exp_ti !=0 else 0 for (i, E_exp_ti) in enumerate(E_exp_t)]
+    E_exp_nused_t_byorigin = {origin: vecvecmul(E_exp_t_byorigin[origin], F_exp_nused_t) for origin in VALIDORIGINS}
 
     # Annual exported energy not used for any service (formula 28)
-    E_exp_nused_an = np.sum(E_exp_nused_t)
+    E_exp_nused_an = sum(E_exp_nused_t)
 
     # Delivered (electric) energy for each time step (formula 29)
-    E_del_t = E_EPus_t - E_pr_used_EPus_t
+    E_del_t = vecvecdif(E_EPus_t, E_pr_used_EPus_t)
     # Annual delivered (electric) energy for EPB uses (formula 30)
-    E_del_an = np.sum(E_del_t)
+    E_del_an = sum(E_del_t)
 
     # Annual temporary exported (electric) energy (formula 31)
-    E_exp_tmp_an = np.minimum(E_exp_nused_an, E_del_an)
+    E_exp_tmp_an = min(E_exp_nused_an, E_del_an)
 
     # Temporary exported energy for each time step (formula 32)
     # E_exp_tmp_t = np.zeros(numsteps) if (E_exp_nused_an == 0) else E_exp_tmp_an * E_exp_nused_t / E_exp_nused_an # not used
 
     # Redelivered energy for each time step (formula 33)
-    E_del_rdel_t = np.zeros(numsteps) if (E_del_an == 0) else E_exp_tmp_an * E_del_t / E_del_an
+    if E_del_an == 0:
+        E_del_rdel_t = [0] * numsteps
+    else:
+        E_del_rdel_t = [E_exp_tmp_an * E_del_ti / E_del_an for E_del_ti in E_del_t]
     # Annual redelivered energy
-    # E_del_rdel_an = np.sum(E_del_rdel_t) # not used
+    # E_del_rdel_an = sum(E_del_rdel_t) # not used
 
     # Exported (electric) energy to the grid for each time step (formula 34)
-    # E_exp_grid_t = E_exp_nused_t - E_exp_tmp_t # not used
+    # E_exp_grid_t = vecdif(E_exp_nused_t, E_exp_tmp_t) # not used
 
     # Annual exported (electric) energy to the grid (formula 35)
     E_exp_grid_an = E_exp_nused_an - E_exp_tmp_an
     # Energy exported to grid, by origin, weighting done by exported and not used energy
     F_exp_grid_an = E_exp_grid_an / E_exp_nused_an if E_exp_nused_an != 0 else 0
-    E_exp_grid_t_byorigin = {origin: E_exp_nused_t_byorigin[origin] * F_exp_grid_an for origin in VALIDORIGINS}
+    E_exp_grid_t_byorigin = {origin: veckmul(E_exp_nused_t_byorigin[origin], F_exp_grid_an) for origin in VALIDORIGINS}
 
     # (Electric) energy delivered by the grid for each time step (formula 36)
-    # E_del_grid_t = E_del_t - E_del_rdel_t  # not used
+    # E_del_grid_t = vecdif(E_del_t, E_del_rdel_t)  # not used
 
     # Annual (electric) energy delivered by the grid (formula 37)
     # E_del_grid_an = E_del_an - E_del_rdel_an # not used
 
     # Corrected delivered energy for each time step (formula 38)
-    E_del_t_corr = E_del_t - k_rdel * E_del_rdel_t
+    E_del_t_corr = [E_del_ti - k_rdel * E_del_rdel_t[i] for (i, E_del_ti) in enumerate(E_del_t)]
 
     # Corrected temporary exported energy (formula 39)
-    # E_exp_tmp_t_corr = E_exp_tmp_t * (1 - k_rdel) # not used
+    # E_exp_tmp_t_corr = [E_exp_tmp_ti * (1 - k_rdel) for E_exp_tmp_ti in E_exp_tmp_t] # not used
 
-    components_t = {'grid': {'input': sum(E_del_t_corr)}}
+    components_t = {'grid': {'input': sum(E_del_t_corr)}} # Scalar
 
     components_t.update({origin: {'input': E_pr_t_byorigin[origin],
                                   'to_nEPB': E_exp_used_nEPus_t_byorigin[origin],
@@ -163,7 +181,10 @@ def components_an_forcarrier(components_t):
         components_an[origin] = {}
         components_t_byorigin = components_t[origin]
         for use in components_t_byorigin:
-            sumforuse = components_t_byorigin[use].sum()
+            try: # we get a list
+                sumforuse = sum(components_t_byorigin[use])
+            except TypeError: # if origin == 'grid' and use == 'input' we get an scalar
+                sumforuse = components_t_byorigin[use]
             # TODO we need to know numsteps to make this shortcut work
             # TODO some input data doesn't have timestep data and this fails
             # try:
@@ -196,13 +217,15 @@ def delivered_weighted_energy_stepA(components, fp):
     to the renewable and not renewable share of this weighted energy (step A).
     """
 
-    delivered_wenergy_stepA = pd.Series({'ren': 0.0, 'nren': 0.0})
-    fpA = fp[(fp.uso=='input') & (fp.step=='A')]
+    delivered_wenergy_stepA = {'ren': 0.0, 'nren': 0.0}
+    fpA = fp[(fp.uso=='input') & (fp.step=='A')] # TODO: dataframe
+    #fpA = [fpi for fpi in fp if fpi.uso=='input' and fpi.step=='A']
     for source in components:
         origins = components[source]
         if 'input' in origins:
-            factor_paso_A = fpA[(fpA.fuente==source)][['ren', 'nren']].iloc[0]
-            delivered_wenergy_stepA = delivered_wenergy_stepA + factor_paso_A * origins['input']
+            factor_paso_A = fpA[(fpA.fuente==source)][['ren', 'nren']].iloc[0] # TODO: dataframe
+            delivered_wenergy_stepA = {'ren': delivered_wenergy_stepA['ren'] + factor_paso_A['ren'] * origins['input'],
+                                       'nren': delivered_wenergy_stepA['nren'] + factor_paso_A['nren'] * origins['input'] }
     return delivered_wenergy_stepA
 
 def exported_weighted_energy_stepA(components, fpA):
@@ -214,21 +237,24 @@ def exported_weighted_energy_stepA(components, fpA):
     to the renewable and not renewable share of this weighted energy (step A).
     """
 
-    to_nEPB = pd.Series({'ren': 0.0, 'nren': 0.0})
-    to_grid = pd.Series({'ren': 0.0, 'nren': 0.0})
-    fpAnEPB = fpA[(fpA.uso=='to_nEPB')]
-    fpAgrid = fpA[(fpA.uso=='to_nEPB')]
+    to_nEPB = {'ren': 0.0, 'nren': 0.0}
+    to_grid = {'ren': 0.0, 'nren': 0.0}
+    fpAnEPB = fpA[(fpA.uso=='to_nEPB')] # TODO: dataframe
+    fpAgrid = fpA[(fpA.uso=='to_nEPB')] # TODO: dataframe
     for source in components:
         destinations = components[source]
         if 'to_nEPB' in destinations:
-            fp_tmp = fpAnEPB[fpAnEPB.fuente==source][['ren', 'nren']].iloc[0]
-            to_nEPB = to_nEPB + fp_tmp * destinations['to_nEPB']
+            fp_tmp = fpAnEPB[fpAnEPB.fuente==source][['ren', 'nren']].iloc[0] # TODO: dataframe
+            to_nEPB = { 'ren': to_nEPB['ren'] + fp_tmp['ren'] * destinations['to_nEPB'],
+                        'nren': to_nEPB['nren'] + fp_tmp['nren'] * destinations['to_nEPB'] } # TODO: numpy
 
         if 'to_grid' in destinations:
-            fp_tmp = fpAgrid[fpAgrid.fuente== source][['ren', 'nren']].iloc[0]
-            to_grid = to_grid + fp_tmp * destinations['to_grid']
+            fp_tmp = fpAgrid[fpAgrid.fuente== source][['ren', 'nren']].iloc[0] # TODO: dataframe
+            to_grid = { 'ren': to_grid['ren'] + fp_tmp['ren'] * destinations['to_grid'],
+                        'nren': to_grid['nren'] + fp_tmp['nren'] * destinations['to_grid'] } # TODO: numpy
 
-    exported_energy_stepA = to_nEPB + to_grid
+    exported_energy_stepA = { 'ren': to_nEPB['ren'] + to_grid['ren'],
+                              'nren': to_nEPB['nren'] + to_grid['nren'] } # TODO: numpy?
     return exported_energy_stepA
 
 def gridsavings_stepB(components, fp, k_exp):
@@ -242,25 +268,27 @@ def gridsavings_stepB(components, fp, k_exp):
     to the renewable and not renewable share of this weighted energy (step B).
     """
 
-    to_nEPB = pd.Series({'ren': 0.0, 'nren': 0.0})
-    to_grid = pd.Series({'ren': 0.0, 'nren': 0.0})
-    fpA = fp[fp.step=='A']
-    fpB = fp[fp.step=='B']
-    fpAnEPB,fpAgrid = fpA[fpA.uso=='to_nEPB'], fpA[fpA.uso=='to_grid']
-    fpBnEPB,fpBgrid = fpB[fpB.uso=='to_nEPB'], fpB[fpB.uso=='to_grid']
+    to_nEPB = {'ren': 0.0, 'nren': 0.0}
+    to_grid = {'ren': 0.0, 'nren': 0.0}
+    fpA = fp[fp.step=='A'] # TODO: dataframe
+    fpB = fp[fp.step=='B'] # TODO: dataframe
+    fpAnEPB,fpAgrid = fpA[fpA.uso=='to_nEPB'], fpA[fpA.uso=='to_grid'] # TODO: dataframe
+    fpBnEPB,fpBgrid = fpB[fpB.uso=='to_nEPB'], fpB[fpB.uso=='to_grid'] # TODO: dataframe
 
     for source in components:
         destinations = components[source]
         if 'to_nEPB' in destinations:
-            fpA_tmp= fpAnEPB[fpAnEPB.fuente==source][['ren','nren']].iloc[0]
-            fpB_tmp= fpBnEPB[fpBnEPB.fuente==source][['ren','nren']].iloc[0]
-            to_nEPB = to_nEPB + (fpB_tmp - fpA_tmp) * destinations['to_nEPB']
+            fpA_tmp= fpAnEPB[fpAnEPB.fuente==source][['ren','nren']].iloc[0] # TODO: dataframe
+            fpB_tmp= fpBnEPB[fpBnEPB.fuente==source][['ren','nren']].iloc[0] # TODO: dataframe
+            to_nEPB = { 'ren': to_nEPB['ren'] + (fpB_tmp['ren'] - fpA_tmp['ren']) * destinations['to_nEPB'],
+                        'nren': to_nEPB['nren'] + (fpB_tmp['nren'] - fpA_tmp['nren']) * destinations['to_nEPB'] } # TODO: dataframe
         if 'to_grid' in destinations:
-            fpA_tmp= fpAgrid[fpAgrid.fuente==source][['ren','nren']].iloc[0]
-            fpB_tmp= fpBgrid[fpBgrid.fuente==source][['ren','nren']].iloc[0]
-            to_grid = to_grid + (fpB_tmp - fpA_tmp) * destinations['to_grid']
+            fpA_tmp= fpAgrid[fpAgrid.fuente==source][['ren','nren']].iloc[0] # TODO: dataframe
+            fpB_tmp= fpBgrid[fpBgrid.fuente==source][['ren','nren']].iloc[0] # TODO: dataframe
+            to_grid = { 'ren': to_grid['ren'] + (fpB_tmp['ren'] - fpA_tmp['ren']) * destinations['to_grid'],
+                        'nren': to_grid['nren'] + (fpB_tmp['nren'] - fpA_tmp['nren']) * destinations['to_grid'] } # TODO: dataframe
 
-    gridsavings = k_exp * (to_nEPB + to_grid)
+    gridsavings = {'ren': k_exp * (to_nEPB['ren'] + to_grid['ren']), 'nren': k_exp * (to_nEPB['nren'] + to_grid['nren'])} # TODO: numpy?
     return gridsavings
 
 def weighted_energy(data, k_rdel, fp, k_exp):
@@ -277,22 +305,23 @@ def weighted_energy(data, k_rdel, fp, k_exp):
     primary energy.
     """
     components = energycomponents(data, k_rdel)
-    EPA = pd.Series({'ren': 0.0, 'nren': 0.0})
-    EPB = pd.Series({'ren': 0.0, 'nren': 0.0})
+    EPA = {'ren': 0.0, 'nren': 0.0}
+    EPB = {'ren': 0.0, 'nren': 0.0}
 
     for carrier in components:
-        fp_cr = fp[fp.vector==carrier]
+        fp_cr = fp[fp.vector==carrier] # TODO: dataframe
         components_cr_an = components[carrier]['anual']
 
         delivered_wenergy_stepA = delivered_weighted_energy_stepA(components_cr_an, fp_cr)
         exported_wenergy_stepA = exported_weighted_energy_stepA(components_cr_an, fp_cr)
-        weighted_energy_stepA = delivered_wenergy_stepA - exported_wenergy_stepA
+        weighted_energy_stepA = { 'ren': delivered_wenergy_stepA['ren'] - exported_wenergy_stepA['ren'],
+                                  'nren': delivered_wenergy_stepA['nren'] - exported_wenergy_stepA['nren'] } # TODO: dataframe
 
         gsavings_stepB = gridsavings_stepB(components_cr_an, fp_cr, k_exp)
-        weighted_energy_stepAB = weighted_energy_stepA - gsavings_stepB
+        weighted_energy_stepAB = { 'ren': weighted_energy_stepA['ren'] - gsavings_stepB['ren'],
+                                   'nren': weighted_energy_stepA['nren'] - gsavings_stepB['nren'] } # TODO: dataframe
 
-        EPA = EPA + weighted_energy_stepA
-        EPB = EPB + weighted_energy_stepAB
+        EPA = {'ren': EPA['ren'] + weighted_energy_stepA['ren'], 'nren': EPA['nren'] + weighted_energy_stepA['nren']} # TODO: dataframe
+        EPB = {'ren': EPB['ren'] + weighted_energy_stepAB['ren'], 'nren': EPB['nren'] + weighted_energy_stepAB['nren']} # TODO: dataframe
 
-    EP = {'EP': EPB, 'EPpasoA': EPA}
-    return EP
+    return {'EP': EPB, 'EPpasoA': EPA}

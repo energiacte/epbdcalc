@@ -23,7 +23,6 @@
 # SOFTWARE.
 
 import os, sys
-import pandas as pd
 
 currpath = os.path.abspath(os.path.dirname(__file__))
 sys.path.append(os.path.join(currpath, '..'))
@@ -36,9 +35,10 @@ from pyepbd import (FACTORESDEPASOOFICIALES,
 
 def check(EPB, res):
     """Check that result is within valid range"""
-    res = EPB['EP'] - pd.Series({'ren': res[0], 'nren': res[1]})
-    if abs(res.sum()) > 2.0:
-        print('Resultado no coincidente: ', res.sum())
+    ep = EPB['EP']
+    res = {'ren': ep['ren'] - res[0], 'nren': ep['nren'] - res[1]}
+    if abs(res['ren'] + res['nren']) > 2.0:
+        print('Resultado no coincidente: ', res['ren']+ res['nren'])
         print(ep2string(EPB))
         print('#####################################################')
         print('--------------------')
