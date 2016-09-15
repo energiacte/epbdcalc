@@ -119,7 +119,7 @@ def readfactors(filename):
                 vector, fuente, uso, step, fren, fnren = fieldslist
                 fren, fnren = float(fren), float(fnren)
             except:
-                raise ValueError, u"Número o tipo incorrecto de datos en campos de línea %i: %s" % (ii, line)
+                raise ValueError(u"Número o tipo incorrecto de datos en campos de línea %i: %s" % (ii, line))
             data.append({'vector': vector, 'fuente': fuente, 'uso': uso, 'step': step, 'ren': fren, 'nren': fnren})
     return data
 
