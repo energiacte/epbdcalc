@@ -57,28 +57,7 @@ El cálculo está organizado por:
     - destino o uso de la energía.
 """
 
-# Vector utilities --------------------------------------------
-def vecvecmin(vec1, vec2):
-    """Elementwise minimum min res[i] = min(vec1[i], vec2[i])"""
-    return [min(v1, v2) for v1, v2 in zip(vec1, vec2)]
-
-def vecvecsum(args):
-    """Elementwise sum res[i] = vec1[i] + vec2[i]"""
-    return [sum(valsi) for valsi in zip(*args)]
-
-def vecvecdif(vec1, vec2):
-    """Elementwise difference res[i] = vec1[i] - vec2[i]"""
-    return [v1 - v2 for v1, v2 in zip(vec1, vec2)]
-
-def vecvecmul(vec1, vec2):
-    """Elementwise multiplication res[i] = vec1[i] * vec2[i]"""
-    return [v1 * v2 for v1, v2 in zip(vec1, vec2)]
-
-def veckmul(vec1, k):
-    """Multiply vector by scalar"""
-    return [v1 * k for v1 in vec1]
-# --------------------------------------------------------------
-
+from .utils import *
 
 # origin for produced energy must be either 'INSITU' or 'COGENERACION'
 VALIDORIGINS = ['INSITU', 'COGENERACION']
