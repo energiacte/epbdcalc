@@ -3,6 +3,13 @@
 News
 ====
 
+6.0
+---
+
+*15-sep-2016*
+
+* Elimina dependencias (numpy y pandas)
+
 5.0
 ---
 

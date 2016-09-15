@@ -94,7 +94,7 @@ setup(
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=['pandas >= 0.15', 'numpy >= 1.7'],
+    install_requires=[],
 
     # dependencies for the setup script to run
     setup_requires=['pytest-runner'],
