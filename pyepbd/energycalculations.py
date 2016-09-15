@@ -73,12 +73,12 @@ def components_t_forcarrier(vdata, k_rdel):
     E_EPus_t = vdata['CONSUMO']['EPB']
     # Energy used by technical systems for non-EPB services, for each time step
     E_nEPus_t = vdata['CONSUMO']['NEPB']
-    numsteps = E_EPus_t.size # TODO: numpy method
+    numsteps = len(E_EPus_t)
 
     # (Electricity) produced on-site and inside the assessment boundary, by origin
     E_pr_t_byorigin = vdata['PRODUCCION']
     # (Electric) energy produced on-site and inside the assessment boundary, for each time step (formula 23)
-    E_pr_t = vecvecsum([E_pr_t_byorigin[origin] for origin in VALIDORIGINS])
+    E_pr_t = veclistsum([E_pr_t_byorigin[origin] for origin in VALIDORIGINS])
 
     # Produced energy from all origins for EPB services for each time step (formula 24)
     E_pr_used_EPus_t = vecvecmin(E_EPus_t, E_pr_t)
@@ -119,7 +119,7 @@ def components_t_forcarrier(vdata, k_rdel):
 
     # Redelivered energy for each time step (formula 33)
     if E_del_an == 0:
-        E_del_rdel_t = [0] * numsteps
+        E_del_rdel_t = [0.0] * numsteps
     else:
         E_del_rdel_t = [E_exp_tmp_an * E_del_ti / E_del_an for E_del_ti in E_del_t]
     # Annual redelivered energy

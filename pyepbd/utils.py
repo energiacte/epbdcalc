@@ -32,9 +32,13 @@ def vecvecmin(vec1, vec2):
     """Elementwise minimum min res[i] = min(vec1[i], vec2[i])"""
     return [min(v1, v2) for v1, v2 in zip(vec1, vec2)]
 
-def vecvecsum(args):
+def veclistsum(veclist):
+    """Elementwise sum res[i] = vec1[i] + vec2[i] + ... + vecj[i]"""
+    return [sum(valsi) for valsi in zip(*veclist)]
+
+def vecvecsum(vec1, vec2):
     """Elementwise sum res[i] = vec1[i] + vec2[i]"""
-    return [sum(valsi) for valsi in zip(*args)]
+    return [v1 + v2 for v1, v2 in zip(vec1, vec2)]
 
 def vecvecdif(vec1, vec2):
     """Elementwise difference res[i] = vec1[i] - vec2[i]"""
