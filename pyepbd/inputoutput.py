@@ -27,8 +27,8 @@
 # TODO: handle exceptions in CLI
 
 from io import open
-import numpy as np
 import pandas as pd
+from .utils import *
 
 def readenergydata(datalist):
     """Read input data from list and return data structure
@@ -58,19 +58,19 @@ def readenergydata(datalist):
         carrier = data['carrier']
         ctype = data['ctype']
         originoruse = data['originoruse']
-        values = np.array(data['values']).astype(np.float)
+        values = [float(value) for value in data['values']]
 
         if len(values) != numsteps:
             raise ValueError("All input must have the same number of timesteps. "
-                             "Problem found in line %i:\n\t%s" % (ii+1, line))
+                             "Problem found in line %i:\n\t%s" % (ii+1, data))
 
         if carrier not in energydata:
-            energydata[carrier] = {'CONSUMO': {'EPB': np.zeros(numsteps),
-                                                  'NEPB': np.zeros(numsteps)},
-                                   'PRODUCCION': {'INSITU': np.zeros(numsteps),
-                                                  'COGENERACION': np.zeros(numsteps)}}
+            energydata[carrier] = {'CONSUMO': {'EPB': [0.0] * numsteps,
+                                                  'NEPB': [0.0] * numsteps},
+                                   'PRODUCCION': {'INSITU': [0.0] * numsteps,
+                                                  'COGENERACION': [0.0] * numsteps}}
 
-        energydata[carrier][ctype][originoruse] = energydata[carrier][ctype][originoruse] + values
+        energydata[carrier][ctype][originoruse] = vecvecsum(energydata[carrier][ctype][originoruse], values)
     return energydata
 
 def readenergyfile(filename):
