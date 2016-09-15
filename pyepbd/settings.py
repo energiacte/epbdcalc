@@ -30,10 +30,7 @@ building code regulations (Código Técnico de la Edificación CTE).
 Weighting factors are based on primary energy use.
 """
 
-import pandas as pd
-
 # These are all provisional values subject to change
-
 K_EXP = 0.0
 
 K_RDEL = 0.0
@@ -111,10 +108,5 @@ FACTORESDEPASO = [
     ['RED2',                'grid',         'input',    'A', 0.000, 1.300], # User defined!, district heating/cooling carrier
 ]
 
-FACTORESDEPASOOFICIALES = pd.DataFrame(
-    [{'vector': vector, 'fuente': fuente, 'uso': uso, 'step': step, 'ren': fren, 'nren': fnren}
-     for (vector, fuente, uso, step, fren, fnren) in FACTORESDEPASO]
-)
-# FACTORESDEPASOOFICIALES = pd.DataFrame(
-#     FACTORESDEPASO,
-#     columns=['vector', 'fuente', 'uso', 'step', 'ren', 'nren'])
+FACTORESDEPASOOFICIALES = [{'vector': vector, 'fuente': fuente, 'uso': uso, 'step': step, 'ren': fren, 'nren': fnren}
+                           for (vector, fuente, uso, step, fren, fnren) in FACTORESDEPASO]

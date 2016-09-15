@@ -26,8 +26,7 @@
 
 # TODO: handle exceptions in CLI
 
-from io import open
-import pandas as pd
+import io
 from .utils import *
 
 def readenergydata(datalist):
@@ -87,7 +86,7 @@ def readenergyfile(filename):
       - the energy end use (EPB or NEPB) for delivered energy
     * values
     """
-    with open(filename, 'r') as datafile:
+    with io.open(filename, 'r') as datafile:
         datalines = []
         for ii, line in enumerate(datafile):
             if line.startswith('vector') or line.startswith('#'):
@@ -107,12 +106,22 @@ def readenergyfile(filename):
 
 def readfactors(filename):
     """Read energy weighting factors data from file"""
-
     # TODO: check valid sources
-    return pd.read_csv(filename,
-                       skipinitialspace=True,
-                       comment='#',
-                       skip_blank_lines=True)
+    data = []
+    with io.open(filename, 'r') as ff:
+        for ii, line in enumerate(ff.readlines()):
+            line = line.strip()
+            if line == '' or line.startswith('#') or line.startswith('vector,'):
+                continue
+            line = line.rsplit('#')[0]
+            fieldslist = [field.strip() for field in line.split(',')]
+            try:
+                vector, fuente, uso, step, fren, fnren = fieldslist
+                fren, fnren = float(fren), float(fnren)
+            except:
+                raise ValueError, u"Número o tipo incorrecto de datos en campos de línea %i: %s" % (ii, line)
+            data.append({'vector': vector, 'fuente': fuente, 'uso': uso, 'step': step, 'ren': fren, 'nren': fnren})
+    return data
 
 def readfactorsdata(data):
     """Read weighting factors from data object
@@ -128,8 +137,8 @@ def readfactorsdata(data):
     - nren is the factor value for its non-renewable share (e.g. 2.500)
     """
     #TODO: no validation done here
-    return pd.DataFrame(data,
-                        columns=['vector', 'fuente', 'uso', 'step', 'ren', 'nren'])
+    return [{'vector': vector, 'fuente': fuente, 'uso': uso, 'step': step, 'ren': fren, 'nren': fnren}
+            for (vector, fuente, uso, step, fren, fnren) in data]
 
 def ep2string(EP, area=1.0):
     """Format energy efficiency indicators as string from primary energy data

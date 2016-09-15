@@ -164,12 +164,6 @@ def components_an_forcarrier(components_t):
                 sumforuse = sum(components_t_byorigin[use])
             except TypeError: # if origin == 'grid' and use == 'input' we get an scalar
                 sumforuse = components_t_byorigin[use]
-            # TODO we need to know numsteps to make this shortcut work
-            # TODO some input data doesn't have timestep data and this fails
-            # try:
-            #     components_an[origin][use] = sumforuse if abs(sumforuse) > 0.1 else np.zeros(numsteps)
-            # except:
-            #     print origin, use, sumforuse, components_an
             if abs(sumforuse) > 0.1:
                 components_an[origin][use] = sumforuse
     return components_an
@@ -197,12 +191,11 @@ def delivered_weighted_energy_stepA(components, fp):
     """
 
     delivered_wenergy_stepA = {'ren': 0.0, 'nren': 0.0}
-    fpA = fp[(fp.uso=='input') & (fp.step=='A')] # TODO: dataframe
-    #fpA = [fpi for fpi in fp if fpi.uso=='input' and fpi.step=='A']
+    fpA = [fpi for fpi in fp if fpi['uso']=='input' and fpi['step']=='A']
     for source in components:
         origins = components[source]
         if 'input' in origins:
-            factor_paso_A = fpA[(fpA.fuente==source)][['ren', 'nren']].iloc[0] # TODO: dataframe
+            factor_paso_A = [fpi for fpi in fpA if fpi['fuente']==source][0]
             delivered_wenergy_stepA = {'ren': delivered_wenergy_stepA['ren'] + factor_paso_A['ren'] * origins['input'],
                                        'nren': delivered_wenergy_stepA['nren'] + factor_paso_A['nren'] * origins['input'] }
     return delivered_wenergy_stepA
@@ -218,22 +211,22 @@ def exported_weighted_energy_stepA(components, fpA):
 
     to_nEPB = {'ren': 0.0, 'nren': 0.0}
     to_grid = {'ren': 0.0, 'nren': 0.0}
-    fpAnEPB = fpA[(fpA.uso=='to_nEPB')] # TODO: dataframe
-    fpAgrid = fpA[(fpA.uso=='to_nEPB')] # TODO: dataframe
+    fpAnEPB = [fpi for fpi in fpA if fpi['uso']=='to_nEPB']
+    fpAgrid = [fpi for fpi in fpA if fpi['uso']=='to_grid']
     for source in components:
         destinations = components[source]
         if 'to_nEPB' in destinations:
-            fp_tmp = fpAnEPB[fpAnEPB.fuente==source][['ren', 'nren']].iloc[0] # TODO: dataframe
+            fp_tmp = [fpi for fpi in fpAnEPB if fpi['fuente']==source][0] # TODO: check whether there's data
             to_nEPB = { 'ren': to_nEPB['ren'] + fp_tmp['ren'] * destinations['to_nEPB'],
-                        'nren': to_nEPB['nren'] + fp_tmp['nren'] * destinations['to_nEPB'] } # TODO: numpy
+                        'nren': to_nEPB['nren'] + fp_tmp['nren'] * destinations['to_nEPB'] }
 
         if 'to_grid' in destinations:
-            fp_tmp = fpAgrid[fpAgrid.fuente== source][['ren', 'nren']].iloc[0] # TODO: dataframe
+            fp_tmp = [fpi for fpi in fpAgrid if fpi['fuente']==source][0] # TODO: check whether there's data
             to_grid = { 'ren': to_grid['ren'] + fp_tmp['ren'] * destinations['to_grid'],
-                        'nren': to_grid['nren'] + fp_tmp['nren'] * destinations['to_grid'] } # TODO: numpy
+                        'nren': to_grid['nren'] + fp_tmp['nren'] * destinations['to_grid'] }
 
     exported_energy_stepA = { 'ren': to_nEPB['ren'] + to_grid['ren'],
-                              'nren': to_nEPB['nren'] + to_grid['nren'] } # TODO: numpy?
+                              'nren': to_nEPB['nren'] + to_grid['nren'] }
     return exported_energy_stepA
 
 def gridsavings_stepB(components, fp, k_exp):
@@ -249,25 +242,27 @@ def gridsavings_stepB(components, fp, k_exp):
 
     to_nEPB = {'ren': 0.0, 'nren': 0.0}
     to_grid = {'ren': 0.0, 'nren': 0.0}
-    fpA = fp[fp.step=='A'] # TODO: dataframe
-    fpB = fp[fp.step=='B'] # TODO: dataframe
-    fpAnEPB,fpAgrid = fpA[fpA.uso=='to_nEPB'], fpA[fpA.uso=='to_grid'] # TODO: dataframe
-    fpBnEPB,fpBgrid = fpB[fpB.uso=='to_nEPB'], fpB[fpB.uso=='to_grid'] # TODO: dataframe
+    fpA = [fpi for fpi in fp if fpi['step']=='A']
+    fpB = [fpi for fpi in fp if fpi['step']=='B']
+    fpAnEPB = [fpi for fpi in fpA if fpi['uso']=='to_nEPB']
+    fpAgrid = [fpi for fpi in fpA if fpi['uso']=='to_grid']
+    fpBnEPB = [fpi for fpi in fpB if fpi['uso']=='to_nEPB']
+    fpBgrid = [fpi for fpi in fpB if fpi['uso']=='to_grid']
 
     for source in components:
         destinations = components[source]
         if 'to_nEPB' in destinations:
-            fpA_tmp= fpAnEPB[fpAnEPB.fuente==source][['ren','nren']].iloc[0] # TODO: dataframe
-            fpB_tmp= fpBnEPB[fpBnEPB.fuente==source][['ren','nren']].iloc[0] # TODO: dataframe
+            fpA_tmp = [fpi for fpi in fpAnEPB if fpi['fuente']==source][0] # TODO: check whether there's data
+            fpB_tmp = [fpi for fpi in fpBnEPB if fpi['fuente']==source][0] # TODO: check whether there's data
             to_nEPB = { 'ren': to_nEPB['ren'] + (fpB_tmp['ren'] - fpA_tmp['ren']) * destinations['to_nEPB'],
-                        'nren': to_nEPB['nren'] + (fpB_tmp['nren'] - fpA_tmp['nren']) * destinations['to_nEPB'] } # TODO: dataframe
+                        'nren': to_nEPB['nren'] + (fpB_tmp['nren'] - fpA_tmp['nren']) * destinations['to_nEPB'] }
         if 'to_grid' in destinations:
-            fpA_tmp= fpAgrid[fpAgrid.fuente==source][['ren','nren']].iloc[0] # TODO: dataframe
-            fpB_tmp= fpBgrid[fpBgrid.fuente==source][['ren','nren']].iloc[0] # TODO: dataframe
+            fpA_tmp = [fpi for fpi in fpAgrid if fpi['fuente']==source][0] # TODO: check whether there's data
+            fpB_tmp = [fpi for fpi in fpBgrid if fpi['fuente']==source][0] # TODO: check whether there's data
             to_grid = { 'ren': to_grid['ren'] + (fpB_tmp['ren'] - fpA_tmp['ren']) * destinations['to_grid'],
-                        'nren': to_grid['nren'] + (fpB_tmp['nren'] - fpA_tmp['nren']) * destinations['to_grid'] } # TODO: dataframe
+                        'nren': to_grid['nren'] + (fpB_tmp['nren'] - fpA_tmp['nren']) * destinations['to_grid'] }
 
-    gridsavings = {'ren': k_exp * (to_nEPB['ren'] + to_grid['ren']), 'nren': k_exp * (to_nEPB['nren'] + to_grid['nren'])} # TODO: numpy?
+    gridsavings = {'ren': k_exp * (to_nEPB['ren'] + to_grid['ren']), 'nren': k_exp * (to_nEPB['nren'] + to_grid['nren'])}
     return gridsavings
 
 def weighted_energy(data, k_rdel, fp, k_exp):
@@ -288,19 +283,19 @@ def weighted_energy(data, k_rdel, fp, k_exp):
     EPB = {'ren': 0.0, 'nren': 0.0}
 
     for carrier in components:
-        fp_cr = fp[fp.vector==carrier] # TODO: dataframe
+        fp_cr = [fpi for fpi in fp if fpi['vector'] == carrier]
         components_cr_an = components[carrier]['anual']
 
         delivered_wenergy_stepA = delivered_weighted_energy_stepA(components_cr_an, fp_cr)
         exported_wenergy_stepA = exported_weighted_energy_stepA(components_cr_an, fp_cr)
         weighted_energy_stepA = { 'ren': delivered_wenergy_stepA['ren'] - exported_wenergy_stepA['ren'],
-                                  'nren': delivered_wenergy_stepA['nren'] - exported_wenergy_stepA['nren'] } # TODO: dataframe
+                                  'nren': delivered_wenergy_stepA['nren'] - exported_wenergy_stepA['nren'] }
 
         gsavings_stepB = gridsavings_stepB(components_cr_an, fp_cr, k_exp)
         weighted_energy_stepAB = { 'ren': weighted_energy_stepA['ren'] - gsavings_stepB['ren'],
-                                   'nren': weighted_energy_stepA['nren'] - gsavings_stepB['nren'] } # TODO: dataframe
+                                   'nren': weighted_energy_stepA['nren'] - gsavings_stepB['nren'] }
 
-        EPA = {'ren': EPA['ren'] + weighted_energy_stepA['ren'], 'nren': EPA['nren'] + weighted_energy_stepA['nren']} # TODO: dataframe
-        EPB = {'ren': EPB['ren'] + weighted_energy_stepAB['ren'], 'nren': EPB['nren'] + weighted_energy_stepAB['nren']} # TODO: dataframe
+        EPA = {'ren': EPA['ren'] + weighted_energy_stepA['ren'], 'nren': EPA['nren'] + weighted_energy_stepA['nren']}
+        EPB = {'ren': EPB['ren'] + weighted_energy_stepAB['ren'], 'nren': EPB['nren'] + weighted_energy_stepAB['nren']}
 
     return {'EP': EPB, 'EPpasoA': EPA}
